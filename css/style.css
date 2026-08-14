@@ -6,13 +6,18 @@
   --nav-height: 64px;
   --blend: 120px; /* 섹션 사이 배경색이 자연스럽게 섞이는 구간 높이 */
 
-  /* Home & Contact — Spline 씬의 실제 캔버스 배경색(RGB 212,213,228)을 그대로 앵커로 사용 */
+  /* Home — Spline 씬의 실제 캔버스 배경색(RGB 212,213,228)을 그대로 앵커로 사용 */
   --home-bg: #d4d5e4;
   --home-bg-alt: #c7c9da;
   --home-text: #23273a;
   --home-muted: #5b5f78;
   --accent: #0d9488;       /* 로봇 포인트 컬러(청록/사이언) — 사이트 전체의 단일 포인트 컬러 */
   --accent-2: #2dd4bf;     /* accent의 밝은 변형, 같은 계열로 통일 */
+
+  /* Contact — 사이트를 마무리하는 어두운 톤 (Nav가 Home에서 시작할 때 쓰는 색과 같은 계열) */
+  --contact-bg: #0a0e14;
+  --contact-text: #eef3f8;
+  --contact-muted: #8fa1b3;
 
   /* 가운데 콘텐츠 섹션들 — Home 배경과 같은 라벤더-그레이 계열의 명도 흐름 */
   --about-bg: #f0f1f7;
@@ -98,17 +103,27 @@ a { color: inherit; text-decoration: none; }
 
 /* -------------------------------------------
    Navigation
+   기본(=Home 화면) 상태: "Projects 보기" 버튼 위쪽 즈음에, 어두운 배경 + 흰 글씨로 떠 있다.
+   Home을 벗어나 스크롤하면(JS가 .is-docked를 붙이면) 화면 맨 위로 이동하면서
+   밝은 배경 + 어두운 글씨로 자연스럽게 바뀐다.
 ------------------------------------------- */
 .navbar {
   position: fixed;
-  top: 0; left: 0; right: 0;
+  top: 56%;
+  left: 0; right: 0;
   height: var(--nav-height);
   z-index: 100;
-  background: rgba(255, 255, 255, 0.55);
+  background: rgba(10, 14, 20, 0.55);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(31, 35, 51, 0.08);
-  transition: background 0.3s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  transition: top 0.5s cubic-bezier(0.22, 1, 0.36, 1), background 0.4s ease, border-color 0.4s ease;
+}
+
+.navbar.is-docked {
+  top: 0;
+  background: rgba(255, 255, 255, 0.55);
+  border-bottom-color: rgba(31, 35, 51, 0.08);
 }
 
 .nav-inner {
@@ -124,6 +139,11 @@ a { color: inherit; text-decoration: none; }
 .nav-logo {
   font-weight: 800;
   letter-spacing: 0.05em;
+  color: #fff;
+  transition: color 0.4s ease;
+}
+
+.navbar.is-docked .nav-logo {
   color: var(--text);
 }
 
@@ -135,17 +155,26 @@ a { color: inherit; text-decoration: none; }
 
 .nav-link {
   font-size: 0.9rem;
-  color: rgba(31, 35, 51, 0.65);
+  color: rgba(255, 255, 255, 0.75);
   padding: 6px 2px;
   border-bottom: 2px solid transparent;
-  transition: color 0.2s ease, border-color 0.2s ease;
+  transition: color 0.3s ease, border-color 0.2s ease;
 }
 
-.nav-link:hover { color: var(--text); }
+.navbar.is-docked .nav-link {
+  color: rgba(31, 35, 51, 0.65);
+}
+
+.nav-link:hover { color: #fff; }
+.navbar.is-docked .nav-link:hover { color: var(--text); }
 
 .nav-link.active {
   color: var(--accent);
   border-bottom-color: var(--accent);
+}
+
+@media (max-width: 768px) {
+  .navbar { top: 50%; }
 }
 
 /* -------------------------------------------
@@ -311,7 +340,12 @@ a { color: inherit; text-decoration: none; }
   background: linear-gradient(to bottom, var(--about-bg) 0, var(--current-bg) var(--blend), var(--current-bg) 100%);
 }
 
-.current-project-card {
+/*
+  진행 로그 / 프로젝트 설명 / 대표 사진, 이 세 가지가 각자 분리된 블록으로 보이도록
+  구성한다. 설명과 로그는 각각 흰 카드(.cp-card)에 담고, 사진은 카드 없이
+  섹션 배경 위에 그대로 떠 있게 해서 서로 다른 성격의 정보라는 걸 시각적으로 구분한다.
+*/
+.cp-card {
   position: relative;
   background: var(--bg);
   border: 1px solid var(--border);
@@ -320,13 +354,20 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 12px 30px rgba(20, 30, 40, 0.06);
 }
 
-/* 왼쪽: 프로젝트 설명 / 오른쪽: 대표 사진 슬라이드쇼 */
-.cp-top {
+.cp-info-card {
+  margin: 0;
+}
+
+.cp-log-card {
+  margin-top: 24px;
+}
+
+/* 왼쪽: 프로젝트 설명 카드 / 오른쪽: 대표 사진 (카드 없이) */
+.cp-layout {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 32px;
   align-items: start;
-  margin-bottom: 28px;
 }
 
 .cp-media {
@@ -368,7 +409,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 @media (max-width: 768px) {
-  .cp-top {
+  .cp-layout {
     grid-template-columns: 1fr;
   }
 }
@@ -1012,13 +1053,13 @@ a { color: inherit; text-decoration: none; }
 /* -------------------------------------------
    Contact
 ------------------------------------------- */
-/* Contact는 Home과 같은 배경 톤으로 돌아와 사이트 전체를 감싸는 bookend 역할을 한다 */
+/* Contact는 어두운 톤으로 마무리해서, 밝은 Home에서 시작한 사이트가 다시 어두운 분위기로 닫히도록 한다 */
 .contact-section {
-  background: linear-gradient(to bottom, var(--experience-bg) 0, var(--home-bg) var(--blend), var(--home-bg) 100%);
-  color: var(--home-text);
+  background: linear-gradient(to bottom, var(--experience-bg) 0, var(--contact-bg) var(--blend), var(--contact-bg) 100%);
+  color: var(--contact-text);
 }
 
-.contact-section .section-title { color: var(--home-text); }
+.contact-section .section-title { color: var(--contact-text); }
 
 .contact-links {
   display: flex;
@@ -1028,10 +1069,10 @@ a { color: inherit; text-decoration: none; }
 
 .contact-links a {
   padding: 12px 24px;
-  border: 1px solid rgba(31, 35, 51, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 999px;
   font-weight: 600;
-  color: var(--home-text);
+  color: var(--contact-text);
   transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 

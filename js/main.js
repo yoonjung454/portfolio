@@ -4,6 +4,7 @@
 
 document.addEventListener('DOMContentLoaded', () => {
   initIntro();
+  initNavDocking();
   initRevealOnScroll();
   initNavActiveState();
   initScrollIndicator();
@@ -31,6 +32,25 @@ function initIntro() {
       homeContent.classList.add('is-in');
     }, 900);
   }
+}
+
+/* ---------------------------------------------------------
+   0-1) Navigation 바 — Home에서는 아래쪽(어두운 톤)에 떠 있다가,
+   스크롤해서 Home을 벗어나면 화면 맨 위로 이동하며 밝은 톤으로 바뀐다.
+--------------------------------------------------------- */
+function initNavDocking() {
+  const navbar = document.getElementById('navbar');
+  const home = document.getElementById('home');
+  if (!navbar || !home) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      // Home이 화면에 60% 이상 보이는 동안은 "Home 안" 상태, 그 밖은 "도킹" 상태
+      navbar.classList.toggle('is-docked', entry.intersectionRatio < 0.6);
+    });
+  }, { threshold: [0, 0.6, 1] });
+
+  observer.observe(home);
 }
 
 /* 3D 오브젝트는 Home 섹션 안에 그대로 배치되어 있어서(position: absolute),
