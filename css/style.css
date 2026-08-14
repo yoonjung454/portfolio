@@ -514,8 +514,10 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 12px 30px rgba(20, 30, 40, 0.05);
 }
 
+/* 설명 카드와 진행 로그 카드는 글자가 잘 읽히도록 다른 카드보다 덜 투명하게(더 불투명하게) */
 .cp-info-card {
   margin: 0;
+  background: rgba(255, 255, 255, 0.88);
 }
 
 /* 관련 자료 / 진행 로그를 각자 별도의 카드로 분리 — 서로 다른 정보라는 게 한눈에 구분되도록 */
@@ -525,6 +527,15 @@ a { color: inherit; text-decoration: none; }
 
 .cp-log-card {
   margin-top: 16px;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.cp-log-card .cp-log {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.cp-log-card .cp-log-display {
+  background: rgba(255, 255, 255, 0.85);
 }
 
 /* 왼쪽: 프로젝트 설명 카드 / 오른쪽: 대표 사진 (카드 없이) */
