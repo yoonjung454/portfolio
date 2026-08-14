@@ -293,7 +293,7 @@ function initCurrentProjectCarousel() {
     photos[index].classList.remove('is-active');
     index = (index + 1) % photos.length;
     photos[index].classList.add('is-active');
-  }, 3500);
+  }, 1800);
 }
 
 /* ---------------------------------------------------------
