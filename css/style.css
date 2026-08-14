@@ -320,6 +320,59 @@ a { color: inherit; text-decoration: none; }
   box-shadow: 0 12px 30px rgba(20, 30, 40, 0.06);
 }
 
+/* 왼쪽: 프로젝트 설명 / 오른쪽: 대표 사진 슬라이드쇼 */
+.cp-top {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 32px;
+  align-items: start;
+  margin-bottom: 28px;
+}
+
+.cp-media {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* 사진 여러 장이 같은 자리에 겹쳐 있다가, 서서히 사라지고 다음 사진이 떠오르며 바뀐다 */
+.cp-photo-carousel {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 14px;
+  overflow: hidden;
+  background: var(--bg-alt);
+  box-shadow: 0 8px 24px rgba(20, 30, 40, 0.08);
+}
+
+.cp-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+
+.cp-photo.is-active {
+  opacity: 1;
+}
+
+.cp-media-caption {
+  margin: 0;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .cp-top {
+    grid-template-columns: 1fr;
+  }
+}
+
 .badge-in-progress {
   display: inline-block;
   padding: 4px 12px;

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initScrollIndicator();
   initProjectArchive();
   initCurrentProjectLog();
+  initCurrentProjectCarousel();
 });
 
 /* ---------------------------------------------------------
@@ -208,4 +209,23 @@ function initCurrentProjectLog() {
   slider.value = String(latestIndex);
   render(latestIndex, false);
   log.classList.add('is-enhanced'); // JS가 정상 동작할 때만 슬라이더 UI로 전환
+}
+
+/* ---------------------------------------------------------
+   6) Current Project — 대표 사진 슬라이드쇼
+   여러 장의 사진이 같은 자리에 겹쳐 있다가, 한 장씩 서서히 사라지고
+   다음 사진이 떠오르며 자동으로 바뀐다 (CSS opacity 전환 + setInterval).
+--------------------------------------------------------- */
+function initCurrentProjectCarousel() {
+  const photos = Array.from(document.querySelectorAll('#cpPhotoCarousel .cp-photo'));
+  if (photos.length < 2) return;
+
+  let index = photos.findIndex((photo) => photo.classList.contains('is-active'));
+  if (index < 0) index = 0;
+
+  setInterval(() => {
+    photos[index].classList.remove('is-active');
+    index = (index + 1) % photos.length;
+    photos[index].classList.add('is-active');
+  }, 3500);
 }
