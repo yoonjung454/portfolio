@@ -381,25 +381,6 @@ a { color: inherit; text-decoration: none; }
 }
 .projects-section .section-title { color: var(--archive-text); }
 
-.archive-3d-header {
-  width: 100%;
-  max-width: 260px;
-  height: 200px;
-  margin: 0 0 36px;
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: var(--archive-card);
-  border: 1px solid var(--archive-card-edge);
-  box-shadow: 0 12px 30px rgba(20, 30, 40, 0.08);
-}
-
-.archive-3d-embed {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
-}
-
 .archive {
   display: flex;
   flex-direction: column;
