@@ -129,12 +129,14 @@ function initCurrentProjectLog() {
   const list = document.getElementById('cpLogList');
   const displayDate = document.getElementById('cpLogDisplayDate');
   const displayText = document.getElementById('cpLogDisplayText');
+  const badge = document.getElementById('cpLogBadge');
   if (!log || !slider || !list || !displayDate || !displayText) return;
 
   const entries = Array.from(list.querySelectorAll('li'));
   if (!entries.length) return;
 
-  slider.max = String(entries.length - 1);
+  const latestIndex = entries.length - 1;
+  slider.max = String(latestIndex);
 
   const fileItems = Array.from(document.querySelectorAll('#cpFileList > li'));
   const emptyMessage = document.getElementById('cpFilesEmpty');
@@ -144,6 +146,13 @@ function initCurrentProjectLog() {
     if (!entry) return;
     displayDate.textContent = entry.dataset.date || '';
     displayText.textContent = entry.querySelector('.cp-log-text')?.textContent || '';
+
+    // 지금 보고 있는 게 최신 기록인지 과거 기록인지 배지로 구분해준다
+    if (badge) {
+      const isLatest = index === latestIndex;
+      badge.textContent = isLatest ? '최신' : '과거 기록';
+      badge.classList.toggle('is-latest', isLatest);
+    }
 
     // 관련 자료: 이 날짜(index)에 해당하는 항목만 보여주고 나머지는 숨긴다
     let visibleCount = 0;
@@ -159,7 +168,6 @@ function initCurrentProjectLog() {
 
   // 로그 목록 자체는 오래된 순(왼→오)으로 두되, 처음 화면에는 가장 최근 항목이 먼저 보이도록
   // 슬라이더를 맨 오른쪽(가장 최근)에서 시작한다.
-  const latestIndex = entries.length - 1;
   slider.value = String(latestIndex);
   render(latestIndex);
   log.classList.add('is-enhanced'); // JS가 정상 동작할 때만 슬라이더 UI로 전환

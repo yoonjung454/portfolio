@@ -470,11 +470,30 @@ a { color: inherit; text-decoration: none; }
 }
 
 .cp-log-display .cp-log-date {
-  display: block;
+  display: inline-block;
+  margin: 0 8px 4px 0;
+}
+
+/* 지금 보고 있는 로그가 "최신"인지 "과거 기록"인지 한눈에 구분하는 배지 */
+.cp-log-badge {
+  display: inline-block;
   margin: 0 0 4px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  background: var(--border);
+  color: var(--text-muted);
+}
+
+.cp-log-badge.is-latest {
+  background: rgba(13, 148, 136, 0.14);
+  color: var(--archive-accent);
 }
 
 .cp-log-display .cp-log-text {
+  display: block;
   margin: 0;
   font-size: 0.9rem;
   color: var(--text-muted);
