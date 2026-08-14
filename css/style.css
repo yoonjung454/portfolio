@@ -201,7 +201,10 @@ a { color: inherit; text-decoration: none; }
   border-bottom-color: var(--accent);
 }
 
-/* Home 화면에서는 메뉴 하나하나가 각자 독립된 알약 모양으로 떠 있는다 (하나로 이어진 바가 아님) */
+/*
+  Home 화면에서는 메뉴 하나하나가 각자 독립된 알약 모양으로 떠 있는다 (하나로 이어진 바가 아님).
+  기본은 살짝 작게 있다가, 마우스를 올리면 커지면서 반응한다.
+*/
 .navbar:not(.is-docked) .nav-link {
   padding: 8px 16px;
   border-bottom: none;
@@ -209,14 +212,22 @@ a { color: inherit; text-decoration: none; }
   background: rgba(10, 14, 20, 0.55);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+  transform: scale(0.88);
+  transition: color 0.3s ease, background 0.3s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .navbar:not(.is-docked) .nav-link:hover {
   background: rgba(10, 14, 20, 0.75);
+  transform: scale(1.08);
 }
 
 .navbar:not(.is-docked) .nav-link.active {
   background: rgba(13, 148, 136, 0.35);
+}
+
+/* Home 화면에 있을 때는 "Home" 메뉴 자체는 굳이 보일 필요가 없어서 생략한다 */
+.navbar:not(.is-docked) .nav-link[data-nav="home"] {
+  display: none;
 }
 
 /*
@@ -444,10 +455,6 @@ a { color: inherit; text-decoration: none; }
   margin-top: 14px;
 }
 
-.current-project-section .cp-photo-carousel {
-  aspect-ratio: 16 / 8;
-}
-
 .current-project-section .cp-log-title,
 .current-project-section .cp-files-title {
   margin-bottom: 8px;
@@ -516,20 +523,23 @@ a { color: inherit; text-decoration: none; }
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 32px;
-  align-items: start;
+  align-items: stretch; /* 오른쪽 사진 칸이 왼쪽 설명 카드와 같은 높이로 늘어나도록 */
 }
 
 .cp-media {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  height: 100%;
 }
 
-/* 사진 여러 장이 같은 자리에 겹쳐 있다가, 서서히 사라지고 다음 사진이 떠오르며 바뀐다 */
+/* 사진 여러 장이 같은 자리에 겹쳐 있다가, 서서히 사라지고 다음 사진이 떠오르며 바뀐다.
+   높이는 고정 비율이 아니라 flex:1로 채워서, 왼쪽 설명 카드와 같은 높이를 갖게 한다. */
 .cp-photo-carousel {
   position: relative;
+  flex: 1;
   width: 100%;
-  aspect-ratio: 4 / 3;
+  min-height: 160px;
   border-radius: 14px;
   overflow: hidden;
   background: var(--bg-alt);
@@ -560,6 +570,15 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 768px) {
   .cp-layout {
     grid-template-columns: 1fr;
+  }
+  /* 1단으로 쌓이는 화면에서는 굳이 왼쪽 카드 높이에 맞출 필요가 없어서, 원래처럼 고정 비율로 되돌린다 */
+  .cp-media {
+    height: auto;
+  }
+  .cp-photo-carousel {
+    flex: none;
+    aspect-ratio: 4 / 3;
+    min-height: 0;
   }
 }
 

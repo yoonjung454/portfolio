@@ -91,43 +91,6 @@
         </div>
 
         <div class="cp-card cp-log-card reveal">
-          <div class="cp-log" id="cpLog">
-            <h4 class="cp-log-title">진행 로그</h4>
-
-            <!-- JS가 활성화되면 이 목록 대신 아래의 슬라이더로 날짜별 내용을 보여준다 -->
-            <ul class="cp-log-list" id="cpLogList">
-              <li data-date="08.04–05"><span class="cp-log-date">08.04–05</span><span class="cp-log-text">HTML 마크업 실습 (폼, 테이블, 회원가입 페이지)</span></li>
-              <li data-date="08.05–06"><span class="cp-log-date">08.05–06</span><span class="cp-log-text">CSS 스타일링 실습 (내부 스타일시트, 이력서 페이지 제작)</span></li>
-              <li data-date="08.06"><span class="cp-log-date">08.06</span><span class="cp-log-text">JavaScript 기초(연산자·조건문·반복문) 학습, 프로필 카드 페이지 제작</span></li>
-              <li data-date="08.07"><span class="cp-log-date">08.07</span><span class="cp-log-text">개인 기획서(STUDY.OS) 작성, AI 도구 트렌드 조사 보고서 작성</span></li>
-              <li data-date="08.10"><span class="cp-log-date">08.10</span><span class="cp-log-text">Python 기초 문법 학습 시작 (변수, 자료형, 연산자)</span></li>
-              <li data-date="08.11–12"><span class="cp-log-date">08.11–12</span><span class="cp-log-text">Python 조건문 · 반복문 실습</span></li>
-              <li data-date="08.13"><span class="cp-log-date">08.13</span><span class="cp-log-text">1주차 출석 확인서류 제출, 실습 자료 정리</span></li>
-              <li data-date="08.14"><span class="cp-log-date">08.14</span><span class="cp-log-text">개인 포트폴리오 사이트 만들기</span></li>
-            </ul>
-
-            <div class="cp-log-timeline">
-              <div class="cp-log-track">
-                <input type="range" class="cp-log-slider" id="cpLogSlider" min="0" max="7" step="1" value="7" aria-label="진행 로그 타임라인">
-                <div class="cp-log-ticks" id="cpLogTicks" aria-hidden="true">
-                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                </div>
-              </div>
-              <div class="cp-log-range-labels" aria-hidden="true">
-                <span>08.04</span>
-                <span>08.14</span>
-              </div>
-            </div>
-
-            <div class="cp-log-display" id="cpLogDisplay">
-              <div class="cp-log-display-head">
-                <span class="cp-log-date" id="cpLogDisplayDate"></span>
-                <span class="cp-log-badge" id="cpLogBadge"></span>
-              </div>
-              <p class="cp-log-text" id="cpLogDisplayText"></p>
-            </div>
-          </div>
-
           <div class="cp-files" id="cpFiles">
             <h4 class="cp-files-title">관련 자료</h4>
             <p class="cp-files-hint">위 진행 로그의 바를 움직이면, 그 날짜에 해당하는 자료만 보여줘요.</p>
@@ -234,6 +197,43 @@
               </li>
             </ul>
             <p class="cp-files-empty" id="cpFilesEmpty">이 날짜에는 공개할 별도 자료가 없어요 (출석 확인서류 등 비공개 문서만 있음).</p>
+          </div>
+
+          <div class="cp-log" id="cpLog">
+            <h4 class="cp-log-title">진행 로그</h4>
+
+            <!-- JS가 활성화되면 이 목록 대신 아래의 슬라이더로 날짜별 내용을 보여준다 -->
+            <ul class="cp-log-list" id="cpLogList">
+              <li data-date="08.04–05"><span class="cp-log-date">08.04–05</span><span class="cp-log-text">HTML 마크업 실습 (폼, 테이블, 회원가입 페이지)</span></li>
+              <li data-date="08.05–06"><span class="cp-log-date">08.05–06</span><span class="cp-log-text">CSS 스타일링 실습 (내부 스타일시트, 이력서 페이지 제작)</span></li>
+              <li data-date="08.06"><span class="cp-log-date">08.06</span><span class="cp-log-text">JavaScript 기초(연산자·조건문·반복문) 학습, 프로필 카드 페이지 제작</span></li>
+              <li data-date="08.07"><span class="cp-log-date">08.07</span><span class="cp-log-text">개인 기획서(STUDY.OS) 작성, AI 도구 트렌드 조사 보고서 작성</span></li>
+              <li data-date="08.10"><span class="cp-log-date">08.10</span><span class="cp-log-text">Python 기초 문법 학습 시작 (변수, 자료형, 연산자)</span></li>
+              <li data-date="08.11–12"><span class="cp-log-date">08.11–12</span><span class="cp-log-text">Python 조건문 · 반복문 실습</span></li>
+              <li data-date="08.13"><span class="cp-log-date">08.13</span><span class="cp-log-text">1주차 출석 확인서류 제출, 실습 자료 정리</span></li>
+              <li data-date="08.14"><span class="cp-log-date">08.14</span><span class="cp-log-text">개인 포트폴리오 사이트 만들기</span></li>
+            </ul>
+
+            <div class="cp-log-timeline">
+              <div class="cp-log-track">
+                <input type="range" class="cp-log-slider" id="cpLogSlider" min="0" max="7" step="1" value="7" aria-label="진행 로그 타임라인">
+                <div class="cp-log-ticks" id="cpLogTicks" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="cp-log-range-labels" aria-hidden="true">
+                <span>08.04</span>
+                <span>08.14</span>
+              </div>
+            </div>
+
+            <div class="cp-log-display" id="cpLogDisplay">
+              <div class="cp-log-display-head">
+                <span class="cp-log-date" id="cpLogDisplayDate"></span>
+                <span class="cp-log-badge" id="cpLogBadge"></span>
+              </div>
+              <p class="cp-log-text" id="cpLogDisplayText"></p>
+            </div>
           </div>
         </div>
       </div>
