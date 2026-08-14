@@ -3,39 +3,19 @@
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initHomeDocking();
   initRevealOnScroll();
   initNavActiveState();
   initScrollIndicator();
   initProjectArchive();
 });
 
-/* ---------------------------------------------------------
-   1) Home — 3D 오브젝트 도킹
-   Home에 있을 때는 화면 전체를 채우다가, 아래로 스크롤해서
-   Home을 벗어나면 우측 하단으로 작게 도킹되어 이후 모든 섹션에서
-   계속 옆에 떠 있는 상태를 유지한다 (전체 사이트에 일관된 3D 요소).
-
-   (마우스에 따른 회전/기울임은 Spline 씬 자체가 처리하므로
-    여기서는 별도의 tilt 로직을 두지 않는다.)
---------------------------------------------------------- */
-function initHomeDocking() {
-  const homeSection = document.getElementById('home');
-  const stage = document.getElementById('home3dStage');
-  if (!homeSection || !stage) return;
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      // Home이 화면에 절반 이상 보이면 풀스크린, 그렇지 않으면 도킹
-      stage.classList.toggle('docked', entry.intersectionRatio < 0.5);
-    });
-  }, { threshold: [0, 0.5, 1] });
-
-  observer.observe(homeSection);
-}
+/* 3D 오브젝트는 Home 섹션 안에 그대로 배치되어 있어서(position: absolute),
+   Home을 스크롤해서 벗어나면 Home과 함께 자연스럽게 화면 밖으로 사라진다.
+   별도의 JS 도킹/추적 로직은 두지 않는다.
+   (마우스에 따른 회전/기울임 역시 Spline 씬 자체가 처리한다.) */
 
 /* ---------------------------------------------------------
-   2) 섹션 등장 애니메이션 (IntersectionObserver)
+   1) 섹션 등장 애니메이션 (IntersectionObserver)
 --------------------------------------------------------- */
 function initRevealOnScroll() {
   const targets = document.querySelectorAll('.reveal');
@@ -54,7 +34,7 @@ function initRevealOnScroll() {
 }
 
 /* ---------------------------------------------------------
-   3) Navigation 활성화 (IntersectionObserver)
+   2) Navigation 활성화 (IntersectionObserver)
 --------------------------------------------------------- */
 function initNavActiveState() {
   const sections = document.querySelectorAll('main .section');
@@ -77,7 +57,7 @@ function initNavActiveState() {
 }
 
 /* ---------------------------------------------------------
-   4) Scroll indicator 클릭 시 About으로 이동
+   3) Scroll indicator 클릭 시 About으로 이동
 --------------------------------------------------------- */
 function initScrollIndicator() {
   const indicator = document.getElementById('scrollIndicator');
@@ -89,7 +69,7 @@ function initScrollIndicator() {
 }
 
 /* ---------------------------------------------------------
-   5) Project Archive — hover는 CSS로 처리, 클릭은 여기서 열고/닫기
+   4) Project Archive — hover는 CSS로 처리, 클릭은 여기서 열고/닫기
 --------------------------------------------------------- */
 function initProjectArchive() {
   const headers = document.querySelectorAll('.project-tab-header');

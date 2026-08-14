@@ -4,8 +4,9 @@
 
 :root {
   --nav-height: 64px;
+  --blend: 120px; /* 섹션 사이 배경색이 자연스럽게 섞이는 구간 높이 */
 
-  /* Home (dark / tech) */
+  /* Home & Contact — 다크 톤으로 사이트의 시작/끝을 감싸는 bookend */
   --home-bg: #0a0e14;
   --home-bg-alt: #0f1620;
   --home-text: #eef3f8;
@@ -13,15 +14,20 @@
   --accent: #5eead4;
   --accent-2: #7dd3fc;
 
-  /* Content sections (clean / light) */
-  --bg: #ffffff;
+  /* 가운데 콘텐츠 섹션들 — 따뜻한 종이 톤 계열로 하나의 흐름을 이룬다 */
+  --about-bg: #f7f1e6;
+  --current-bg: #f1e6d3;
+  --archive-bg: #e8d9bd;   /* Archive에서 가장 짙은 kraft 톤 (흐름의 정점) */
+  --skills-bg: #f1e6d3;
+  --experience-bg: #f7f1e6;
+
+  --bg: #ffffff;           /* 카드/버튼 등 컴포넌트 표면 */
   --bg-alt: #f6f7f9;
   --text: #1b1f24;
   --text-muted: #5b6572;
   --border: #e4e7eb;
 
-  /* Archive (paper / kraft) */
-  --archive-bg: #efe7d8;
+  /* Archive 전용 포인트 컬러 */
   --archive-card: #fbf6ea;
   --archive-card-edge: #ddceac;
   --archive-text: #33291f;
@@ -134,37 +140,11 @@ a { color: inherit; text-decoration: none; }
   overflow: hidden;
 }
 
-/*
-  3D 오브젝트는 항상 화면(viewport) 기준으로 고정한다(position: fixed).
-  - Home에 있을 때: 화면 전체를 채우는 배경
-  - Home을 벗어나 스크롤하면: 우측 하단으로 작게 "도킹"되어 계속 옆에서 보이도록 유지
-  → 사이트 전체를 스크롤하는 동안 같은 3D 오브젝트가 계속 함께 있다는 일관성을 준다.
-*/
+/* 3D 오브젝트는 Home 화면 전체를 채우고, Home 밖으로 스크롤하면 Home과 함께 그대로 사라진다 */
 .home-3d-stage {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  width: auto;
-  height: auto;
-  z-index: 40;
-  border-radius: 0;
-  overflow: hidden;
-  box-shadow: none;
-  transition:
-    top 0.6s ease, left 0.6s ease, right 0.6s ease, bottom 0.6s ease,
-    width 0.6s ease, height 0.6s ease,
-    border-radius 0.6s ease, box-shadow 0.6s ease;
-}
-
-.home-3d-stage.docked {
-  top: auto;
-  left: auto;
-  right: 24px;
-  bottom: 24px;
-  width: 200px;
-  height: 200px;
-  border-radius: 16px;
-  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  position: absolute;
+  inset: 0;
+  z-index: 1;
 }
 
 .spline-embed {
@@ -285,7 +265,9 @@ a { color: inherit; text-decoration: none; }
 /* -------------------------------------------
    About
 ------------------------------------------- */
-.about-section { background: var(--bg); }
+.about-section {
+  background: linear-gradient(to bottom, var(--home-bg) 0, var(--about-bg) var(--blend), var(--about-bg) 100%);
+}
 
 .about-list {
   list-style: none;
@@ -309,7 +291,9 @@ a { color: inherit; text-decoration: none; }
 /* -------------------------------------------
    Current Project
 ------------------------------------------- */
-.current-project-section { background: var(--bg-alt); }
+.current-project-section {
+  background: linear-gradient(to bottom, var(--about-bg) 0, var(--current-bg) var(--blend), var(--current-bg) 100%);
+}
 
 .current-project-card {
   position: relative;
@@ -363,7 +347,9 @@ a { color: inherit; text-decoration: none; }
 /* -------------------------------------------
    Projects Archive
 ------------------------------------------- */
-.projects-section { background: var(--archive-bg); }
+.projects-section {
+  background: linear-gradient(to bottom, var(--current-bg) 0, var(--archive-bg) var(--blend), var(--archive-bg) 100%);
+}
 .projects-section .section-title { color: var(--archive-text); }
 
 .archive {
@@ -483,7 +469,9 @@ a { color: inherit; text-decoration: none; }
 /* -------------------------------------------
    Skills
 ------------------------------------------- */
-.skills-section { background: var(--bg); }
+.skills-section {
+  background: linear-gradient(to bottom, var(--archive-bg) 0, var(--skills-bg) var(--blend), var(--skills-bg) 100%);
+}
 
 .skills-grid {
   display: grid;
@@ -495,7 +483,7 @@ a { color: inherit; text-decoration: none; }
   padding: 22px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: var(--bg-alt);
+  background: var(--bg);
 }
 
 .skill-category h3 {
@@ -518,7 +506,9 @@ a { color: inherit; text-decoration: none; }
 /* -------------------------------------------
    Experience
 ------------------------------------------- */
-.experience-section { background: var(--bg-alt); }
+.experience-section {
+  background: linear-gradient(to bottom, var(--skills-bg) 0, var(--experience-bg) var(--blend), var(--experience-bg) 100%);
+}
 
 .experience-grid {
   display: grid;
@@ -543,7 +533,13 @@ a { color: inherit; text-decoration: none; }
 /* -------------------------------------------
    Contact
 ------------------------------------------- */
-.contact-section { background: var(--bg); }
+/* Contact는 Home과 같은 다크 톤으로 돌아와 사이트 전체를 감싸는 bookend 역할을 한다 */
+.contact-section {
+  background: linear-gradient(to bottom, var(--experience-bg) 0, var(--home-bg) var(--blend), var(--home-bg) 100%);
+  color: var(--home-text);
+}
+
+.contact-section .section-title { color: var(--home-text); }
 
 .contact-links {
   display: flex;
@@ -553,15 +549,17 @@ a { color: inherit; text-decoration: none; }
 
 .contact-links a {
   padding: 12px 24px;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 999px;
   font-weight: 600;
-  transition: background 0.2s ease, color 0.2s ease;
+  color: var(--home-text);
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
 .contact-links a:hover {
-  background: var(--text);
-  color: #fff;
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #05201c;
 }
 
 /* -------------------------------------------
@@ -572,13 +570,6 @@ a { color: inherit; text-decoration: none; }
   .nav-link { font-size: 0.8rem; }
 
   .home-content { bottom: 10%; }
-
-  .home-3d-stage.docked {
-    right: 14px;
-    bottom: 14px;
-    width: 120px;
-    height: 120px;
-  }
 
   .project-tab-header {
     grid-template-columns: 34px 1fr;
