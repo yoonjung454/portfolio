@@ -82,18 +82,17 @@
 
           <div class="cp-media">
             <div class="cp-photo-carousel" id="cpPhotoCarousel">
-              <img class="cp-photo is-active" src="current-project/images/day14/portfolio-site-1.svg" alt="08.14 개인 포트폴리오 사이트 제작 화면 1">
-              <img class="cp-photo" src="current-project/images/day14/portfolio-site-2.svg" alt="08.14 개인 포트폴리오 사이트 제작 화면 2">
-              <img class="cp-photo" src="current-project/images/day14/portfolio-site-3.svg" alt="08.14 개인 포트폴리오 사이트 제작 화면 3">
+              <img class="cp-photo is-active" src="current-project/images/day14/portfolio-site-1.png" alt="08.14 포트폴리오 사이트 Home 화면 스크린샷">
+              <img class="cp-photo" src="current-project/images/day14/portfolio-site-2.png" alt="08.14 포트폴리오 사이트 Current Project 화면 스크린샷">
+              <img class="cp-photo" src="current-project/images/day14/portfolio-site-3.png" alt="08.14 포트폴리오 사이트 Project Archive 화면 스크린샷">
             </div>
-            <p class="cp-media-caption">08.14 — 개인 포트폴리오 사이트 만들기 (실제 스크린샷 업로드 예정)</p>
+            <p class="cp-media-caption">08.14 — 개인 포트폴리오 사이트 만들기 (실제 작업 화면 스크린샷)</p>
           </div>
         </div>
 
         <div class="cp-card cp-files-card reveal">
           <div class="cp-files" id="cpFiles">
             <h4 class="cp-files-title">관련 자료</h4>
-            <p class="cp-files-hint">위 진행 로그의 바를 움직이면, 그 날짜에 해당하는 자료만 보여줘요.</p>
             <ul class="cp-file-list" id="cpFileList">
               <li data-day="0">
                 <a class="cp-file-item" href="current-project/code/day1-signup/index.html" target="_blank" rel="noopener">
@@ -398,28 +397,28 @@
             <line class="radar-axis-line" x1="150" y1="150" x2="45.4" y2="116.0" />
 
             <!-- 실제 사용해본 정도를 나타내는 도형 — 스크롤해서 보이면 그려지는 애니메이션 -->
-            <polygon class="radar-shape" id="radarShape" points="150.0,70.8 221.1,126.9 201.7,221.2 109.9,205.2 71.5,124.5" />
+            <polygon class="radar-shape" id="radarShape" points="150.0,101.6 202.3,133.0 179.7,190.9 124.1,185.6 99.8,133.7" />
 
             <!-- 각 축 위의 점 + 라벨: 마우스를 올리면 그 분야의 실제 기술 목록을 보여준다 -->
             <g class="radar-point" tabindex="0" data-title="Programming" data-skills="Python · C · JavaScript">
-              <circle class="radar-point-dot" cx="150.0" cy="70.8" r="6" />
+              <circle class="radar-point-dot" cx="150.0" cy="101.6" r="6" />
               <text class="radar-label" x="150.0" y="20" text-anchor="middle">Programming</text>
             </g>
             <g class="radar-point" tabindex="0" data-title="Web" data-skills="HTML · CSS · JavaScript">
-              <circle class="radar-point-dot" cx="221.1" cy="126.9" r="6" />
+              <circle class="radar-point-dot" cx="202.3" cy="133.0" r="6" />
               <text class="radar-label" x="278" y="106" text-anchor="start">Web</text>
             </g>
             <g class="radar-point" tabindex="0" data-title="Hardware / Embedded" data-skills="Arduino · ESP32 · 센서 활용 · 회로 구성">
-              <circle class="radar-point-dot" cx="201.7" cy="221.2" r="6" />
+              <circle class="radar-point-dot" cx="179.7" cy="190.9" r="6" />
               <text class="radar-label" x="233" y="258" text-anchor="middle">Hardware /</text>
               <text class="radar-label" x="233" y="272" text-anchor="middle">Embedded</text>
             </g>
             <g class="radar-point" tabindex="0" data-title="AI / Computer Vision" data-skills="YOLO · TensorFlow.js · Teachable Machine">
-              <circle class="radar-point-dot" cx="109.9" cy="205.2" r="6" />
+              <circle class="radar-point-dot" cx="124.1" cy="185.6" r="6" />
               <text class="radar-label" x="67" y="258" text-anchor="middle">AI / Vision</text>
             </g>
             <g class="radar-point" tabindex="0" data-title="Tools" data-skills="Git · GitHub · VS Code · Jupyter Notebook">
-              <circle class="radar-point-dot" cx="71.5" cy="124.5" r="6" />
+              <circle class="radar-point-dot" cx="99.8" cy="133.7" r="6" />
               <text class="radar-label" x="16" y="106" text-anchor="end">Tools</text>
             </g>
           </svg>
@@ -436,12 +435,37 @@
     <section id="experience" class="section experience-section">
       <div class="section-inner">
         <h2 class="section-title reveal">Experience</h2>
-        <div class="experience-grid">
-          <div class="experience-category reveal" style="--i:0"><h3>교육</h3><p>추후 추가 예정</p></div>
-          <div class="experience-category reveal" style="--i:1"><h3>대외활동</h3><p>추후 추가 예정</p></div>
-          <div class="experience-category reveal" style="--i:2"><h3>공모전</h3><p>추후 추가 예정</p></div>
-          <div class="experience-category reveal" style="--i:3"><h3>수상</h3><p>추후 추가 예정</p></div>
-          <div class="experience-category reveal" style="--i:4"><h3>기타 활동</h3><p>추후 추가 예정</p></div>
+        <p class="exp-hint reveal">마우스 휠을 올리거나 내리면 원통이 회전하며 다음 항목으로 넘어가요.</p>
+
+        <div class="exp-layout reveal">
+          <!-- 세로 원통 다이얼 — 항목마다 중심에서 멀어질수록 작아지고, 뒤로 말려 들어가듯 보이게 JS가 실시간으로 transform을 계산한다 -->
+          <div class="exp-wheel" id="expWheel" tabindex="0" role="listbox" aria-label="경험 카테고리 선택">
+            <ul class="exp-wheel-list" id="expWheelList">
+              <li class="exp-wheel-item" data-index="0" data-emoji="🎓" data-date="2026.08" data-desc="AI · Web · Embedded 관련 교육 과정 참여" role="option" aria-selected="true">교육</li>
+              <li class="exp-wheel-item" data-index="1" data-emoji="🤝" data-date="추가 예정" data-desc="추후 추가 예정" role="option" aria-selected="false">대외활동</li>
+              <li class="exp-wheel-item" data-index="2" data-emoji="💡" data-date="추가 예정" data-desc="추후 추가 예정" role="option" aria-selected="false">공모전</li>
+              <li class="exp-wheel-item" data-index="3" data-emoji="🏅" data-date="추가 예정" data-desc="추후 추가 예정" role="option" aria-selected="false">수상</li>
+              <li class="exp-wheel-item" data-index="4" data-emoji="✨" data-date="추가 예정" data-desc="추후 추가 예정" role="option" aria-selected="false">기타 활동</li>
+            </ul>
+            <div class="exp-wheel-fade exp-wheel-fade--top" aria-hidden="true"></div>
+            <div class="exp-wheel-fade exp-wheel-fade--bottom" aria-hidden="true"></div>
+            <div class="exp-wheel-nav">
+              <button class="exp-wheel-btn" id="expPrevBtn" type="button" aria-label="이전 항목">▲</button>
+              <button class="exp-wheel-btn" id="expNextBtn" type="button" aria-label="다음 항목">▼</button>
+            </div>
+          </div>
+
+          <!-- 오른쪽 대표 비주얼 — 다이얼에서 선택된 항목이 바뀔 때마다 크로스페이드로 전환된다 -->
+          <div class="exp-visual">
+            <div class="exp-visual-image exp-visual-image--0" id="expVisualImage">
+              <span class="exp-visual-emoji" id="expVisualEmoji">🎓</span>
+            </div>
+            <div class="exp-visual-info" id="expVisualInfo">
+              <h3 class="exp-visual-title" id="expVisualTitle">교육</h3>
+              <p class="exp-visual-date" id="expVisualDate">2026.08</p>
+              <p class="exp-visual-desc" id="expVisualDesc">AI · Web · Embedded 관련 교육 과정 참여</p>
+            </div>
+          </div>
         </div>
       </div>
     </section>

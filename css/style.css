@@ -527,15 +527,6 @@ a { color: inherit; text-decoration: none; }
 
 .cp-log-card {
   margin-top: 16px;
-  background: rgba(255, 255, 255, 0.88);
-}
-
-.cp-log-card .cp-log {
-  background: rgba(255, 255, 255, 0.55);
-}
-
-.cp-log-card .cp-log-display {
-  background: rgba(255, 255, 255, 0.85);
 }
 
 /* 왼쪽: 프로젝트 설명 카드 / 오른쪽: 대표 사진 (카드 없이) */
@@ -869,13 +860,6 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.06em;
 }
 
-.cp-files-hint {
-  margin: 0 0 12px;
-  font-size: 0.82rem;
-  color: var(--text-muted);
-  opacity: 0.8;
-}
-
 .cp-files-empty {
   display: none;
   margin: 0;
@@ -921,45 +905,46 @@ a { color: inherit; text-decoration: none; }
 /*
   파일 목록 앞에 붙는 작은 폴더 아이콘 — Project Archive의 폴더 그래픽(뒤판+앞판)을
   줄여놓은 버전. 같은 시각 언어를 써서 "이것도 하나의 파일철"이라는 느낌을 통일한다.
+  파일 목록에서 눈에 잘 띄도록 텍스트보다 조금 더 크게 키워서 강조한다.
 */
 .cp-file-folder-icon {
   position: relative;
   display: inline-block;
-  width: 26px;
-  height: 20px;
+  width: 40px;
+  height: 30px;
   flex-shrink: 0;
 }
 
 .cp-file-folder-back {
   position: absolute;
-  left: 1px;
-  top: 4px;
-  width: 24px;
-  height: 14px;
+  left: 2px;
+  top: 6px;
+  width: 36px;
+  height: 20px;
   background: #fbbf24;
-  border-radius: 3px;
+  border-radius: 4px;
 }
 
 .cp-file-folder-back::before {
   content: "";
   position: absolute;
-  top: -3px;
+  top: -5px;
   left: 0;
-  width: 10px;
-  height: 5px;
+  width: 15px;
+  height: 7px;
   background: #fbbf24;
-  border-radius: 3px 3px 0 0;
+  border-radius: 4px 4px 0 0;
 }
 
 .cp-file-folder-front {
   position: absolute;
   left: 0;
   bottom: 0;
-  width: 26px;
-  height: 11px;
+  width: 40px;
+  height: 17px;
   background: linear-gradient(#ffd76a, #ffcd54);
-  border: 1.5px solid #f5b82e;
-  border-radius: 3px 3px 4px 4px;
+  border: 2px solid #f5b82e;
+  border-radius: 4px 4px 5px 5px;
   box-sizing: border-box;
 }
 
@@ -1350,24 +1335,188 @@ a { color: inherit; text-decoration: none; }
   background: linear-gradient(to bottom, var(--skills-bg) 0, var(--experience-bg) var(--blend), var(--experience-bg) 100%);
 }
 
-.experience-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 18px;
+.exp-hint {
+  margin: -6px 0 32px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  opacity: 0.8;
 }
 
-.experience-category {
-  padding: 20px;
-  border: 1px dashed var(--border);
-  border-radius: var(--radius);
+/* [ 세로 원통 다이얼 ] [ 큰 대표 이미지 + 상세 정보 ] — 왼쪽 35~40% / 오른쪽 60~65% */
+.exp-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 38%) 1fr;
+  align-items: center;
+  gap: 56px;
+  min-height: 460px;
+}
+
+/*
+  세로 원통 다이얼. perspective를 줘서 자식 항목들의 rotateX/translateZ가
+  실제로 안쪽으로 말려 들어가는 원통 표면처럼 보이게 한다.
+*/
+.exp-wheel {
+  position: relative;
+  height: 380px;
+  perspective: 900px;
+  outline: none;
+}
+
+.exp-wheel-list {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  transform-style: preserve-3d;
+}
+
+.exp-wheel-item {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  margin: 0;
+  padding: 4px 0;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  transform-origin: left center;
+  will-change: transform, opacity, filter;
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.65s ease,
+    filter 0.5s ease, color 0.3s ease;
+}
+
+.exp-wheel-item.is-active {
+  color: var(--archive-accent);
+  font-weight: 800;
+}
+
+/* 위/아래 가장자리를 섹션 배경색으로 살짝 페이드시켜서 리스트가 잘려 보이는 느낌을 줄인다 */
+.exp-wheel-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 90px;
+  pointer-events: none;
+}
+
+.exp-wheel-fade--top {
+  top: 0;
+  background: linear-gradient(to bottom, var(--experience-bg), transparent);
+}
+
+.exp-wheel-fade--bottom {
+  bottom: 0;
+  background: linear-gradient(to top, var(--experience-bg), transparent);
+}
+
+.exp-wheel-nav {
+  position: absolute;
+  right: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 10;
+}
+
+.exp-wheel-btn {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text-muted);
+  font-size: 0.8rem;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
-.experience-category h3 {
-  margin: 0 0 8px;
+.exp-wheel-btn:hover {
+  border-color: var(--archive-accent);
+  color: var(--archive-accent);
+  transform: scale(1.08);
+}
+
+/* 오른쪽 대표 비주얼 */
+.exp-visual {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 26px;
+}
+
+.exp-visual-image {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 20px 45px rgba(20, 30, 40, 0.12);
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.4s ease;
+}
+
+.exp-visual-image.is-changing {
+  opacity: 0;
+  transform: scale(0.88) translateY(10px);
+}
+
+.exp-visual-image--0 { background: linear-gradient(135deg, #e0e7ff, #c7d2fe); }
+.exp-visual-image--1 { background: linear-gradient(135deg, #dcfce7, #bbf7d0); }
+.exp-visual-image--2 { background: linear-gradient(135deg, #fef3c7, #fde68a); }
+.exp-visual-image--3 { background: linear-gradient(135deg, #fee2e2, #fecaca); }
+.exp-visual-image--4 { background: linear-gradient(135deg, #ede9fe, #ddd6fe); }
+
+.exp-visual-emoji {
+  font-size: 4.5rem;
+  filter: drop-shadow(0 12px 18px rgba(20, 30, 40, 0.16));
+}
+
+.exp-visual-info {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.4s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.exp-visual-info.is-changing {
+  opacity: 0;
+  transform: translateY(16px);
+}
+
+.exp-visual-title {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
   color: var(--text);
-  font-size: 1rem;
+}
+
+.exp-visual-date {
+  margin: 0 0 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--archive-accent);
+}
+
+.exp-visual-desc {
+  margin: 0;
+  max-width: 460px;
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-muted);
 }
 
 /* -------------------------------------------
@@ -1419,5 +1568,23 @@ a { color: inherit; text-decoration: none; }
 
   .detail-grid {
     grid-template-columns: 1fr;
+  }
+
+  .exp-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    min-height: 0;
+  }
+
+  .exp-wheel {
+    height: 260px;
+  }
+
+  .exp-wheel-item {
+    font-size: 1.4rem;
+  }
+
+  .exp-visual-emoji {
+    font-size: 3.6rem;
   }
 }

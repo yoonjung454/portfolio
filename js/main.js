@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCurrentProjectLog();
   initCurrentProjectCarousel();
   initSkillsRadar();
+  initExperienceWheel();
 });
 
 /* ---------------------------------------------------------
@@ -303,13 +304,10 @@ function initSkillsRadar() {
   const wrap = document.getElementById('skillsRadarWrap');
   if (!wrap) return;
 
-  // 스크롤해서 들어오면 딱 한 번만 그려지는 애니메이션 재생
+  // 스크롤해서 화면에 들어오면 그려지고, 화면 밖으로 나가면(위로든 아래로든) 다시 지워진다
   const drawObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        wrap.classList.add('is-visible');
-        drawObserver.unobserve(entry.target);
-      }
+      wrap.classList.toggle('is-visible', entry.isIntersecting);
     });
   }, { threshold: 0.35 });
   drawObserver.observe(wrap);
@@ -343,5 +341,122 @@ function initSkillsRadar() {
     point.addEventListener('mouseleave', hideTooltip);
     point.addEventListener('focus', () => showTooltip(point));
     point.addEventListener('blur', hideTooltip);
+  });
+}
+
+/* ---------------------------------------------------------
+   10) Experience — 세로 원통 다이얼(Wheel Selector)
+   가운데 항목이 가장 크고 선명하고, 위/아래로 멀어질수록 작아지며
+   뒤로 말려 들어가듯 보인다. 마우스 휠/버튼/키보드로 한 칸씩 회전시킨다.
+--------------------------------------------------------- */
+function initExperienceWheel() {
+  const wheel = document.getElementById('expWheel');
+  const list = document.getElementById('expWheelList');
+  const visualImage = document.getElementById('expVisualImage');
+  const visualEmoji = document.getElementById('expVisualEmoji');
+  const visualInfo = document.getElementById('expVisualInfo');
+  const visualTitle = document.getElementById('expVisualTitle');
+  const visualDate = document.getElementById('expVisualDate');
+  const visualDesc = document.getElementById('expVisualDesc');
+  const prevBtn = document.getElementById('expPrevBtn');
+  const nextBtn = document.getElementById('expNextBtn');
+  if (!wheel || !list || !visualImage) return;
+
+  const items = Array.from(list.querySelectorAll('.exp-wheel-item'));
+  const total = items.length;
+  if (!total) return;
+
+  let activeIndex = 0;
+  let isLocked = false;
+
+  const SPACING = 62;  // 항목 사이의 세로 간격(px)
+  const LOCK_MS = 650; // 한 칸 회전하는 애니메이션이 끝날 때까지 다음 입력을 막는 시간
+
+  // 각 항목을 중심(활성 항목)에서의 거리에 따라 이동/축소/회전/블러시켜서
+  // 원통 표면에 감겨 있는 듯한 모습을 만든다.
+  function layout() {
+    items.forEach((item, i) => {
+      const diff = i - activeIndex;
+      const absDiff = Math.abs(diff);
+      const translateY = diff * SPACING;
+      const translateX = -Math.pow(absDiff, 1.3) * 5;
+      const translateZ = -absDiff * 26;
+      const rotateX = Math.max(Math.min(diff * -16, 48), -48);
+      const scale = Math.max(1 - absDiff * 0.22, 0.46);
+      const opacity = Math.max(1 - absDiff * 0.32, 0.12);
+      const blur = Math.min(absDiff * 0.5, 1.6);
+
+      item.style.transform =
+        `translateY(calc(-50% + ${translateY}px)) translateX(${translateX}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) scale(${scale})`;
+      item.style.opacity = String(opacity);
+      item.style.filter = blur ? `blur(${blur}px)` : 'none';
+      item.style.zIndex = String(100 - absDiff);
+      item.classList.toggle('is-active', diff === 0);
+      item.setAttribute('aria-selected', diff === 0 ? 'true' : 'false');
+    });
+  }
+
+  // 오른쪽 비주얼을 살짝 줄어들며 사라졌다가, 내용이 바뀐 뒤 다시 커지며 나타나는
+  // 크로스페이드로 전환한다.
+  function updateVisual(item) {
+    visualImage.classList.add('is-changing');
+    visualInfo.classList.add('is-changing');
+
+    setTimeout(() => {
+      visualImage.className = `exp-visual-image exp-visual-image--${item.dataset.index} is-changing`;
+      visualEmoji.textContent = item.dataset.emoji || '';
+      visualTitle.textContent = item.textContent.trim();
+      visualDate.textContent = item.dataset.date || '';
+      visualDesc.textContent = item.dataset.desc || '';
+
+      // 강제 리플로우 — is-changing을 곧바로 떼어내도 transition이 다시 걸리도록 함
+      void visualImage.offsetWidth;
+      visualImage.classList.remove('is-changing');
+      visualInfo.classList.remove('is-changing');
+    }, 200);
+  }
+
+  function goTo(index) {
+    const next = Math.max(0, Math.min(total - 1, index));
+    if (next === activeIndex) return;
+    activeIndex = next;
+    layout();
+    updateVisual(items[activeIndex]);
+  }
+
+  items.forEach((item, i) => {
+    item.addEventListener('click', () => goTo(i));
+  });
+
+  if (prevBtn) prevBtn.addEventListener('click', () => goTo(activeIndex - 1));
+  if (nextBtn) nextBtn.addEventListener('click', () => goTo(activeIndex + 1));
+
+  // 다이얼 위에서만 휠을 가로채서 회전시키고, 그 바깥에서는 페이지가 평소대로 스크롤된다
+  wheel.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    if (isLocked) return;
+    const dir = e.deltaY > 0 ? 1 : -1;
+    const next = activeIndex + dir;
+    if (next < 0 || next > total - 1) return;
+    isLocked = true;
+    goTo(next);
+    setTimeout(() => { isLocked = false; }, LOCK_MS);
+  }, { passive: false });
+
+  wheel.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); goTo(activeIndex + 1); }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); goTo(activeIndex - 1); }
+  });
+
+  layout();
+
+  // 처음 화면에 나타날 때도 대표 비주얼이 한 번 살짝 커지며 등장하는 효과를 재생
+  visualImage.classList.add('is-changing');
+  visualInfo.classList.add('is-changing');
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      visualImage.classList.remove('is-changing');
+      visualInfo.classList.remove('is-changing');
+    }, 60);
   });
 }
