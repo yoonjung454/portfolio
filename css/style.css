@@ -387,6 +387,97 @@ a { color: inherit; text-decoration: none; }
   color: var(--archive-accent);
 }
 
+/*
+  JS가 켜지면 위의 원본 목록(.cp-log-list) 대신 슬라이더 + 표시창으로 바꿔서 보여준다.
+  JS가 실행되지 않는 경우를 대비해, 슬라이더/표시창은 기본적으로 숨겨두고
+  .is-enhanced가 붙었을 때만 나타나도록 한다 (progressive enhancement).
+*/
+.cp-log-timeline,
+.cp-log-display {
+  display: none;
+}
+
+.cp-log.is-enhanced .cp-log-list {
+  display: none;
+}
+
+.cp-log.is-enhanced .cp-log-timeline,
+.cp-log.is-enhanced .cp-log-display {
+  display: block;
+}
+
+.cp-log-timeline {
+  margin: 4px 0 18px;
+}
+
+/* 좌우로 움직이는 바 — 네이티브 range 슬라이더를 사이트 액센트 컬러로 스타일링 */
+.cp-log-slider {
+  width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: var(--border);
+  outline: none;
+  cursor: pointer;
+}
+
+.cp-log-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--archive-accent);
+  border: 3px solid var(--bg);
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.4);
+  cursor: pointer;
+}
+
+.cp-log-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--archive-accent);
+  border: 3px solid var(--bg);
+  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.4);
+  cursor: pointer;
+}
+
+/* 슬라이더 아래, 실제 로그 항목 수만큼 찍히는 눈금 점 */
+.cp-log-ticks {
+  display: flex;
+  justify-content: space-between;
+  padding: 0 1px;
+  margin-top: 6px;
+}
+
+.cp-log-ticks span {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--border);
+}
+
+/* 슬라이더 위치에 맞는 날짜/내용이 나타나는 표시창 */
+.cp-log-display {
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-alt);
+}
+
+.cp-log-display .cp-log-date {
+  display: block;
+  margin: 0 0 4px;
+}
+
+.cp-log-display .cp-log-text {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
 /* GitHub 링크 대신, 업로드해둔 자료 폴더를 보여주는 목록 (진행하면서 폴더가 추가될 예정) */
 .cp-files-title {
   margin: 0 0 10px;

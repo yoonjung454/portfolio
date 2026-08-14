@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNavActiveState();
   initScrollIndicator();
   initProjectArchive();
+  initCurrentProjectLog();
 });
 
 /* ---------------------------------------------------------
@@ -113,4 +114,36 @@ function initProjectArchive() {
       header.setAttribute('aria-expanded', String(!isOpen));
     });
   });
+}
+
+/* ---------------------------------------------------------
+   5) Current Project — 진행 로그 슬라이더
+   원본 <ul class="cp-log-list"> 항목을 그대로 데이터로 사용해서,
+   슬라이더(바)를 좌우로 움직이면 그 위치에 해당하는 날짜의
+   로그 내용이 표시창에 나타나도록 한다.
+--------------------------------------------------------- */
+function initCurrentProjectLog() {
+  const log = document.getElementById('cpLog');
+  const slider = document.getElementById('cpLogSlider');
+  const list = document.getElementById('cpLogList');
+  const displayDate = document.getElementById('cpLogDisplayDate');
+  const displayText = document.getElementById('cpLogDisplayText');
+  if (!log || !slider || !list || !displayDate || !displayText) return;
+
+  const entries = Array.from(list.querySelectorAll('li'));
+  if (!entries.length) return;
+
+  slider.max = String(entries.length - 1);
+
+  const render = (index) => {
+    const entry = entries[index];
+    if (!entry) return;
+    displayDate.textContent = entry.dataset.date || '';
+    displayText.textContent = entry.querySelector('.cp-log-text')?.textContent || '';
+  };
+
+  slider.addEventListener('input', () => render(Number(slider.value)));
+
+  render(0);
+  log.classList.add('is-enhanced'); // JS가 정상 동작할 때만 슬라이더 UI로 전환
 }
