@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입 페이지</title>
+</head>
+<body>
+    <h2> 회원가입 </h2>
+    <a href="index.html"> 뒤로 </a>
+    <form>
+        <table>
+            <tr>
+                <td>아이디</td>
+                <td colspan="3"><input type="text" required></td>
+            </tr>
+            <tr>
+                <td>비밀번호</td>
+                <td colspan="3"><input type="password" required></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="3">
+                    <input type="password" placeholder="비밀번호 재확인" required>
+                </td>
+            </tr>
+            <tr>
+                <td>이름</td>
+                <td colspan="3"><input type="text" value="신재환" maxlength="4"> </td>
+                <tr>
+                    <td>우편번호</td>
+                    <td colspan="2"><input type="text" maxlength="5"></td>
+                    <td><button>검색</button></td>
+                </tr>
+                <tr>
+                    <td>휴대전화</td>
+                    <td>
+                        <select>
+                            <option>011</option>
+                            <option>016</option>
+                            <option>018</option>
+                            <option selected>010</option>
+                        </select>
+                    </td>
+                    <td><input type="text" size="4" required></td>
+                    <td><input type="text" size="4" required></td>
+                </tr>
+                <tr> 
+                    <td>이메일</td>
+                    <td colspan="3"><input type="email" required></td>
+                </tr>
+                <tr>
+                    <td>생년월일</td>
+                    <td colspan="3"><input type="radio" name="birth">양
+                                    <input type="radio" name="birth">음</td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><select><option>1998</option>
+                            <option>1999</option>
+                            <option selected>2000</option>
+                            <option>2001</option>
+                            <option>2002</option>
+                    </select>년</td>
+                    <td><input type="number" min="1" max="12" step="1" value="9">월</td>
+                    <td><input type="number" min="1" max="31" step="1" value="1">일</td>
+                </tr>
+                <tr>
+                    <td colspan="4"><input type="checkbox">이메일을 수신합니다.</td>
+                </tr>
+                <tr>
+                    <td colspan="2"><button type="reset">
+                        <img src="cancel.jpg" width="120px"></button></td>
+                    <td colspan="2"><button type="submit">
+                        <img src="okay.jpg" width="120px"></button></td>
+                </tr>
+            </tr>
+        </table>
+    </form>
+</body>

@@ -109,10 +109,21 @@
             </div>
           </div>
 
-          <div class="cp-files">
+          <div class="cp-files" id="cpFiles">
             <h4 class="cp-files-title">관련 자료</h4>
-            <ul class="cp-file-list">
-              <li>
+            <p class="cp-files-hint">위 진행 로그의 바를 움직이면, 그 날짜에 해당하는 자료만 보여줘요.</p>
+            <ul class="cp-file-list" id="cpFileList">
+              <li data-day="0">
+                <a class="cp-file-item" href="current-project/code/day1-signup/index.html" target="_blank" rel="noopener">
+                  <span class="cp-file-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
+                    </svg>
+                  </span>
+                  <span class="cp-file-name">회원가입 폼 실습 (HTML 테이블·폼)</span>
+                </a>
+              </li>
+              <li data-day="1">
                 <a class="cp-file-item" href="current-project/code/day3-resume/index.html" target="_blank" rel="noopener">
                   <span class="cp-file-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -122,57 +133,7 @@
                   <span class="cp-file-name">이력서 작성 실습 (HTML 테이블·폼)</span>
                 </a>
               </li>
-              <li>
-                <a class="cp-file-item" href="current-project/code/day4-profilecard/index.html" target="_blank" rel="noopener">
-                  <span class="cp-file-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
-                    </svg>
-                  </span>
-                  <span class="cp-file-name">프로필 카드 페이지 실습 (HTML/CSS)</span>
-                </a>
-              </li>
-              <li>
-                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0810_python-basics.ipynb" target="_blank" rel="noopener">
-                  <span class="cp-file-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
-                    </svg>
-                  </span>
-                  <span class="cp-file-name">Python 기초 문법 노트북 (변수 · 자료형 · 연산자)</span>
-                </a>
-              </li>
-              <li>
-                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0811_control-flow.ipynb" target="_blank" rel="noopener">
-                  <span class="cp-file-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
-                    </svg>
-                  </span>
-                  <span class="cp-file-name">Python 조건문 · 반복문 노트북</span>
-                </a>
-              </li>
-              <li>
-                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/STUDY.OS_프로젝트계획서.md" target="_blank" rel="noopener">
-                  <span class="cp-file-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
-                    </svg>
-                  </span>
-                  <span class="cp-file-name">개인 기획서 — STUDY.OS 프로젝트 계획서</span>
-                </a>
-              </li>
-              <li>
-                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/AI도구_트렌드_보고서.md" target="_blank" rel="noopener">
-                  <span class="cp-file-icon" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
-                    </svg>
-                  </span>
-                  <span class="cp-file-name">AI 도구 트렌드 조사 보고서</span>
-                </a>
-              </li>
-              <li>
+              <li data-day="1">
                 <a class="cp-file-item" href="current-project/images/day3-resume-result.png" target="_blank" rel="noopener">
                   <span class="cp-file-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -182,7 +143,17 @@
                   <span class="cp-file-name">실습 결과 캡처 — 이력서 페이지</span>
                 </a>
               </li>
-              <li>
+              <li data-day="2">
+                <a class="cp-file-item" href="current-project/code/day4-profilecard/index.html" target="_blank" rel="noopener">
+                  <span class="cp-file-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
+                    </svg>
+                  </span>
+                  <span class="cp-file-name">프로필 카드 페이지 실습 (HTML/CSS)</span>
+                </a>
+              </li>
+              <li data-day="2">
                 <a class="cp-file-item" href="current-project/images/day4-profilecard-result.png" target="_blank" rel="noopener">
                   <span class="cp-file-icon" aria-hidden="true">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -192,7 +163,48 @@
                   <span class="cp-file-name">실습 결과 캡처 — 프로필 카드 페이지</span>
                 </a>
               </li>
+              <li data-day="3">
+                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/STUDY.OS_프로젝트계획서.md" target="_blank" rel="noopener">
+                  <span class="cp-file-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
+                    </svg>
+                  </span>
+                  <span class="cp-file-name">개인 기획서 — STUDY.OS 프로젝트 계획서</span>
+                </a>
+              </li>
+              <li data-day="3">
+                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/AI도구_트렌드_보고서.md" target="_blank" rel="noopener">
+                  <span class="cp-file-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
+                    </svg>
+                  </span>
+                  <span class="cp-file-name">AI 도구 트렌드 조사 보고서</span>
+                </a>
+              </li>
+              <li data-day="4">
+                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0810_python-basics.ipynb" target="_blank" rel="noopener">
+                  <span class="cp-file-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
+                    </svg>
+                  </span>
+                  <span class="cp-file-name">Python 기초 문법 노트북 (변수 · 자료형 · 연산자)</span>
+                </a>
+              </li>
+              <li data-day="5">
+                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0811_control-flow.ipynb" target="_blank" rel="noopener">
+                  <span class="cp-file-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                      <path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z"/>
+                    </svg>
+                  </span>
+                  <span class="cp-file-name">Python 조건문 · 반복문 노트북</span>
+                </a>
+              </li>
             </ul>
+            <p class="cp-files-empty" id="cpFilesEmpty">이 날짜에는 공개할 별도 자료가 없어요 (출석 확인서류 등 비공개 문서만 있음).</p>
           </div>
         </div>
       </div>

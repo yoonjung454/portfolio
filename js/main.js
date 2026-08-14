@@ -117,10 +117,11 @@ function initProjectArchive() {
 }
 
 /* ---------------------------------------------------------
-   5) Current Project — 진행 로그 슬라이더
+   5) Current Project — 진행 로그 슬라이더 + 연동된 관련 자료
    원본 <ul class="cp-log-list"> 항목을 그대로 데이터로 사용해서,
    슬라이더(바)를 좌우로 움직이면 그 위치에 해당하는 날짜의
-   로그 내용이 표시창에 나타나도록 한다.
+   로그 내용이 표시창에 나타난다. 동시에 "관련 자료" 목록도
+   각 항목의 data-day 값을 기준으로 그 날짜에 해당하는 것만 남기고 숨긴다.
 --------------------------------------------------------- */
 function initCurrentProjectLog() {
   const log = document.getElementById('cpLog');
@@ -135,11 +136,23 @@ function initCurrentProjectLog() {
 
   slider.max = String(entries.length - 1);
 
+  const fileItems = Array.from(document.querySelectorAll('#cpFileList > li'));
+  const emptyMessage = document.getElementById('cpFilesEmpty');
+
   const render = (index) => {
     const entry = entries[index];
     if (!entry) return;
     displayDate.textContent = entry.dataset.date || '';
     displayText.textContent = entry.querySelector('.cp-log-text')?.textContent || '';
+
+    // 관련 자료: 이 날짜(index)에 해당하는 항목만 보여주고 나머지는 숨긴다
+    let visibleCount = 0;
+    fileItems.forEach((item) => {
+      const isMatch = item.dataset.day === String(index);
+      item.hidden = !isMatch;
+      if (isMatch) visibleCount += 1;
+    });
+    emptyMessage?.classList.toggle('is-visible', visibleCount === 0);
   };
 
   slider.addEventListener('input', () => render(Number(slider.value)));
