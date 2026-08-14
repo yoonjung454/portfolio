@@ -70,22 +70,17 @@ Current Project는 Projects Archive 바로 위에 배치해서, "지금 진행 �
 
 이 요소들을 통해 "회로 → 하드웨어 → 코드 → AI로 이어지는 프로젝트를 만드는 사람"이라는 이미지를 자연스럽게 전달하고 싶다.
 
-### 2-2. 마우스 인터랙션 (기본 구현)
+중앙 오브젝트의 구체적인 형태와 디테일은 아래 2-2에서 설명할 Spline에서 직접 만들어보면서 정할 예정이라, 지금은 전체적인 콘셉트만 잡아둔 상태다.
 
-가장 기본이 되는 구현은 **Three.js 같은 3D 라이브러리 없이, HTML + CSS + Vanilla JavaScript만으로 만드는 3D Tilt / Parallax 효과**다.
+### 2-2. 3D 오브젝트 구현 방식 — Spline
 
-- 마우스를 오른쪽으로 움직이면 → 중앙 오브젝트가 오른쪽으로 살짝 회전
-- 마우스를 위쪽으로 움직이면 → 오브젝트가 위쪽으로 살짝 기울어짐
-- 주변의 작은 요소들(Sensor, MCU, Code 등)은 중앙 오브젝트보다 더 빠르게 또는 느리게 움직여서 서로 다른 레이어에 있는 것 같은 깊이감을 만든다
+중앙의 3D 오브젝트는 **Spline**(브라우저에서 3D 씬을 제작할 수 있는 디자인 툴)으로 만들어서 가져올 예정이다. Three.js 코드를 직접 짜는 대신, Spline에서 마우스로 오브젝트를 배치하고 애니메이션/인터랙션을 설정한 뒤, 완성된 씬을 웹페이지에 넣을 수 있는 임베드 코드(`<spline-viewer>` 웹 컴포넌트 + `<script>` 태그, 또는 iframe 형태)로 내보내는 방식이다.
 
-사용할 CSS / JS 요소는 다음과 같다.
-
-- `perspective` — 3D 공간감을 만드는 기준값
-- `transform`, `rotateX()`, `rotateY()`, `translateZ()` — 실제 회전과 깊이 표현
-- `transition` — 마우스가 멈췄을 때 부드럽게 원래 각도로 돌아오는 효과
-- JavaScript `mousemove` 이벤트 — 마우스 좌표를 받아서 회전 각도를 계산
-
-즉, 실제 3D 모델링을 하는 것이 아니라 **평면 요소들을 3D 공간처럼 배치하고 마우스 좌표에 따라 각도만 바꿔주는 방식**이다. Three.js와 실제 3D 모델은 16번째 섹션(향후 확장 기능)에서 별도로 다룬다.
+- Spline 자체 기능으로 "마우스를 따라 오브젝트가 회전/기울어지는" 인터랙션을 씬 안에서 설정할 수 있어서, 중앙 오브젝트의 3D 회전은 별도의 JavaScript 계산 없이 Spline 쪽에서 처리될 가능성이 높다.
+- 임베드 코드를 붙여넣는 것은 영상이나 지도를 삽입하는 것과 비슷한 수준이라, React/Vue 같은 프레임워크나 복잡한 빌드 도구 없이도 순수 HTML/CSS/JS 사이트에 넣을 수 있다.
+- 다만 어떤 오브젝트를 어떻게 구성하고, 어떤 인터랙션을 넣을지 등 **구체적인 내용은 Spline에서 직접 만들어보면서 추후 결정**한다. 이 문서에는 방향성만 먼저 정리해둔다.
+- 주변의 작은 요소들(Sensor, MCU, Code, AI 등 라벨)은 Spline 씬과 별개로, 기존에 계획했던 CSS `perspective` / `transform` / `mousemove` 기반의 Parallax 효과로 얹어서 서로 다른 레이어처럼 움직이게 할 수 있다.
+- 만약 Spline 임베드가 성능이나 디자인 면에서 잘 맞지 않으면, 예전에 정리했던 **CSS 3D Transform 기반의 Tilt 효과**(`perspective`, `rotateX()`, `rotateY()`, `translateZ()`, `mousemove` 이벤트만으로 구현하는 방식)로 대체할 수 있도록 백업 플랜으로 남겨둔다.
 
 ### 2-3. 스크롤과 연결되는 전환 효과
 
@@ -111,6 +106,8 @@ About Section
 2. **발전안**: 스크롤 이벤트(또는 Intersection Observer)로 스크롤 진행률(0~1)을 계산해서, 각 요소의 `transform`과 `opacity`를 진행률에 비례하게 실시간으로 바꿔준다. 이렇게 하면 스크롤 속도에 맞춰 부품이 "흩어지는" 것 같은 인상을 줄 수 있다.
 
 두 방식 모두 순수 CSS/JS로 구현 가능한 범위이며, 실제 구현할 때는 우선 1번 기본안으로 완성한 뒤 여유가 되면 2번으로 다듬는 순서로 진행할 계획이다.
+
+Spline 씬을 사용하더라도 이 전환 효과는 그대로 적용 가능하다. `<spline-viewer>` 요소를 감싸는 wrapper `<div>`에 `transform`, `opacity` 스타일을 주면, 씬 내부를 직접 건드리지 않고도 축소/Fade Out/이동 효과를 줄 수 있기 때문이다.
 
 ### 2-4. Home에 들어갈 텍스트 요소
 
@@ -363,6 +360,7 @@ Experience는 아직 상세 내용을 정하지 않아서, 나중에 채워 넣�
 - HTML
 - CSS
 - JavaScript (Vanilla JS)
+- Spline (Home 3D 오브젝트 제작 및 임베드 전용 — 코드를 직접 작성하는 프레임워크가 아니라, 완성된 씬을 가져오는 외부 툴)
 
 ### 사용하지 않는 기술
 
@@ -372,9 +370,9 @@ Experience는 아직 상세 내용을 정하지 않아서, 나중에 채워 넣�
 - Node.js 기반 백엔드
 - 로그인 / 회원가입 기능
 - 복잡한 빌드 도구나 프레임워크
-- Three.js (필수 기술 아님 — 향후 확장 기능으로만 고려)
+- Three.js를 직접 코드로 작성하는 방식 (필수 기술 아님 — 향후 확장 기능으로만 고려)
 
-Home의 3D 화면도 별도 라이브러리 없이 **CSS 3D Transform + JavaScript 마우스 인터랙션**만으로 구현하는 것을 원칙으로 한다. 지금까지 수업/실습에서 배운 범위 안에서 완성할 수 있는 사이트로 만드는 것이 이번 프로젝트의 핵심 조건이다.
+Home의 3D 화면은 Spline에서 만든 씬을 임베드 코드로 가져오는 방식을 기본으로 하고, 주변 요소들은 **CSS 3D Transform + JavaScript 마우스 인터랙션**으로 보완한다. Spline 임베드 자체는 영상/지도를 삽입하는 정도의 코드 추가이기 때문에, React나 Three.js를 직접 배우지 않아도 지금까지 배운 HTML/CSS/JS 범위 안에서 사이트를 완성할 수 있다는 원칙은 그대로 유지된다.
 
 ---
 
@@ -411,7 +409,7 @@ portfolio/
 
 - Navigation 구조
 - Home / About / Current Project / Projects / Skills / Experience / Contact 각 섹션의 HTML 마크업
-- Home 3D 오브젝트의 HTML 구조 (중앙 오브젝트 + 주변 요소)
+- Home 3D 오브젝트의 HTML 구조 (Spline 임베드 요소 + 주변 요소)
 - Current Project 섹션의 상태 배지 및 진행 정보 구조
 - Project Archive의 탭 구조 (9개 프로젝트 + 각 상세 영역)
 
@@ -419,7 +417,7 @@ portfolio/
 
 - 사이트 전체 레이아웃과 디자인
 - 반응형 레이아웃 (미디어 쿼리)
-- Home의 3D `perspective` 및 `transform` 관련 스타일
+- Home의 Spline 임베드 영역 레이아웃 및 주변 요소의 `perspective` / `transform` 관련 스타일
 - Hover 효과 스타일
 - 스크롤 애니메이션에 사용되는 class 스타일 (예: `.visible`, `.active`)
 - Current Project의 `IN PROGRESS` 배지 및 은은한 강조 애니메이션 스타일
@@ -428,8 +426,7 @@ portfolio/
 
 ### `js/main.js`
 
-- `mousemove` 이벤트 감지 및 Home 3D 오브젝트 회전 처리
-- 주변 요소 Parallax 효과 처리
+- `mousemove` 이벤트 감지 및 Home 주변 요소 Parallax 효과 처리 (중앙 3D 오브젝트 자체의 회전은 Spline 씬 내부 설정으로 처리하고, 별도 JS 보정이 필요하면 여기서 추가)
 - 스크롤 위치 계산 및 Home → About 전환 효과 처리
 - `IntersectionObserver`를 이용한 섹션 등장 애니메이션 처리
 - 스크롤 위치 기반 Navigation 활성화
@@ -438,7 +435,7 @@ portfolio/
 
 ### `images/home/`
 
-- Home에 사용할 PCB, 회로, 전자 부품 관련 이미지 또는 그래픽 요소
+- Home에 사용할 PCB, 회로, 전자 부품 관련 이미지 또는 그래픽 요소 (중앙 3D 오브젝트는 Spline 임베드로 대체되므로, 여기에는 주변 요소용 이미지나 CSS 3D Tilt로 대체할 경우를 대비한 백업용 이미지를 넣어둘 예정)
 
 ### `images/current-project/`
 
@@ -464,8 +461,8 @@ portfolio/
 
 | 기능 | HTML | CSS | JS | 구현 가능 여부 |
 |---|---|---|---|---|
-| Home 3D Tilt | 필요 | 필요 (`perspective`, `transform`) | 필요 (`mousemove`) | 가능 — CSS 3D Transform 기반 |
-| Mouse Interaction | - | 필요 (`transform`, `transition`) | 필요 (`mousemove`, 좌표 계산) | 가능 |
+| Home 중앙 3D 오브젝트 | 필요 (임베드 태그) | 필요 (레이아웃/사이즈) | 불필요~선택 (회전은 Spline 씬 내부 설정, 보정 시에만 JS 추가) | 가능 — Spline 임베드 기반 (구체적인 씬은 추후 결정, 안 되면 CSS Tilt로 대체) |
+| Mouse Interaction (주변 요소) | - | 필요 (`transform`, `transition`) | 필요 (`mousemove`, 좌표 계산) | 가능 |
 | Parallax (주변 요소) | 필요 | 필요 (`transform`) | 필요 (요소별 이동 비율 계산) | 가능 |
 | Scroll Animation | 필요 | 필요 (`transition`, `animation`) | 필요 (`IntersectionObserver`) | 가능 |
 | Smooth Scroll | 필요 (앵커 링크) | 필요 (`scroll-behavior: smooth` 또는 JS 처리) | 필요 시 (`scrollIntoView`) | 가능 |
@@ -480,7 +477,7 @@ portfolio/
 | Contact 링크 | 필요 (`a` 태그) | 필요 (스타일) | - | 가능 |
 | 반응형 디자인 | 필요 | 필요 (미디어 쿼리) | - | 가능 |
 
-특히 강조하고 싶은 부분은, **실제 3D 모델(예: Three.js로 만든 PCB 모델)을 사용하지 않아도, CSS `perspective`와 `transform`만으로 충분히 "3D처럼 보이는" Home 화면을 만들 수 있다는 점**이다. 실제로는 평면 요소들을 3D 공간에 배치하고 마우스 좌표에 따라 회전각만 계산해서 바꿔주는 방식이라, 지금까지 배운 CSS/JS 지식만으로도 이번 기획의 핵심 인터랙션을 구현할 수 있다고 판단했다.
+특히 강조하고 싶은 부분은, **Three.js 코드를 직접 짜지 않아도 Spline 같은 툴에서 만든 3D 씬을 임베드 코드만으로 가져와 실제 3D 화면을 만들 수 있다는 점**이다. 임베드 코드를 붙여넣는 것 자체는 영상이나 지도를 삽입하는 정도의 작업이라 별도의 3D 프로그래밍 지식이 없어도 되고, 그 위에 얹는 주변 요소나 스크롤 연동 효과는 지금까지 배운 CSS `perspective` / `transform`과 JavaScript로 충분히 구현할 수 있다. 만약 Spline 임베드가 여의치 않은 상황이 오더라도, 평면 요소를 3D 공간처럼 배치하고 마우스 좌표에 따라 회전각만 계산하는 CSS 3D Transform 방식으로 대체할 수 있어 이중으로 안전장치를 마련해둔 셈이다.
 
 ---
 
@@ -505,8 +502,8 @@ portfolio/
 
 아래 기능들은 이번 프로젝트와는 분리해서, 나중에 여유가 생기면 시도해보고 싶은 확장 아이디어로 정리해둔다.
 
-- Three.js를 이용한 실제 3D Scene 구현
-- 실제 3D PCB 모델 제작 및 적용
+- Spline 없이 Three.js 코드를 직접 작성해서 커스텀 3D Scene 만들어보기
+- Spline 씬을 더 정교한 3D PCB 모델로 고도화
 - WebGL 기반 그래픽 효과
 - Backend 서버 구축
 - Database 연동
