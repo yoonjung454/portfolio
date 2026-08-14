@@ -638,6 +638,31 @@ a { color: inherit; text-decoration: none; }
   flex-shrink: 0;
 }
 
+/*
+  아카이브 상세 안에서 파일을 날짜별로 묶어 보여줄 때 쓰는 줄.
+  왼쪽엔 날짜(.cp-log-date 재사용), 오른쪽엔 파일 링크(.cp-file-item 재사용)를 나란히 배치한다.
+*/
+.archive-log-list {
+  gap: 6px;
+}
+
+.archive-log-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.archive-log-item .cp-log-date {
+  flex-shrink: 0;
+  min-width: 60px;
+  margin: 0;
+}
+
+.archive-log-item .cp-file-item {
+  flex: 1;
+  min-width: 0;
+}
+
 /* -------------------------------------------
    Projects Archive
 ------------------------------------------- */
