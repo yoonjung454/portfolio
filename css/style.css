@@ -451,8 +451,12 @@ a { color: inherit; text-decoration: none; }
   padding: 14px 16px;
 }
 
-.current-project-section .cp-log-card {
+.current-project-section .cp-files-card {
   margin-top: 14px;
+}
+
+.current-project-section .cp-log-card {
+  margin-top: 12px;
 }
 
 .current-project-section .cp-log-title,
@@ -514,8 +518,13 @@ a { color: inherit; text-decoration: none; }
   margin: 0;
 }
 
-.cp-log-card {
+/* 관련 자료 / 진행 로그를 각자 별도의 카드로 분리 — 서로 다른 정보라는 게 한눈에 구분되도록 */
+.cp-files-card {
   margin-top: 24px;
+}
+
+.cp-log-card {
+  margin-top: 16px;
 }
 
 /* 왼쪽: 프로젝트 설명 카드 / 오른쪽: 대표 사진 (카드 없이) */
