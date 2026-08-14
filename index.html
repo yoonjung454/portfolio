@@ -159,7 +159,7 @@
           </div>
         </div>
 
-        <div class="cp-card cp-log-card reveal">
+        <div class="cp-log-card reveal">
           <div class="cp-log" id="cpLog">
             <h4 class="cp-log-title">진행 로그</h4>
 
@@ -184,7 +184,7 @@
               </div>
               <div class="cp-log-range-labels" aria-hidden="true">
                 <span>08.04</span>
-                <span>08.14</span>
+                <span>08.14 →</span>
               </div>
             </div>
 
@@ -397,28 +397,28 @@
             <line class="radar-axis-line" x1="150" y1="150" x2="45.4" y2="116.0" />
 
             <!-- 실제 사용해본 정도를 나타내는 도형 — 스크롤해서 보이면 그려지는 애니메이션 -->
-            <polygon class="radar-shape" id="radarShape" points="150.0,101.6 202.3,133.0 179.7,190.9 124.1,185.6 99.8,133.7" />
+            <polygon class="radar-shape" id="radarShape" points="150.0,114.8 189.8,137.1 172.0,180.3 132.5,174.0 112.3,137.8" />
 
             <!-- 각 축 위의 점 + 라벨: 마우스를 올리면 그 분야의 실제 기술 목록을 보여준다 -->
             <g class="radar-point" tabindex="0" data-title="Programming" data-skills="Python · C · JavaScript">
-              <circle class="radar-point-dot" cx="150.0" cy="101.6" r="6" />
+              <circle class="radar-point-dot" cx="150.0" cy="114.8" r="6" />
               <text class="radar-label" x="150.0" y="20" text-anchor="middle">Programming</text>
             </g>
             <g class="radar-point" tabindex="0" data-title="Web" data-skills="HTML · CSS · JavaScript">
-              <circle class="radar-point-dot" cx="202.3" cy="133.0" r="6" />
+              <circle class="radar-point-dot" cx="189.8" cy="137.1" r="6" />
               <text class="radar-label" x="278" y="106" text-anchor="start">Web</text>
             </g>
             <g class="radar-point" tabindex="0" data-title="Hardware / Embedded" data-skills="Arduino · ESP32 · 센서 활용 · 회로 구성">
-              <circle class="radar-point-dot" cx="179.7" cy="190.9" r="6" />
+              <circle class="radar-point-dot" cx="172.0" cy="180.3" r="6" />
               <text class="radar-label" x="233" y="258" text-anchor="middle">Hardware /</text>
               <text class="radar-label" x="233" y="272" text-anchor="middle">Embedded</text>
             </g>
             <g class="radar-point" tabindex="0" data-title="AI / Computer Vision" data-skills="YOLO · TensorFlow.js · Teachable Machine">
-              <circle class="radar-point-dot" cx="124.1" cy="185.6" r="6" />
+              <circle class="radar-point-dot" cx="132.5" cy="174.0" r="6" />
               <text class="radar-label" x="67" y="258" text-anchor="middle">AI / Vision</text>
             </g>
             <g class="radar-point" tabindex="0" data-title="Tools" data-skills="Git · GitHub · VS Code · Jupyter Notebook">
-              <circle class="radar-point-dot" cx="99.8" cy="133.7" r="6" />
+              <circle class="radar-point-dot" cx="112.3" cy="137.8" r="6" />
               <text class="radar-label" x="16" y="106" text-anchor="end">Tools</text>
             </g>
           </svg>
@@ -435,7 +435,6 @@
     <section id="experience" class="section experience-section">
       <div class="section-inner">
         <h2 class="section-title reveal">Experience</h2>
-        <p class="exp-hint reveal">마우스 휠을 올리거나 내리면 원통이 회전하며 다음 항목으로 넘어가요.</p>
 
         <div class="exp-layout reveal">
           <!-- 세로 원통 다이얼 — 항목마다 중심에서 멀어질수록 작아지고, 뒤로 말려 들어가듯 보이게 JS가 실시간으로 transform을 계산한다 -->
@@ -449,10 +448,7 @@
             </ul>
             <div class="exp-wheel-fade exp-wheel-fade--top" aria-hidden="true"></div>
             <div class="exp-wheel-fade exp-wheel-fade--bottom" aria-hidden="true"></div>
-            <div class="exp-wheel-nav">
-              <button class="exp-wheel-btn" id="expPrevBtn" type="button" aria-label="이전 항목">▲</button>
-              <button class="exp-wheel-btn" id="expNextBtn" type="button" aria-label="다음 항목">▼</button>
-            </div>
+            <span class="exp-wheel-hint-icon" aria-hidden="true">⇕</span>
           </div>
 
           <!-- 오른쪽 대표 비주얼 — 다이얼에서 선택된 항목이 바뀔 때마다 크로스페이드로 전환된다 -->
@@ -475,7 +471,7 @@
       <div class="section-inner">
         <h2 class="section-title reveal">Contact</h2>
         <div class="contact-links reveal">
-          <a href="https://github.com/username" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://github.com/yoonjung454" target="_blank" rel="noopener">GitHub</a>
           <a href="mailto:example@email.com">Email</a>
           <a href="https://blog-address" target="_blank" rel="noopener">Blog</a>
         </div>

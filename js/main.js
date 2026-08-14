@@ -232,7 +232,7 @@ function initCurrentProjectLog() {
     // 지금 보고 있는 게 최신 기록인지 과거 기록인지 배지로 구분해준다
     if (badge) {
       const isLatest = index === latestIndex;
-      badge.textContent = isLatest ? '최신' : '과거 기록';
+      badge.textContent = isLatest ? 'NEW' : '과거 기록';
       badge.classList.toggle('is-latest', isLatest);
     }
 
@@ -304,10 +304,11 @@ function initSkillsRadar() {
   const wrap = document.getElementById('skillsRadarWrap');
   if (!wrap) return;
 
-  // 스크롤해서 화면에 들어오면 그려지고, 화면 밖으로 나가면(위로든 아래로든) 다시 지워진다
+  // 스크롤해서 화면에 들어오면 그려지고, 화면 밖으로 나가면(위로든 아래로든) 다시 지워진다.
+  // (스크롤 페이드용 .reveal/.is-visible 클래스와 겹치지 않도록 별도의 .is-drawn 클래스를 쓴다)
   const drawObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      wrap.classList.toggle('is-visible', entry.isIntersecting);
+      wrap.classList.toggle('is-drawn', entry.isIntersecting);
     });
   }, { threshold: 0.35 });
   drawObserver.observe(wrap);
@@ -347,7 +348,8 @@ function initSkillsRadar() {
 /* ---------------------------------------------------------
    10) Experience — 세로 원통 다이얼(Wheel Selector)
    가운데 항목이 가장 크고 선명하고, 위/아래로 멀어질수록 작아지며
-   뒤로 말려 들어가듯 보인다. 마우스 휠/버튼/키보드로 한 칸씩 회전시킨다.
+   뒤로 말려 들어가듯 보인다. 화살표나 마우스 휠이 아니라, 마우스로
+   직접 잡고 드래그해서 원통을 돌리는 방식으로만 회전시킨다.
 --------------------------------------------------------- */
 function initExperienceWheel() {
   const wheel = document.getElementById('expWheel');
@@ -358,8 +360,6 @@ function initExperienceWheel() {
   const visualTitle = document.getElementById('expVisualTitle');
   const visualDate = document.getElementById('expVisualDate');
   const visualDesc = document.getElementById('expVisualDesc');
-  const prevBtn = document.getElementById('expPrevBtn');
-  const nextBtn = document.getElementById('expNextBtn');
   if (!wheel || !list || !visualImage) return;
 
   const items = Array.from(list.querySelectorAll('.exp-wheel-item'));
@@ -367,16 +367,18 @@ function initExperienceWheel() {
   if (!total) return;
 
   let activeIndex = 0;
-  let isLocked = false;
+  let dragOffset = 0; // 드래그하는 동안의 소수 단위 이동량(아직 확정된 칸 이동이 아님)
+  let isDragging = false;
+  let dragStartY = 0;
+  let dragMoved = false;
 
-  const SPACING = 62;  // 항목 사이의 세로 간격(px)
-  const LOCK_MS = 650; // 한 칸 회전하는 애니메이션이 끝날 때까지 다음 입력을 막는 시간
+  const SPACING = 62; // 항목 사이의 세로 간격(px)
 
-  // 각 항목을 중심(활성 항목)에서의 거리에 따라 이동/축소/회전/블러시켜서
-  // 원통 표면에 감겨 있는 듯한 모습을 만든다.
-  function layout() {
+  // 각 항목을 중심(활성 항목 + 드래그 중인 소수 오프셋)에서의 거리에 따라
+  // 이동/축소/회전/블러시켜서 원통 표면에 감겨 있는 듯한 모습을 만든다.
+  function layout(virtualIndex) {
     items.forEach((item, i) => {
-      const diff = i - activeIndex;
+      const diff = i - virtualIndex;
       const absDiff = Math.abs(diff);
       const translateY = diff * SPACING;
       const translateX = -Math.pow(absDiff, 1.3) * 5;
@@ -391,8 +393,8 @@ function initExperienceWheel() {
       item.style.opacity = String(opacity);
       item.style.filter = blur ? `blur(${blur}px)` : 'none';
       item.style.zIndex = String(100 - absDiff);
-      item.classList.toggle('is-active', diff === 0);
-      item.setAttribute('aria-selected', diff === 0 ? 'true' : 'false');
+      item.classList.toggle('is-active', Math.round(diff) === 0);
+      item.setAttribute('aria-selected', Math.round(diff) === 0 ? 'true' : 'false');
     });
   }
 
@@ -418,37 +420,71 @@ function initExperienceWheel() {
 
   function goTo(index) {
     const next = Math.max(0, Math.min(total - 1, index));
+    wheel.classList.remove('is-dragging');
+    layout(next);
     if (next === activeIndex) return;
     activeIndex = next;
-    layout();
     updateVisual(items[activeIndex]);
   }
 
-  items.forEach((item, i) => {
-    item.addEventListener('click', () => goTo(i));
-  });
+  // 마우스/터치로 직접 잡고 위아래로 끌면 원통이 그만큼 따라 돌고,
+  // 손을 떼는 순간 가장 가까운 항목으로 스냅된다. 손가락을 거의 움직이지 않고 뗐다면
+  // (=클릭) 그 항목(회색으로 흐려진 항목 포함)이 바로 중앙으로 온다.
+  //
+  // 주의: setPointerCapture를 쓰면 이후의 pointerup 이벤트는 실제로 커서 아래 있는
+  // <li>가 아니라 이 wheel 엘리먼트로 리타깃되기 때문에, 개별 항목에 click 리스너를
+  // 다는 방식은 동작하지 않는다. 그래서 pointerdown 시점에 눌린 항목을 미리 기억해뒀다가
+  // pointerup에서 직접 사용한다.
+  let pointerDownItem = null;
 
-  if (prevBtn) prevBtn.addEventListener('click', () => goTo(activeIndex - 1));
-  if (nextBtn) nextBtn.addEventListener('click', () => goTo(activeIndex + 1));
+  function onPointerDown(e) {
+    isDragging = true;
+    dragMoved = false;
+    dragStartY = e.clientY;
+    dragOffset = 0;
+    pointerDownItem = e.target.closest ? e.target.closest('.exp-wheel-item') : null;
+    wheel.classList.add('is-dragging');
+    wheel.setPointerCapture?.(e.pointerId);
+  }
 
-  // 다이얼 위에서만 휠을 가로채서 회전시키고, 그 바깥에서는 페이지가 평소대로 스크롤된다
-  wheel.addEventListener('wheel', (e) => {
-    e.preventDefault();
-    if (isLocked) return;
-    const dir = e.deltaY > 0 ? 1 : -1;
-    const next = activeIndex + dir;
-    if (next < 0 || next > total - 1) return;
-    isLocked = true;
-    goTo(next);
-    setTimeout(() => { isLocked = false; }, LOCK_MS);
-  }, { passive: false });
+  function onPointerMove(e) {
+    if (!isDragging) return;
+    const deltaY = e.clientY - dragStartY;
+    if (Math.abs(deltaY) > 4) dragMoved = true;
+    const raw = -deltaY / SPACING;
+    dragOffset = Math.max(-activeIndex, Math.min(total - 1 - activeIndex, raw));
+    layout(activeIndex + dragOffset);
+  }
 
+  function onPointerUp() {
+    if (!isDragging) return;
+    isDragging = false;
+    const steps = Math.round(dragOffset);
+    dragOffset = 0;
+
+    if (!dragMoved && pointerDownItem) {
+      // 거의 움직이지 않고 손을 뗌 = 클릭. 회색으로 흐려진 항목이라도 그 항목을 바로 중앙으로.
+      goTo(Number(pointerDownItem.dataset.index));
+    } else {
+      goTo(activeIndex + steps);
+    }
+    pointerDownItem = null;
+    dragMoved = false;
+  }
+
+  wheel.addEventListener('pointerdown', onPointerDown);
+  wheel.addEventListener('pointermove', onPointerMove);
+  wheel.addEventListener('pointerup', onPointerUp);
+  wheel.addEventListener('pointerleave', onPointerUp);
+  wheel.addEventListener('pointercancel', onPointerUp);
+
+  // 화살표/휠 없이도 키보드로는 접근할 수 있도록 최소한의 대체 수단만 남겨둔다
   wheel.addEventListener('keydown', (e) => {
     if (e.key === 'ArrowDown' || e.key === 'ArrowRight') { e.preventDefault(); goTo(activeIndex + 1); }
     if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') { e.preventDefault(); goTo(activeIndex - 1); }
   });
 
-  layout();
+  layout(activeIndex);
 
   // 처음 화면에 나타날 때도 대표 비주얼이 한 번 살짝 커지며 등장하는 효과를 재생
   visualImage.classList.add('is-changing');
