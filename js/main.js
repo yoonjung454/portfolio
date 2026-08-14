@@ -3,7 +3,6 @@
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initHomeParallax();
   initHomeScrollTransition();
   initRevealOnScroll();
   initNavActiveState();
@@ -12,47 +11,10 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ---------------------------------------------------------
-   1) Home — mouse parallax / tilt
-   마우스 위치에 따라 Spline 프레임을 살짝 기울이고,
-   주변 floating-tag 요소들을 서로 다른 속도로 움직인다.
---------------------------------------------------------- */
-function initHomeParallax() {
-  const stage = document.getElementById('home3dStage');
-  const splineWrap = document.getElementById('splineWrap');
-  const tags = document.querySelectorAll('.floating-tag');
-  if (!stage || !splineWrap) return;
-
-  const MAX_TILT = 6; // deg
-  const MAX_TAG_MOVE = 26; // px
-
-  stage.addEventListener('mousemove', (e) => {
-    const rect = stage.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 ~ 0.5
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-    // 중앙 프레임: 마우스 반대 방향으로 살짝 회전 (오른쪽으로 움직이면 오브젝트도 오른쪽으로 도는 느낌)
-    const rotateY = x * MAX_TILT * 2;
-    const rotateX = -y * MAX_TILT * 2;
-    splineWrap.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-
-    // 주변 요소: 각자 data-depth 비율만큼 반대 방향으로 이동해서 레이어 깊이감 표현
-    tags.forEach((tag) => {
-      const depth = parseFloat(tag.dataset.depth) || 0.5;
-      const moveX = x * MAX_TAG_MOVE * depth;
-      const moveY = y * MAX_TAG_MOVE * depth;
-      tag.style.transform = `translate(${moveX}px, ${moveY}px)`;
-    });
-  });
-
-  stage.addEventListener('mouseleave', () => {
-    splineWrap.style.transform = 'rotateX(0deg) rotateY(0deg)';
-    tags.forEach((tag) => { tag.style.transform = 'translate(0, 0)'; });
-  });
-}
-
-/* ---------------------------------------------------------
-   2) Home — scroll transition
+   1) Home — scroll transition
    Home을 벗어나며 스크롤할수록 3D 스테이지를 축소 + Fade Out.
+   (마우스에 따른 회전/기울임은 Spline 씬 자체가 처리하므로
+    여기서는 별도의 tilt 로직을 두지 않는다.)
 --------------------------------------------------------- */
 function initHomeScrollTransition() {
   const homeSection = document.getElementById('home');
@@ -79,7 +41,7 @@ function initHomeScrollTransition() {
 }
 
 /* ---------------------------------------------------------
-   3) 섹션 등장 애니메이션 (IntersectionObserver)
+   2) 섹션 등장 애니메이션 (IntersectionObserver)
 --------------------------------------------------------- */
 function initRevealOnScroll() {
   const targets = document.querySelectorAll('.reveal');
@@ -98,7 +60,7 @@ function initRevealOnScroll() {
 }
 
 /* ---------------------------------------------------------
-   4) Navigation 활성화 (IntersectionObserver)
+   3) Navigation 활성화 (IntersectionObserver)
 --------------------------------------------------------- */
 function initNavActiveState() {
   const sections = document.querySelectorAll('main .section');
@@ -121,7 +83,7 @@ function initNavActiveState() {
 }
 
 /* ---------------------------------------------------------
-   5) Scroll indicator 클릭 시 About으로 이동
+   4) Scroll indicator 클릭 시 About으로 이동
 --------------------------------------------------------- */
 function initScrollIndicator() {
   const indicator = document.getElementById('scrollIndicator');
@@ -133,7 +95,7 @@ function initScrollIndicator() {
 }
 
 /* ---------------------------------------------------------
-   6) Project Archive — hover는 CSS로 처리, 클릭은 여기서 열고/닫기
+   5) Project Archive — hover는 CSS로 처리, 클릭은 여기서 열고/닫기
 --------------------------------------------------------- */
 function initProjectArchive() {
   const headers = document.querySelectorAll('.project-tab-header');
