@@ -373,7 +373,9 @@ a { color: inherit; text-decoration: none; }
   padding: 0;
   margin: 0;
   display: flex;
-  flex-direction: column;
+  /* 목록 자체(DOM)는 오래된 순으로 두되, 화면에는 최근 항목이 위로 오도록 시각적으로만 뒤집는다.
+     JS가 꺼져 있어도(fallback) 최근 로그가 먼저 보이도록 하기 위함. */
+  flex-direction: column-reverse;
   gap: 8px;
   font-size: 0.9rem;
   color: var(--text-muted);

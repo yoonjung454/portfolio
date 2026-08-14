@@ -157,6 +157,10 @@ function initCurrentProjectLog() {
 
   slider.addEventListener('input', () => render(Number(slider.value)));
 
-  render(0);
+  // 로그 목록 자체는 오래된 순(왼→오)으로 두되, 처음 화면에는 가장 최근 항목이 먼저 보이도록
+  // 슬라이더를 맨 오른쪽(가장 최근)에서 시작한다.
+  const latestIndex = entries.length - 1;
+  slider.value = String(latestIndex);
+  render(latestIndex);
   log.classList.add('is-enhanced'); // JS가 정상 동작할 때만 슬라이더 UI로 전환
 }
