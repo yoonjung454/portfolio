@@ -188,8 +188,6 @@ Home~About~Current Project~Archive~Skills~Experience는 옅은 라벤더-그레�
 
 - **Contact — Email·Blog 링크가 아직 placeholder**다 (`mailto:example@email.com`, `https://blog-address`). 실제 주소가 정해지면 교체 필요.
 - **Experience 상세 정보 미완성** — "교육" 항목만 실제 내용(2026.08, AI·Web·Embedded 교육 과정)이 채워져 있고, 대외활동/공모전/수상/기타활동은 "추가 예정" 상태다.
-- **진로멘토링 3회차**는 편집 전 원본 영상만 있어서 자료 없이 설명 카드로만 존재한다.
-- 사이트 전반의 배경 로봇·플레이스홀더 이미지는 저해상도 압축을 거치지 않은 원본이라, 필요하면 용량 최적화 여지가 있다.
 
 ---
 
