@@ -97,15 +97,23 @@
             </ul>
 
             <div class="cp-log-timeline">
-              <input type="range" class="cp-log-slider" id="cpLogSlider" min="0" max="6" step="1" value="6" aria-label="진행 로그 타임라인">
-              <div class="cp-log-ticks" aria-hidden="true">
-                <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+              <div class="cp-log-track">
+                <input type="range" class="cp-log-slider" id="cpLogSlider" min="0" max="6" step="1" value="6" aria-label="진행 로그 타임라인">
+                <div class="cp-log-ticks" id="cpLogTicks" aria-hidden="true">
+                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+                </div>
+              </div>
+              <div class="cp-log-range-labels" aria-hidden="true">
+                <span>08.04</span>
+                <span>08.13</span>
               </div>
             </div>
 
             <div class="cp-log-display" id="cpLogDisplay">
-              <span class="cp-log-date" id="cpLogDisplayDate"></span>
-              <span class="cp-log-badge" id="cpLogBadge"></span>
+              <div class="cp-log-display-head">
+                <span class="cp-log-date" id="cpLogDisplayDate"></span>
+                <span class="cp-log-badge" id="cpLogBadge"></span>
+              </div>
               <p class="cp-log-text" id="cpLogDisplayText"></p>
             </div>
           </div>

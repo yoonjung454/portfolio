@@ -122,15 +122,21 @@ function initProjectArchive() {
    슬라이더(바)를 좌우로 움직이면 그 위치에 해당하는 날짜의
    로그 내용이 표시창에 나타난다. 동시에 "관련 자료" 목록도
    각 항목의 data-day 값을 기준으로 그 날짜에 해당하는 것만 남기고 숨긴다.
+
+   부드러운 움직임을 위해:
+   - 트랙 채움(--fill)과 지나온 눈금(is-passed)은 드래그하는 동안 매 프레임 즉시 갱신 (버벅임 없이 손끝을 그대로 따라오도록)
+   - 표시창 내용(날짜/배지/텍스트)은 값이 "실제로 바뀔 때"만 짧게 크로스페이드 (드래그 중 매 픽셀마다 깜빡이지 않도록)
 --------------------------------------------------------- */
 function initCurrentProjectLog() {
   const log = document.getElementById('cpLog');
   const slider = document.getElementById('cpLogSlider');
   const list = document.getElementById('cpLogList');
+  const display = document.getElementById('cpLogDisplay');
   const displayDate = document.getElementById('cpLogDisplayDate');
   const displayText = document.getElementById('cpLogDisplayText');
   const badge = document.getElementById('cpLogBadge');
-  if (!log || !slider || !list || !displayDate || !displayText) return;
+  const ticksBox = document.getElementById('cpLogTicks');
+  if (!log || !slider || !list || !display || !displayDate || !displayText) return;
 
   const entries = Array.from(list.querySelectorAll('li'));
   if (!entries.length) return;
@@ -138,10 +144,21 @@ function initCurrentProjectLog() {
   const latestIndex = entries.length - 1;
   slider.max = String(latestIndex);
 
+  const ticks = ticksBox ? Array.from(ticksBox.querySelectorAll('span')) : [];
   const fileItems = Array.from(document.querySelectorAll('#cpFileList > li'));
   const emptyMessage = document.getElementById('cpFilesEmpty');
 
-  const render = (index) => {
+  let currentIndex = null;
+  let fadeTimer = null;
+
+  // 트랙 채움 + 눈금은 값이 바뀔 때마다 즉시(부드럽게) 갱신 — 드래그의 손맛을 위해 지연 없음
+  const updateTrack = (index) => {
+    const percent = latestIndex === 0 ? 100 : (index / latestIndex) * 100;
+    slider.style.setProperty('--fill', `${percent}%`);
+    ticks.forEach((tick, i) => tick.classList.toggle('is-passed', i <= index));
+  };
+
+  const updateContent = (index) => {
     const entry = entries[index];
     if (!entry) return;
     displayDate.textContent = entry.dataset.date || '';
@@ -164,11 +181,31 @@ function initCurrentProjectLog() {
     emptyMessage?.classList.toggle('is-visible', visibleCount === 0);
   };
 
-  slider.addEventListener('input', () => render(Number(slider.value)));
+  const render = (index, animate) => {
+    updateTrack(index);
+
+    if (index === currentIndex) return;
+    currentIndex = index;
+
+    if (!animate) {
+      updateContent(index);
+      return;
+    }
+
+    // 짧게 가라앉듯 사라졌다가, 새 내용으로 바뀐 뒤 다시 떠오르며 나타난다
+    clearTimeout(fadeTimer);
+    display.classList.add('is-changing');
+    fadeTimer = setTimeout(() => {
+      updateContent(index);
+      display.classList.remove('is-changing');
+    }, 160);
+  };
+
+  slider.addEventListener('input', () => render(Number(slider.value), true));
 
   // 로그 목록 자체는 오래된 순(왼→오)으로 두되, 처음 화면에는 가장 최근 항목이 먼저 보이도록
   // 슬라이더를 맨 오른쪽(가장 최근)에서 시작한다.
   slider.value = String(latestIndex);
-  render(latestIndex);
+  render(latestIndex, false);
   log.classList.add('is-enhanced'); // JS가 정상 동작할 때만 슬라이더 UI로 전환
 }

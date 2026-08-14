@@ -352,15 +352,16 @@ a { color: inherit; text-decoration: none; }
   color: var(--text-muted);
 }
 
-/* 진행 로그 — day/week 단위로 실습 내용을 짧게 기록해두는 타임라인 */
+/* 진행 로그 — day/week 단위로 실습 내용을 짧게 기록해두는 타임라인 (토스 스타일: 여백 넉넉, 부드러운 카드) */
 .cp-log {
   margin: 0 0 24px;
-  padding-top: 20px;
-  border-top: 1px dashed var(--border);
+  padding: 22px;
+  border-radius: 18px;
+  background: var(--bg-alt);
 }
 
 .cp-log-title {
-  margin: 0 0 10px;
+  margin: 0 0 14px;
   font-size: 0.85rem;
   font-weight: 700;
   color: var(--text-muted);
@@ -409,75 +410,130 @@ a { color: inherit; text-decoration: none; }
 }
 
 .cp-log-timeline {
-  margin: 4px 0 18px;
+  margin: 4px 0 20px;
 }
 
-/* 좌우로 움직이는 바 — 네이티브 range 슬라이더를 사이트 액센트 컬러로 스타일링 */
+.cp-log-track {
+  position: relative;
+  padding: 10px 0 18px;
+}
+
+/*
+  좌우로 움직이는 바. 네이티브 range 슬라이더는 그대로 쓰되(접근성·터치 대응이 좋음),
+  트랙 배경을 --fill 값(0~100%)에 맞춰 그러데이션으로 칠해서
+  "지금까지 지나온 만큼"이 채워진 진행 바처럼 보이게 한다. --fill은 JS가 드래그할 때마다 갱신.
+*/
 .cp-log-slider {
+  --fill: 100%;
+  position: relative;
+  z-index: 2;
   width: 100%;
+  margin: 0;
   appearance: none;
   -webkit-appearance: none;
   height: 4px;
   border-radius: 999px;
-  background: var(--border);
+  background: linear-gradient(
+    to right,
+    var(--archive-accent) var(--fill),
+    var(--border) var(--fill)
+  );
   outline: none;
   cursor: pointer;
+  transition: box-shadow 0.2s ease;
 }
 
+/* 토스 느낌의 흰 원형 손잡이 — 채워진 색이 아니라 흰 배경 + 은은한 링/그림자로 존재감을 줌 */
 .cp-log-slider::-webkit-slider-thumb {
   appearance: none;
   -webkit-appearance: none;
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: var(--archive-accent);
-  border: 3px solid var(--bg);
-  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.4);
+  background: #fff;
+  border: 2px solid var(--archive-accent);
+  box-shadow: 0 2px 6px rgba(20, 30, 40, 0.18);
   cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.15s ease;
+}
+
+.cp-log-slider:active::-webkit-slider-thumb {
+  transform: scale(1.15);
+  box-shadow: 0 4px 12px rgba(20, 30, 40, 0.24);
 }
 
 .cp-log-slider::-moz-range-thumb {
-  width: 18px;
-  height: 18px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: var(--archive-accent);
-  border: 3px solid var(--bg);
-  box-shadow: 0 2px 8px rgba(13, 148, 136, 0.4);
+  background: #fff;
+  border: 2px solid var(--archive-accent);
+  box-shadow: 0 2px 6px rgba(20, 30, 40, 0.18);
   cursor: pointer;
+  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.15s ease;
 }
 
-/* 슬라이더 아래, 실제 로그 항목 수만큼 찍히는 눈금 점 */
+.cp-log-slider:active::-moz-range-thumb {
+  transform: scale(1.15);
+}
+
+/* 슬라이더 아래, 실제 로그 항목 수만큼 찍히는 눈금 점 — 지나온 지점은 채워서 진행감을 준다 */
 .cp-log-ticks {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 20px;
   display: flex;
   justify-content: space-between;
   padding: 0 1px;
-  margin-top: 6px;
+  pointer-events: none;
 }
 
 .cp-log-ticks span {
-  width: 4px;
-  height: 4px;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
   background: var(--border);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.cp-log-ticks span.is-passed {
+  background: var(--archive-accent);
+  transform: scale(1.1);
+}
+
+.cp-log-range-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-top: -6px;
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  opacity: 0.7;
 }
 
 /* 슬라이더 위치에 맞는 날짜/내용이 나타나는 표시창 */
 .cp-log-display {
-  padding: 14px 16px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--bg-alt);
+  padding: 18px 20px;
+  border-radius: 14px;
+  background: var(--bg);
+  box-shadow: 0 4px 16px rgba(20, 30, 40, 0.06);
+}
+
+.cp-log-display-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 8px;
 }
 
 .cp-log-display .cp-log-date {
   display: inline-block;
-  margin: 0 8px 4px 0;
+  margin: 0;
 }
 
 /* 지금 보고 있는 로그가 "최신"인지 "과거 기록"인지 한눈에 구분하는 배지 */
 .cp-log-badge {
   display: inline-block;
-  margin: 0 0 4px;
   padding: 2px 10px;
   border-radius: 999px;
   font-size: 0.72rem;
@@ -485,6 +541,7 @@ a { color: inherit; text-decoration: none; }
   letter-spacing: 0.02em;
   background: var(--border);
   color: var(--text-muted);
+  transition: background 0.25s ease, color 0.25s ease;
 }
 
 .cp-log-badge.is-latest {
@@ -495,8 +552,24 @@ a { color: inherit; text-decoration: none; }
 .cp-log-display .cp-log-text {
   display: block;
   margin: 0;
-  font-size: 0.9rem;
-  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: var(--archive-text);
+}
+
+/*
+  슬라이더를 움직여서 로그 내용이 바뀔 때, 텍스트가 툭 끊기듯 바뀌지 않고
+  살짝 가라앉으며 사라졌다가 다시 떠오르며 나타나도록 부드럽게 크로스페이드 한다.
+*/
+.cp-log-display-head,
+.cp-log-display .cp-log-text {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.cp-log-display.is-changing .cp-log-display-head,
+.cp-log-display.is-changing .cp-log-text {
+  opacity: 0;
+  transform: translateY(3px);
 }
 
 /* GitHub 링크 대신, 실제로 올려둔 실습 코드·문서·이미지로 바로 이동하는 목록.
