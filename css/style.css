@@ -431,23 +431,16 @@ a { color: inherit; text-decoration: none; }
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* 프로젝트 탭마다 있는 작은 3D 폴더 아이콘.
-   평소엔 비어 있다가(정지), hover/포커스/열림 상태일 때만 JS가 iframe을 넣어준다.
-   → 9개 Spline iframe이 한꺼번에 떠서 브라우저가 무거워지는 걸 방지 */
-.tab-3d {
+/* 프로젝트 탭마다 있는 작은 폴더 아이콘 (정적 SVG) */
+.tab-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: 44px;
   height: 44px;
   border-radius: 8px;
-  overflow: hidden;
-  background: var(--bg-alt);
+  color: var(--archive-accent);
   flex-shrink: 0;
-}
-
-.tab-3d iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
 }
 
 .project-tab-header:hover {
@@ -638,13 +631,11 @@ a { color: inherit; text-decoration: none; }
 
   .home-content { bottom: 10%; }
 
-  .tab-3d { display: none; } /* 모바일에서는 hover가 잘 안 통하므로 아이콘 생략 */
-
   .project-tab-header {
-    grid-template-columns: 34px 1fr;
+    grid-template-columns: 30px 34px 1fr;
     row-gap: 6px;
   }
-  .tab-field, .tab-tag { grid-column: 2 / 3; }
+  .tab-field, .tab-tag { grid-column: 3 / 4; }
 
   .detail-grid {
     grid-template-columns: 1fr;

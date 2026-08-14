@@ -91,41 +91,14 @@ function initScrollIndicator() {
 }
 
 /* ---------------------------------------------------------
-   4) Project Archive
-   - Hover는 CSS로 처리, 클릭은 여기서 열고/닫기
-   - 탭마다 있는 작은 3D 폴더 아이콘은 평소엔 비어 있다가(정지),
-     hover/포커스/열림 상태일 때만 iframe을 만들어 넣고,
-     그 상태를 벗어나면 다시 비워서 9개가 동시에 떠 있지 않게 한다
+   4) Project Archive — hover는 CSS로 처리, 클릭은 여기서 열고/닫기
 --------------------------------------------------------- */
 function initProjectArchive() {
-  const tabs = document.querySelectorAll('.project-tab');
+  const headers = document.querySelectorAll('.project-tab-header');
 
-  tabs.forEach((tab) => {
-    const header = tab.querySelector('.project-tab-header');
-    const iconBox = tab.querySelector('.tab-3d');
-    const splineSrc = iconBox?.dataset.spline;
-
-    const loadIcon = () => {
-      if (!iconBox || !splineSrc || iconBox.firstElementChild) return;
-      const iframe = document.createElement('iframe');
-      iframe.src = splineSrc;
-      iframe.setAttribute('frameborder', '0');
-      iframe.setAttribute('loading', 'lazy');
-      iframe.setAttribute('title', 'Project folder 3D icon');
-      iconBox.appendChild(iframe);
-    };
-
-    const unloadIcon = () => {
-      // 펼쳐져 있는 탭은 계속 보여주고, 닫힌 탭만 정리한다
-      if (!iconBox || tab.classList.contains('is-open')) return;
-      iconBox.innerHTML = '';
-    };
-
-    tab.addEventListener('mouseenter', loadIcon);
-    tab.addEventListener('focusin', loadIcon);
-    tab.addEventListener('mouseleave', unloadIcon);
-
+  headers.forEach((header) => {
     header.addEventListener('click', () => {
+      const tab = header.closest('.project-tab');
       const isOpen = tab.classList.contains('is-open');
 
       // 이미 열려있던 다른 프로젝트는 닫아서 한 번에 하나만 펼쳐지게 한다
@@ -133,15 +106,11 @@ function initProjectArchive() {
         if (openTab !== tab) {
           openTab.classList.remove('is-open');
           openTab.querySelector('.project-tab-header').setAttribute('aria-expanded', 'false');
-          if (!openTab.matches(':hover')) {
-            openTab.querySelector('.tab-3d')?.replaceChildren();
-          }
         }
       });
 
       tab.classList.toggle('is-open', !isOpen);
       header.setAttribute('aria-expanded', String(!isOpen));
-      if (!isOpen) loadIcon();
     });
   });
 }
