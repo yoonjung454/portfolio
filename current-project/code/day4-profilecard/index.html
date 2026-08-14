@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko"> /*언어 설정*/
+<head>
+<meta charset="UTF-8">
+<title>우리 동네 고양이 도감</title>
+<style> /* 디자인 설정*/
+body{ /*바디 스타일 설정*/
+    background-color:#eef2ec;  /*배경색상 바꾸기*/
+    font-family: Arial, sans-serif; /*폰트 변경*/
+    margin:0;
+    padding:0;
+}
+/* ===== 상단 바 : 로고와 메뉴가 한 줄에 ===== */
+header{  /*헤더 디자인 설정*/
+    background-color:#2f6f4e; /*배경색상 바꾸기*/
+    color:white; /*글자 색 변경*/
+    padding:15px; /*요소 안쪽 여백 늘리기*/
+    display:flex; /*가로세로 중앙 정렬*/
+    justify-content:center; /*가로방향에서 중앙 정렬*/
+    align-items:center; /*세로방향에서 중앙 정렬*/
+}
+header h1{  /*헤더 로고 디자인 설정*/
+    color:white; /*글자 색 변경*/
+    margin:0;
+    padding:0 30px;  /*요소 안쪽 여백 늘리기*/
+}
+nav ul{ /*메뉴바 디자인 설정*/
+    list-style-type:none; 
+    margin:0; 
+    padding:0;
+}
+nav ul li{ /*메뉴 디자인 설정*/
+    display:inline; /*요소를 옆으로 나란히 정렬*/
+    margin:0 12px; /*요소 바깥쪽 좌우 여백 늘리기*/
+}
+nav ul li a{ 
+    color:white; /*글자 색 변경*/
+    text-decoration:none; /*밑줄 없애기*/
+}
+nav ul li a:hover{ /*마우스를 올리면 변화*/
+    color:#ffd66b; /*글자 색 변경*/
+}
+/* ===== 소개 영역 : 글은 왼쪽, 사진은 오른쪽 ===== */
+.hero{
+    display:flex; /*가로세로 중앙 정렬-*/
+    justify-content:center; /*가로방향에서 중앙 정렬*/
+    align-items:center; /*세로방향에서 중앙 정렬*/
+    padding:50px; /*요소 안쪽 여백 늘리기*/
+    background-color:white; /*배경색상 바꾸기*/
+}
+.hero-text{ /*클래스 스타일 변경*/
+    width:340px; 
+    padding:20px; /*요소 안쪽 여백 늘리기*/
+}
+.hero-text h2{ /*클래스 제목 스타일 변경*/
+    color:#2f6f4e; /*글자 색 변경*/
+    margin:0;
+    padding:0;
+}
+.hero-text p{  /*클래스 글자 스타일 변경*/
+    color:#666; /*글자 색 변경*/
+}
+.hero-img{ /*클래스 이미지 스타일 변경*/
+    width:200px; /*사진 가로 길이 설정*/
+    height:200px; /*사진 높이 설정*/
+    border-radius:50%; /*모서리 둥근 정도 설정*/
+    box-shadow:0 5px 15px rgba(0,0,0,0.2); /*박스 그림자 설정*/
+}
+/* ===== 카드 3개가 가로로 나란히 ===== */
+.cards{ /*클래스 스타일 변경*/
+    display:flex; /*가로세로 중앙 정렬*/
+    justify-content:center; /*가로방향에서 중앙 정렬*/
+    padding:40px; /*요소 안쪽 여백 늘리기*/
+}
+.card{ /*클래스 안 클래스 스타일 변경*/
+    width:220px;
+    background-color:white; /*배경색상 바꾸기*/
+    border-radius:12px; /*모서리 둥근 정도 설정*/
+    padding:20px; /*요소 안쪽 여백 늘리기*/
+    margin:0 15px; /*요소 바깥쪽 여백 늘리기*/
+    text-align:center; /*가로방향에서 중앙 정렬*/
+    box-shadow:0 3px 8px rgba(0,0,0,0.1); /*박스 그림자 설정*/
+}
+.card img{ /*클래스 이미지 스타일 변경*/
+    width:100px; /*사진 가로 길이 설정*/
+    height:100px; /*사진 높이 설정*/
+    border-radius:50%;/*사진 모형 원형으로 설정*/
+}
+.card h2{ /*클래스 제목 스타일 변경*/
+    color:#2f6f4e; /*글자 색 변경*/
+    margin:15px 0 5px; /*요소 바깥쪽 여백 넣기*/
+}
+.card p{ /*클래스 글자 스타일 변경*/
+    color:#777; /*글자 색 변경*/
+}
+.btn{ /*버튼 클래스 스타일 변경*/
+    display:inline-block;
+    padding:8px 18px; /*요소 안쪽 여백 늘리기*/
+    background-color:#2f6f4e; /*배경색상 바꾸기*/
+    color:white; /*글자 색 변경*/
+    text-decoration:none; /* 밑줄 없애기*/
+    border-radius:20px;  /*모서리 둥근 정도 설정*/
+}
+.btn:hover{ /*마우스를 올리면 변화*/
+    background-color:#1d4a33; /*배경색상 바꾸기*/
+}
+footer{ /*저작권 기입 클래스 스타일 변경*/
+    text-align:center; /*텍스트 가운데 정렬*/
+    padding:20px; /*요소 안쪽 여백 늘리기*/
+    background-color:#2f6f4e; /*배경색상 바꾸기*/
+    color:white; /*글자 색 변경*/
+}
+/* ===== 화면이 좁아지면 가로 배치를 세로로 ===== */
+@media screen and (max-width:600px){ /**반응형 디자인: 화면이 변형 될 때 형태 유지, 가로 길이 최대 600설정*/
+    header{ 
+        display:block; 
+        text-align:center; /*가로방향에서 중앙 정렬*/
+    }
+    header h1{
+        padding:0;
+    }
+    nav ul li{  /*해당 경로로 이동, 리스트 */
+        display:inline-block;
+        margin:10px 8px; /*요소 바깥쪽 여백 늘리기*/
+    }
+    .hero{
+        display:block;
+        text-align:center; /*가로방향에서 중앙 정렬*/
+        padding:30px; /*요소 안쪽 여백 늘리기*/
+    }
+    .hero-text{
+        width:260px; /*클래스 가로 길이 설정*/
+    }
+    .cards{
+        display:block;
+        padding:20px; /*요소 안쪽 여백 늘리기*/
+    }
+    .card{
+        width:220px; /*클래스 가로 길이 설정*/
+        margin:15px; /*요소 바깥쪽 여백 늘리기*/
+    }
+}
+</style>
+</head>
+<body>
+<header>
+    <h1>고양이 도감</h1> 
+    <nav>  <!--설정 경로로 이동하도록 설정-->
+        <ul> <!--리스트 형성-->
+            <li><a href="#">소개</a></li>  <!--클릭시 소개로 이동-->
+            <li><a href="#">고양이들</a></li>  <!--클릭시 고양이들로 이동-->
+            <li><a href="#">제보하기</a></li>  <!--클릭시 제보하기로 이동-->
+    </nav>
+</header>
+<div class="hero">  <!--div 영억을 나누는, 클래스 이름 설정-->
+    <div class="hero-text"> <!--div 영억을 나누는, 클래스 이름 설정-->
+        <h2>우리 동네 고양이들</h2>
+        <p>골목에서 만난 고양이들을 기록하는 페이지입니다. 이름과 성격, 자주 나타나는 자리를 함께 적어 두었습니다.</p> <!--글쓰기-->
+        <a href="#" class="btn">제보하기</a> <!--클릭시 제보하기로 이동, 클래스 부여-->
+    </div>
+    <img src="PfDog.jpg" class="hero-img"> <!--이미지 넣기, 클래스 설정-->
+</div>
+<div class="cards"> <!--영역 나누기, 클래스 설정-->
+    <div class="card"> <!--영역 나누기, 클래스 설정-->
+        <img src="ch.jpg">  <!--이미지 넣기-->
+        <h2>치즈</h2> <!--제목쓰기-->
+        <p>편의점 앞 담장에 자주 앉아 있습니다. 사람을 별로 무서워하지 않습니다.</p> <!--글쓰기-->
+    </div>
+    <div class="card"> <!--영역 나누기, 클래스 설정-->
+        <img src="bla.jpg"> <!--이미지 넣기-->
+        <h2>까망</h2> <!--제목쓰기-->
+        <p>주차장 3번 자리 아래가 지정석입니다. 낮에는 거의 자고 있습니다.</p> <!--글쓰기-->
+    </div>
+    <div class="card"> <!--영역 나누기, 클래스 설정-->
+        <img src="PfDog.jpg"> <!--이미지 넣기-->
+        <h2>삼색</h2> <!--제목쓰기-->
+        <p>놀이터 미끄럼틀 근처에 나타납니다. 셋 중 가장 겁이 많습니다.</p> <!--글쓰기-->
+    </div>
+</div>
+<footer> <!--저작권? 정보 넣기-->
+    <p>&copy; 2026 고양이 도감</p> <!--글쓰기-->
+</footer>
+</body>
+</html>

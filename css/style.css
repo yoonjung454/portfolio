@@ -478,7 +478,7 @@ a { color: inherit; text-decoration: none; }
   color: var(--text-muted);
 }
 
-/* GitHub 링크 대신, 업로드해둔 자료 폴더를 보여주는 목록 (진행하면서 폴더가 추가될 예정) */
+/* GitHub 링크 대신, 실제로 올려둔 실습 코드·문서·이미지로 바로 이동하는 목록 */
 .cp-files-title {
   margin: 0 0 10px;
   font-size: 0.85rem;
@@ -507,6 +507,13 @@ a { color: inherit; text-decoration: none; }
   background: var(--bg-alt);
   font-size: 0.9rem;
   color: var(--text-muted);
+  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.cp-file-item:hover {
+  border-color: var(--archive-accent);
+  color: var(--archive-text);
+  transform: translateX(2px);
 }
 
 .cp-file-icon {
