@@ -3,11 +3,33 @@
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
+  initIntro();
   initRevealOnScroll();
   initNavActiveState();
   initScrollIndicator();
   initProjectArchive();
 });
+
+/* ---------------------------------------------------------
+   0) 첫 진입 인트로 — 암전 → 로봇 등장 → 텍스트 등장 순서로 연출
+--------------------------------------------------------- */
+function initIntro() {
+  const overlay = document.getElementById('introOverlay');
+  const homeContent = document.querySelector('.home-content');
+  if (!overlay) return;
+
+  // 잠깐 암전을 유지한 뒤 걷어내서 3D 로봇이 먼저 드러나게 한다
+  setTimeout(() => {
+    overlay.classList.add('is-hidden');
+  }, 300);
+
+  // 오버레이가 걷히기 시작하고 조금 지난 뒤에 텍스트가 뒤이어 올라오며 등장
+  if (homeContent) {
+    setTimeout(() => {
+      homeContent.classList.add('is-in');
+    }, 900);
+  }
+}
 
 /* 3D 오브젝트는 Home 섹션 안에 그대로 배치되어 있어서(position: absolute),
    Home을 스크롤해서 벗어나면 Home과 함께 자연스럽게 화면 밖으로 사라진다.
@@ -69,14 +91,41 @@ function initScrollIndicator() {
 }
 
 /* ---------------------------------------------------------
-   4) Project Archive — hover는 CSS로 처리, 클릭은 여기서 열고/닫기
+   4) Project Archive
+   - Hover는 CSS로 처리, 클릭은 여기서 열고/닫기
+   - 탭마다 있는 작은 3D 폴더 아이콘은 평소엔 비어 있다가(정지),
+     hover/포커스/열림 상태일 때만 iframe을 만들어 넣고,
+     그 상태를 벗어나면 다시 비워서 9개가 동시에 떠 있지 않게 한다
 --------------------------------------------------------- */
 function initProjectArchive() {
-  const headers = document.querySelectorAll('.project-tab-header');
+  const tabs = document.querySelectorAll('.project-tab');
 
-  headers.forEach((header) => {
+  tabs.forEach((tab) => {
+    const header = tab.querySelector('.project-tab-header');
+    const iconBox = tab.querySelector('.tab-3d');
+    const splineSrc = iconBox?.dataset.spline;
+
+    const loadIcon = () => {
+      if (!iconBox || !splineSrc || iconBox.firstElementChild) return;
+      const iframe = document.createElement('iframe');
+      iframe.src = splineSrc;
+      iframe.setAttribute('frameborder', '0');
+      iframe.setAttribute('loading', 'lazy');
+      iframe.setAttribute('title', 'Project folder 3D icon');
+      iconBox.appendChild(iframe);
+    };
+
+    const unloadIcon = () => {
+      // 펼쳐져 있는 탭은 계속 보여주고, 닫힌 탭만 정리한다
+      if (!iconBox || tab.classList.contains('is-open')) return;
+      iconBox.innerHTML = '';
+    };
+
+    tab.addEventListener('mouseenter', loadIcon);
+    tab.addEventListener('focusin', loadIcon);
+    tab.addEventListener('mouseleave', unloadIcon);
+
     header.addEventListener('click', () => {
-      const tab = header.closest('.project-tab');
       const isOpen = tab.classList.contains('is-open');
 
       // 이미 열려있던 다른 프로젝트는 닫아서 한 번에 하나만 펼쳐지게 한다
@@ -84,11 +133,15 @@ function initProjectArchive() {
         if (openTab !== tab) {
           openTab.classList.remove('is-open');
           openTab.querySelector('.project-tab-header').setAttribute('aria-expanded', 'false');
+          if (!openTab.matches(':hover')) {
+            openTab.querySelector('.tab-3d')?.replaceChildren();
+          }
         }
       });
 
       tab.classList.toggle('is-open', !isOpen);
       header.setAttribute('aria-expanded', String(!isOpen));
+      if (!isOpen) loadIcon();
     });
   });
 }

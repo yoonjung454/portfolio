@@ -39,6 +39,26 @@
 
 * { box-sizing: border-box; }
 
+/* 첫 진입 인트로 — 암전된 화면이 걷히면서 로봇이 드러나고, 뒤이어 텍스트가 등장 */
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 200;
+  opacity: 1;
+  pointer-events: none; /* JS가 실패하더라도 사이트 사용을 막지 않도록 */
+  transition: opacity 0.9s ease;
+}
+
+.intro-overlay.is-hidden {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-overlay { display: none; }
+  .home-content { opacity: 1; transform: none; transition: none; }
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: var(--nav-height);
@@ -163,6 +183,15 @@ a { color: inherit; text-decoration: none; }
   text-align: center;
   padding: 0 24px;
   pointer-events: none; /* 텍스트 영역이 3D 오브젝트의 마우스 인터랙션을 가리지 않도록 */
+  /* 인트로 시퀀스: 로봇이 먼저 보이고, 그 다음 글자가 뒤이어 올라오며 등장 */
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.home-content.is-in {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .home-content > * { pointer-events: auto; }
@@ -387,7 +416,7 @@ a { color: inherit; text-decoration: none; }
 .project-tab-header {
   width: 100%;
   display: grid;
-  grid-template-columns: 50px 1fr auto auto;
+  grid-template-columns: 50px 44px 1fr auto auto;
   align-items: center;
   gap: 16px;
   text-align: left;
@@ -400,6 +429,25 @@ a { color: inherit; text-decoration: none; }
   font-family: inherit;
   font-size: 1rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+/* 프로젝트 탭마다 있는 작은 3D 폴더 아이콘.
+   평소엔 비어 있다가(정지), hover/포커스/열림 상태일 때만 JS가 iframe을 넣어준다.
+   → 9개 Spline iframe이 한꺼번에 떠서 브라우저가 무거워지는 걸 방지 */
+.tab-3d {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-alt);
+  flex-shrink: 0;
+}
+
+.tab-3d iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
 }
 
 .project-tab-header:hover {
@@ -589,6 +637,8 @@ a { color: inherit; text-decoration: none; }
   .nav-link { font-size: 0.8rem; }
 
   .home-content { bottom: 10%; }
+
+  .tab-3d { display: none; } /* 모바일에서는 hover가 잘 안 통하므로 아이콘 생략 */
 
   .project-tab-header {
     grid-template-columns: 34px 1fr;
