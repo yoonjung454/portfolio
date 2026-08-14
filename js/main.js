@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initProjectArchive();
   initCurrentProjectLog();
   initCurrentProjectCarousel();
+  initSkillsRadar();
 });
 
 /* ---------------------------------------------------------
@@ -290,4 +291,57 @@ function initCurrentProjectCarousel() {
     index = (index + 1) % photos.length;
     photos[index].classList.add('is-active');
   }, 3500);
+}
+
+/* ---------------------------------------------------------
+   7) Skills — 오각형 능력치 차트
+   스크롤해서 화면에 들어오면 도형이 그려지는 애니메이션을 1번만 재생하고,
+   각 꼭짓점(축)에 마우스를 올리거나 포커스하면 그 분야에서 실제로 써본
+   기술 목록을 말풍선으로 보여준다.
+--------------------------------------------------------- */
+function initSkillsRadar() {
+  const wrap = document.getElementById('skillsRadarWrap');
+  if (!wrap) return;
+
+  // 스크롤해서 들어오면 딱 한 번만 그려지는 애니메이션 재생
+  const drawObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        wrap.classList.add('is-visible');
+        drawObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.35 });
+  drawObserver.observe(wrap);
+
+  // 각 축에 마우스를 올리면(또는 키보드 포커스) 그 분야의 실제 기술 목록을 말풍선으로 표시
+  const tooltip = document.getElementById('skillsTooltip');
+  const tooltipTitle = document.getElementById('skillsTooltipTitle');
+  const tooltipSkills = document.getElementById('skillsTooltipSkills');
+  const points = wrap.querySelectorAll('.radar-point');
+  if (!tooltip || !tooltipTitle || !tooltipSkills || !points.length) return;
+
+  const showTooltip = (point) => {
+    const dot = point.querySelector('.radar-point-dot');
+    if (!dot) return;
+
+    tooltipTitle.textContent = point.dataset.title || '';
+    tooltipSkills.textContent = point.dataset.skills || '';
+
+    // SVG 점의 실제 화면 좌표를 구해서, 그 바로 위에 말풍선을 띄운다
+    const dotRect = dot.getBoundingClientRect();
+    const wrapRect = wrap.getBoundingClientRect();
+    tooltip.style.left = `${dotRect.left + dotRect.width / 2 - wrapRect.left}px`;
+    tooltip.style.top = `${dotRect.top - wrapRect.top}px`;
+    tooltip.classList.add('is-visible');
+  };
+
+  const hideTooltip = () => tooltip.classList.remove('is-visible');
+
+  points.forEach((point) => {
+    point.addEventListener('mouseenter', () => showTooltip(point));
+    point.addEventListener('mouseleave', hideTooltip);
+    point.addEventListener('focus', () => showTooltip(point));
+    point.addEventListener('blur', hideTooltip);
+  });
 }
