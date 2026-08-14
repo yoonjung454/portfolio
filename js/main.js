@@ -51,6 +51,26 @@ function initNavDocking() {
   }, { threshold: [0, 0.6, 1] });
 
   observer.observe(home);
+  positionHomeNav();
+  window.addEventListener('resize', positionHomeNav);
+}
+
+/*
+  Home 화면에 있을 때, nav 바가 정확히 태그라인("I build ideas into systems.")과
+  Projects 보기 버튼 사이 중간에 오도록 실제 위치를 재서 --home-nav-top으로 넣어준다.
+  (화면 크기마다 두 요소 사이 간격이 달라서, 고정된 %값 대신 직접 측정한다)
+*/
+function positionHomeNav() {
+  const navbar = document.getElementById('navbar');
+  const tagline = document.querySelector('.home-tagline');
+  const cta = document.querySelector('.home-cta');
+  if (!navbar || !tagline || !cta) return;
+
+  const taglineRect = tagline.getBoundingClientRect();
+  const ctaRect = cta.getBoundingClientRect();
+  const midpoint = (taglineRect.bottom + ctaRect.top) / 2;
+
+  navbar.style.setProperty('--home-nav-top', `${midpoint}px`);
 }
 
 /* 3D 오브젝트는 Home 섹션 안에 그대로 배치되어 있어서(position: absolute),
