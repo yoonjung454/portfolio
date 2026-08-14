@@ -103,9 +103,10 @@ a { color: inherit; text-decoration: none; }
 
 /* -------------------------------------------
    Navigation
-   기본(=Home 화면) 상태: "Projects 보기" 버튼 위쪽 즈음에, 어두운 배경 + 흰 글씨로 떠 있다.
+   기본(=Home 화면) 상태: 하나로 이어진 바가 아니라, 메뉴 하나하나가 각자
+   어두운 알약(pill) 모양으로 개별적으로 떠 있다 ("Projects 보기" 버튼 위쪽 즈음).
    Home을 벗어나 스크롤하면(JS가 .is-docked를 붙이면) 화면 맨 위로 이동하면서
-   밝은 배경 + 어두운 글씨로 자연스럽게 바뀐다.
+   하나로 이어진 밝은 바 + 어두운 글씨로 자연스럽게 바뀐다.
 ------------------------------------------- */
 .navbar {
   position: fixed;
@@ -115,17 +116,17 @@ a { color: inherit; text-decoration: none; }
   left: 0; right: 0;
   height: var(--nav-height);
   z-index: 100;
-  background: rgba(10, 14, 20, 0.55);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  border-bottom: none;
   transition: top 0.5s cubic-bezier(0.22, 1, 0.36, 1), background 0.4s ease, border-color 0.4s ease;
 }
 
 .navbar.is-docked {
   top: 0;
   background: rgba(255, 255, 255, 0.55);
-  border-bottom-color: rgba(31, 35, 51, 0.08);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(31, 35, 51, 0.08);
 }
 
 .nav-inner {
@@ -141,7 +142,7 @@ a { color: inherit; text-decoration: none; }
 /* Home 화면(도킹 전)에서는 로고 없이, 메뉴만 가운데 정렬로 떠 있는다 */
 .navbar:not(.is-docked) .nav-inner {
   justify-content: center;
-  gap: 40px;
+  gap: 14px;
 }
 
 .navbar:not(.is-docked) .nav-logo {
@@ -165,12 +166,18 @@ a { color: inherit; text-decoration: none; }
   flex-wrap: wrap;
 }
 
+.navbar:not(.is-docked) .nav-links {
+  gap: 10px;
+}
+
 .nav-link {
+  display: inline-flex;
+  align-items: center;
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.75);
   padding: 6px 2px;
   border-bottom: 2px solid transparent;
-  transition: color 0.3s ease, border-color 0.2s ease;
+  transition: color 0.3s ease, border-color 0.2s ease, background 0.3s ease;
 }
 
 .navbar.is-docked .nav-link {
@@ -183,6 +190,52 @@ a { color: inherit; text-decoration: none; }
 .nav-link.active {
   color: var(--accent);
   border-bottom-color: var(--accent);
+}
+
+/* Home 화면에서는 메뉴 하나하나가 각자 독립된 알약 모양으로 떠 있는다 (하나로 이어진 바가 아님) */
+.navbar:not(.is-docked) .nav-link {
+  padding: 8px 16px;
+  border-bottom: none;
+  border-radius: 999px;
+  background: rgba(10, 14, 20, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.navbar:not(.is-docked) .nav-link:hover {
+  background: rgba(10, 14, 20, 0.75);
+}
+
+.navbar:not(.is-docked) .nav-link.active {
+  background: rgba(13, 148, 136, 0.35);
+}
+
+/*
+  메뉴를 클릭하면 그 메뉴 옆으로 간격이 벌어지면서, 어떤 섹션인지 짧은 한국어
+  설명이 오른쪽으로 펼쳐지듯 나타난다. max-width를 0→값 있는 상태로 전환해서
+  텍스트가 옆으로 쭉 펼쳐지는 느낌을 낸다.
+*/
+.nav-link-desc {
+  display: inline-block;
+  max-width: 0;
+  margin-left: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  opacity: 0;
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--accent);
+  transition: max-width 0.45s cubic-bezier(0.22, 1, 0.36, 1), margin-left 0.45s ease, opacity 0.3s ease;
+}
+
+.nav-link.is-expanded .nav-link-desc {
+  max-width: 220px;
+  margin-left: 10px;
+  opacity: 1;
+}
+
+@media (max-width: 768px) {
+  .nav-link-desc { display: none; } /* 좁은 화면에서는 메뉴가 밀리는 걸 막기 위해 생략 */
 }
 
 @media (max-width: 768px) {
@@ -265,6 +318,7 @@ a { color: inherit; text-decoration: none; }
 
 .home-cta {
   display: inline-block;
+  margin-top: 96px; /* 태그라인과의 간격을 넓혀서, 그 사이에 뜨는 nav 바에 가려지지 않게 함 */
   padding: 12px 28px;
   border: 1px solid var(--accent);
   border-radius: 999px;
@@ -352,26 +406,75 @@ a { color: inherit; text-decoration: none; }
   background: linear-gradient(to bottom, var(--about-bg) 0, var(--current-bg) var(--blend), var(--current-bg) 100%);
 }
 
-/* 한 화면에 최대한 다 들어오도록 이 섹션만 여백/카드 크기를 좀 더 촘촘하게 줄인다 */
+/*
+  이 섹션(설명 + 사진 + 진행 로그 + 관련 자료)이 전부 한 화면 안에 들어오도록
+  여백과 카드 크기를 곳곳에서 촘촘하게 줄인다.
+*/
 .current-project-section .section-inner {
-  padding-top: 56px;
-  padding-bottom: 56px;
+  padding-top: 36px;
+  padding-bottom: 36px;
+}
+
+.current-project-section .section-title {
+  margin-bottom: 18px;
 }
 
 .current-project-section .cp-card {
-  padding: 22px 24px;
+  padding: 18px 20px;
+}
+
+.current-project-section .cp-layout {
+  gap: 20px;
 }
 
 .current-project-section .cp-log {
-  padding: 16px;
+  padding: 14px 16px;
 }
 
 .current-project-section .cp-log-card {
-  margin-top: 16px;
+  margin-top: 14px;
 }
 
 .current-project-section .cp-photo-carousel {
-  aspect-ratio: 16 / 11;
+  aspect-ratio: 16 / 8;
+}
+
+.current-project-section .cp-log-title,
+.current-project-section .cp-files-title {
+  margin-bottom: 8px;
+}
+
+.current-project-section .cp-log-timeline {
+  margin: 2px 0 12px;
+}
+
+.current-project-section .cp-files-hint {
+  margin-bottom: 8px;
+  font-size: 0.76rem;
+}
+
+.current-project-section .badge-in-progress {
+  margin-bottom: 8px;
+}
+
+.current-project-section .cp-name {
+  margin-bottom: 4px;
+  font-size: 1.25rem;
+}
+
+.current-project-section .cp-today {
+  margin-top: 10px;
+  padding-top: 10px;
+}
+
+.current-project-section .cp-file-item {
+  padding: 8px 12px;
+  background: rgba(255, 255, 255, 0.4);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.current-project-section .cp-files-empty {
+  border-color: rgba(255, 255, 255, 0.5);
 }
 
 /*
@@ -379,13 +482,16 @@ a { color: inherit; text-decoration: none; }
   구성한다. 설명과 로그는 각각 흰 카드(.cp-card)에 담고, 사진은 카드 없이
   섹션 배경 위에 그대로 떠 있게 해서 서로 다른 성격의 정보라는 걸 시각적으로 구분한다.
 */
+/* 완전한 흰 박스 대신, 배경이 살짝 비쳐 보이는 반투명 유리 카드(토스 스타일) */
 .cp-card {
   position: relative;
-  background: var(--bg);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
   border-radius: var(--radius);
   padding: 32px;
-  box-shadow: 0 12px 30px rgba(20, 30, 40, 0.06);
+  box-shadow: 0 12px 30px rgba(20, 30, 40, 0.05);
 }
 
 .cp-info-card {
@@ -489,7 +595,7 @@ a { color: inherit; text-decoration: none; }
   margin: 0 0 24px;
   padding: 22px;
   border-radius: 18px;
-  background: var(--bg-alt);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .cp-log-title {
@@ -647,8 +753,8 @@ a { color: inherit; text-decoration: none; }
 .cp-log-display {
   padding: 18px 20px;
   border-radius: 14px;
-  background: var(--bg);
-  box-shadow: 0 4px 16px rgba(20, 30, 40, 0.06);
+  background: rgba(255, 255, 255, 0.55);
+  box-shadow: 0 4px 16px rgba(20, 30, 40, 0.05);
 }
 
 .cp-log-display-head {
@@ -1128,6 +1234,7 @@ a { color: inherit; text-decoration: none; }
   .nav-link { font-size: 0.8rem; }
 
   .home-content { bottom: 10%; }
+  .home-cta { margin-top: 64px; }
 
   .archive {
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));

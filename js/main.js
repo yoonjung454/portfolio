@@ -5,6 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   initIntro();
   initNavDocking();
+  initNavDescExpand();
   initRevealOnScroll();
   initNavActiveState();
   initScrollIndicator();
@@ -71,6 +72,27 @@ function positionHomeNav() {
   const midpoint = (taglineRect.bottom + ctaRect.top) / 2;
 
   navbar.style.setProperty('--home-nav-top', `${midpoint}px`);
+}
+
+/* ---------------------------------------------------------
+   0-2) 메뉴 클릭 시, 그 메뉴 옆으로 간격이 벌어지며 한국어 설명이 펼쳐진다.
+   한 번에 하나만 펼쳐지도록, 다른 메뉴를 클릭하면 이전 것은 접힌다.
+--------------------------------------------------------- */
+function initNavDescExpand() {
+  const links = document.querySelectorAll('.nav-link');
+  if (!links.length) return;
+
+  links.forEach((link) => {
+    link.addEventListener('click', () => {
+      const alreadyExpanded = link.classList.contains('is-expanded');
+
+      links.forEach((other) => other.classList.remove('is-expanded'));
+
+      if (!alreadyExpanded) {
+        link.classList.add('is-expanded');
+      }
+    });
+  });
 }
 
 /* 3D 오브젝트는 Home 섹션 안에 그대로 배치되어 있어서(position: absolute),
