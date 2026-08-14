@@ -397,7 +397,39 @@ a { color: inherit; text-decoration: none; }
    About
 ------------------------------------------- */
 .about-section {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(to bottom, var(--home-bg) 0, var(--about-bg) var(--blend), var(--about-bg) 100%);
+}
+
+.about-section .section-inner {
+  position: relative;
+  z-index: 1;
+}
+
+/*
+  About 배경에 살짝 얹히는 로봇 — 이 섹션에 도달하면 은은하게 떠오르고,
+  다른 섹션으로 넘어가면 다시 사라진다. 텍스트를 가리지 않도록 아주 연하게,
+  클릭도 되지 않게 둔다.
+*/
+.about-bg-robot {
+  position: absolute;
+  right: -30px;
+  top: 50%;
+  z-index: 0;
+  width: 320px;
+  max-width: 42%;
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  transform: translateY(-50%) translateX(28px);
+  transition: opacity 1.1s ease, transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.about-bg-robot.is-visible {
+  opacity: 0.16;
+  transform: translateY(-50%) translateX(0);
 }
 
 .about-list {
@@ -1567,5 +1599,9 @@ a { color: inherit; text-decoration: none; }
 
   .exp-visual-emoji {
     font-size: 3.6rem;
+  }
+
+  .about-bg-robot {
+    display: none;
   }
 }

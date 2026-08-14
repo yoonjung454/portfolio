@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCurrentProjectCarousel();
   initSkillsRadar();
   initExperienceWheel();
+  initAboutBgRobot();
 });
 
 /* ---------------------------------------------------------
@@ -495,4 +496,23 @@ function initExperienceWheel() {
       visualInfo.classList.remove('is-changing');
     }, 60);
   });
+}
+
+/* ---------------------------------------------------------
+   11) About — 배경 로봇
+   About 섹션에 도달하면 오른쪽에 은은하게 떠오르고, 다른 섹션으로
+   넘어가면(위로든 아래로든) 다시 사라진다.
+--------------------------------------------------------- */
+function initAboutBgRobot() {
+  const robot = document.getElementById('aboutBgRobot');
+  const about = document.getElementById('about');
+  if (!robot || !about) return;
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      robot.classList.toggle('is-visible', entry.isIntersecting);
+    });
+  }, { threshold: 0.4 });
+
+  observer.observe(about);
 }
