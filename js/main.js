@@ -3,7 +3,7 @@
    ========================================================= */
 
 document.addEventListener('DOMContentLoaded', () => {
-  initHomeScrollTransition();
+  initHomeDocking();
   initRevealOnScroll();
   initNavActiveState();
   initScrollIndicator();
@@ -11,33 +11,27 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* ---------------------------------------------------------
-   1) Home — scroll transition
-   Home을 벗어나며 스크롤할수록 3D 스테이지를 축소 + Fade Out.
+   1) Home — 3D 오브젝트 도킹
+   Home에 있을 때는 화면 전체를 채우다가, 아래로 스크롤해서
+   Home을 벗어나면 우측 하단으로 작게 도킹되어 이후 모든 섹션에서
+   계속 옆에 떠 있는 상태를 유지한다 (전체 사이트에 일관된 3D 요소).
+
    (마우스에 따른 회전/기울임은 Spline 씬 자체가 처리하므로
     여기서는 별도의 tilt 로직을 두지 않는다.)
 --------------------------------------------------------- */
-function initHomeScrollTransition() {
+function initHomeDocking() {
   const homeSection = document.getElementById('home');
   const stage = document.getElementById('home3dStage');
   if (!homeSection || !stage) return;
 
-  const update = () => {
-    const rect = homeSection.getBoundingClientRect();
-    const homeHeight = rect.height || window.innerHeight;
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      // Home이 화면에 절반 이상 보이면 풀스크린, 그렇지 않으면 도킹
+      stage.classList.toggle('docked', entry.intersectionRatio < 0.5);
+    });
+  }, { threshold: [0, 0.5, 1] });
 
-    // Home 상단이 화면 위로 올라간 만큼을 0~1 진행률로 변환
-    const progress = Math.min(Math.max(-rect.top / (homeHeight * 0.8), 0), 1);
-
-    const scale = 1 - progress * 0.3;
-    const opacity = 1 - progress;
-    const translateY = progress * 60;
-
-    stage.style.transform = `scale(${scale}) translateY(-${translateY}px)`;
-    stage.style.opacity = String(opacity);
-  };
-
-  window.addEventListener('scroll', update, { passive: true });
-  update();
+  observer.observe(homeSection);
 }
 
 /* ---------------------------------------------------------
