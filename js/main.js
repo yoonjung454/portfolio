@@ -14,7 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
   initCurrentProjectCarousel();
   initSkillsRadar();
   initExperienceWheel();
-  initAboutBgRobot();
+  initSectionBgRobot('aboutBgRobot', 'about');
+  initSectionBgRobot('contactBgRobot', 'contact');
 });
 
 /* ---------------------------------------------------------
@@ -499,14 +500,14 @@ function initExperienceWheel() {
 }
 
 /* ---------------------------------------------------------
-   11) About — 배경 로봇
-   About 섹션에 도달하면 오른쪽에 은은하게 떠오르고, 다른 섹션으로
+   11) 섹션 배경 로봇 (About / Contact)
+   해당 섹션에 도달하면 배경에 은은하게 떠오르고, 다른 섹션으로
    넘어가면(위로든 아래로든) 다시 사라진다.
 --------------------------------------------------------- */
-function initAboutBgRobot() {
-  const robot = document.getElementById('aboutBgRobot');
-  const about = document.getElementById('about');
-  if (!robot || !about) return;
+function initSectionBgRobot(imgId, sectionId) {
+  const robot = document.getElementById(imgId);
+  const section = document.getElementById(sectionId);
+  if (!robot || !section) return;
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -514,5 +515,5 @@ function initAboutBgRobot() {
     });
   }, { threshold: 0.4 });
 
-  observer.observe(about);
+  observer.observe(section);
 }

@@ -1537,11 +1537,43 @@ a { color: inherit; text-decoration: none; }
 ------------------------------------------- */
 /* Contact는 어두운 톤으로 마무리해서, 밝은 Home에서 시작한 사이트가 다시 어두운 분위기로 닫히도록 한다 */
 .contact-section {
+  position: relative;
+  overflow: hidden;
   background: linear-gradient(to bottom, var(--experience-bg) 0, var(--contact-bg) var(--blend), var(--contact-bg) 100%);
   color: var(--contact-text);
 }
 
+.contact-section .section-inner {
+  position: relative;
+  z-index: 1;
+}
+
 .contact-section .section-title { color: var(--contact-text); }
+
+/*
+  Contact 배경의 로켓 로봇 — 배경 자체가 검은색이라 어두운 Contact 톤에
+  자연스럽게 스며든다. About의 배경 로봇과 같은 방식으로, 이 섹션에
+  도달하면 떠오르고 벗어나면 사라진다.
+*/
+.contact-bg-robot {
+  position: absolute;
+  right: -60px;
+  top: 50%;
+  z-index: 0;
+  width: 460px;
+  max-width: 55%;
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  transform: translateY(-50%) translateX(36px) scale(0.94);
+  transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.contact-bg-robot.is-visible {
+  opacity: 0.55;
+  transform: translateY(-50%) translateX(0) scale(1);
+}
 
 .contact-links {
   display: flex;
@@ -1602,6 +1634,10 @@ a { color: inherit; text-decoration: none; }
   }
 
   .about-bg-robot {
+    display: none;
+  }
+
+  .contact-bg-robot {
     display: none;
   }
 }
