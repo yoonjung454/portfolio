@@ -571,162 +571,193 @@ a { color: inherit; text-decoration: none; }
 .projects-section {
   background: linear-gradient(to bottom, var(--current-bg) 0, var(--archive-bg) var(--blend), var(--archive-bg) 100%);
 }
-.projects-section .section-title { color: var(--archive-text); }
 
-.archive {
-  display: flex;
-  flex-direction: column;
-  padding-top: 20px; /* 맨 위 파일의 탭이 잘리지 않도록 여유 공간 */
+.projects-section .section-title {
+  color: var(--archive-text);
 }
 
-/*
-  서류 더미: 뒤로 갈수록(=i가 클수록) 아주 살짝 작아지고 아래로 가라앉으면서
-  뒤쪽에 층층이 쌓인 것 같은 입체감을 준다. 실제로 겹쳐서 쌓인 종이 더미를
-  비스듬히 내려다보는 듯한 느낌을 노린 것.
-*/
+/* =========================
+   폴더 전체 배치 — 종이 파일 더미 대신, 폴더 아이콘들이 나란히 놓인 그리드
+========================= */
+.archive {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 45px 35px;
+  align-items: start;
+  padding-top: 35px;
+}
+
+/* 프로젝트 하나 (폴더 아이콘 + 이름 + 상세 내용을 담는 칸) */
 .project-tab {
   position: relative;
-  margin-top: -18px;
-  z-index: calc(10 - var(--i, 0));
-  transform: scale(calc(1 - var(--i, 0) * 0.006));
-  transform-origin: top center;
-  transition: transform 0.25s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 0;
 }
-
-.project-tab:first-child { margin-top: 0; }
 
 /*
-  주의: z-index는 같은 stacking context 안의 형제 요소끼리만 비교된다.
-  .project-tab-header::hover에만 z-index를 줘봐야, 그 header는 부모인
-  .project-tab이 만든 stacking context에 갇혀 있어서 "더 앞쪽(= i가 작은)"
-  다른 .project-tab을 절대 넘어설 수 없다. 그래서 z-index는 반드시
-  .project-tab(부모) 레벨에서 올려줘야, 목록 뒤쪽에 있는 파일을 hover했을 때도
-  진짜로 다른 파일들 위로 튀어나온다.
+  탭을 열면 그 칸만 그리드 전체 너비를 차지하도록 만들어서,
+  아래의 상세 내용(.project-detail)이 좁은 폴더 칸에 눌리지 않고
+  한 줄을 통째로 차지해서 펼쳐지게 한다.
 */
-.project-tab:hover {
-  z-index: 45;
-}
-
-/* 열린 탭은 다른 파일들보다 완전히 앞으로 나와서, 그 안의 종이가 전부 위에 떠 보이도록 */
 .project-tab.is-open {
-  z-index: 60;
-  transform: scale(1);
+  grid-column: 1 / -1;
 }
 
+/* =========================
+   폴더 버튼
+========================= */
 .project-tab-header {
-  position: relative;
-  width: 100%;
-  display: grid;
-  grid-template-columns: 44px 1fr auto auto;
+  appearance: none;
+  border: none;
+  background: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 16px;
-  text-align: left;
-  padding: 18px 22px;
-  background: var(--archive-card);
-  border: 1px solid var(--archive-card-edge);
-  border-radius: 4px 10px 10px 10px;
-  color: var(--archive-text);
   cursor: pointer;
   font-family: inherit;
-  font-size: 1rem;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  color: var(--archive-text);
 }
 
-/*
-  실제로 서류철에서 원하는 문서를 살짝 꺼내는 느낌:
-  마우스를 올린 파일만 다른 파일보다 앞으로 나오면서 위로 떠오르고 살짝 커진다.
-  (z-index 상승은 위의 .project-tab:hover에서 처리한다)
-*/
-.project-tab-header:hover {
-  transform: translateY(-8px) scale(1.02);
-  box-shadow: 0 16px 30px rgba(20, 30, 40, 0.2);
+/* =========================
+   폴더 아이콘
+========================= */
+.folder-icon {
+  position: relative;
+  width: 125px;
+  height: 100px;
+  transition: transform 0.25s ease, filter 0.25s ease;
 }
 
-/*
-  폴더 위로 삐져나온 색인 플랩. 실제 서류철처럼 파일마다 탭이 조금씩
-  다른 가로 위치(--tab-x)에 붙어 있어서, 위에서 내려다보면 탭들이
-  계단식으로 어긋나 보인다. 안에는 프로젝트 이름이 적혀 있다.
-*/
-.project-tab-header::before {
-  content: attr(data-name);
+/* 마우스 올렸을 때 — 폴더 전체가 살짝 떠오른다 */
+.project-tab-header:hover .folder-icon {
+  transform: translateY(-8px) scale(1.04);
+  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.15));
+}
+
+/* 폴더 뒤판 */
+.folder-back {
   position: absolute;
-  top: -20px;
-  left: var(--tab-x, 20px);
-  padding: 4px 14px;
-  white-space: nowrap;
-  background: var(--archive-accent);
-  color: #fff;
-  font-size: 0.72rem;
-  font-weight: 800;
-  letter-spacing: 0.02em;
-  border-radius: 6px 6px 0 0;
-  box-shadow: 0 -2px 6px rgba(20, 30, 40, 0.12);
+  left: 2px;
+  top: 15px;
+  width: 121px;
+  height: 78px;
+  background: #fbbf24;
+  border-radius: 7px;
 }
 
-/* 프로젝트 탭마다 있는 작은 폴더 아이콘 (정적 SVG) */
-.tab-icon {
-  display: inline-flex;
-  align-items: center;
+/* 폴더 위쪽 탭 */
+.folder-back::before {
+  content: "";
+  position: absolute;
+  top: -13px;
+  left: 0;
+  width: 52px;
+  height: 25px;
+  background: #fbbf24;
+  border-radius: 7px 7px 0 0;
+}
+
+/* 안에 들어있는 종이 */
+.folder-paper {
+  position: absolute;
+  z-index: 2;
+  left: 30px;
+  top: 23px;
+  width: 65px;
+  height: 65px;
+  background: #ffffff;
+  border: 1px solid #d8d8d8;
+  border-radius: 3px;
+  display: flex;
   justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 8px;
-  color: var(--archive-accent);
-  flex-shrink: 0;
+  align-items: center;
+  font-size: 24px;
+  transition: transform 0.3s ease;
 }
 
+/* 종이 오른쪽 위 접힌 모서리 */
+.folder-paper::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 18px;
+  height: 18px;
+  background: linear-gradient(45deg, #e5e7eb 50%, transparent 50%);
+}
+
+/* hover 시 종이가 살짝 올라옴 (서류철에서 문서를 꺼내는 느낌) */
+.project-tab-header:hover .folder-paper {
+  transform: translateY(-10px);
+}
+
+/* 폴더 앞판 */
+.folder-front {
+  position: absolute;
+  z-index: 3;
+  bottom: 0;
+  left: 0;
+  width: 125px;
+  height: 60px;
+  background: linear-gradient(#ffd76a, #ffcd54);
+  border: 2px solid #f5b82e;
+  border-radius: 5px 5px 7px 7px;
+  box-sizing: border-box;
+}
+
+/* =========================
+   폴더 이름
+========================= */
 .tab-name {
-  font-weight: 700;
-  transition: color 0.2s ease;
+  margin-top: 12px;
+  font-size: 16px;
+  font-weight: 500;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.project-tab-header:hover .tab-name { color: var(--archive-accent); }
-
-.tab-field {
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-.tab-tag {
-  font-size: 0.8rem;
+.project-tab-header:hover .tab-name {
   color: var(--archive-accent);
-  background: rgba(13, 148, 136, 0.1);
-  padding: 2px 10px;
-  border-radius: 999px;
 }
+
+/* =========================
+   상세 내용
+========================= */
 
 /*
   상세 내용은 폴더 색과 다른 새하얀 종이 한 장이라는 느낌을 주기 위해
-  배경을 순백색(--bg)으로 분리했다. 평소엔 폴더 속에 접혀 들어가 있다가
-  (높이 0, 아래로 눌린 채) 열리면 폴더 위로 겹치며 위로 미끄러져 올라온다.
+  배경을 순백색(--bg)으로 분리했다. 평소엔 접혀 있다가(높이 0),
+  열리면(부모 .project-tab이 그리드 전체 너비로 확장되면서) 그 안에서
+  펼쳐진다.
 */
 .project-detail {
+  width: 100%;
   max-height: 0;
   overflow: hidden;
   opacity: 0;
-  transform: translateY(28px) scale(0.97);
-  transform-origin: top center;
   background: var(--bg);
-  border: 1px solid var(--archive-card-edge);
-  border-top: none;
-  border-radius: 0 0 10px 10px;
-  transition: max-height 0.5s ease, opacity 0.4s ease, transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), margin-top 0.5s ease, box-shadow 0.5s ease;
+  border-radius: 10px;
+  transition: max-height 0.5s ease, opacity 0.35s ease, margin 0.4s ease;
 }
 
+/* 폴더 클릭 후 */
 .project-tab.is-open .project-detail {
   max-height: 1000px;
   opacity: 1;
-  transform: translateY(0) scale(1);
-  padding: 6px 0 4px;
-  margin-top: -10px; /* 폴더 속에서 살짝 겹쳐 올라온 것처럼 */
-  box-shadow: 0 20px 40px rgba(20, 30, 40, 0.22);
+  margin-top: 20px;
+  box-shadow: 0 15px 35px rgba(20, 30, 40, 0.15);
 }
 
 .detail-grid {
   display: grid;
   grid-template-columns: 220px 1fr;
   gap: 24px;
-  padding: 20px 22px 24px;
+  padding: 24px;
 }
 
 .detail-image {
@@ -864,17 +895,9 @@ a { color: inherit; text-decoration: none; }
 
   .home-content { bottom: 10%; }
 
-  .project-tab-header {
-    grid-template-columns: 34px 1fr;
-    row-gap: 6px;
-  }
-  .tab-field, .tab-tag { grid-column: 2 / 3; }
-
-  /* 좁은 화면에서는 탭이 화면 밖으로 삐져나오지 않도록 가로 스태거 폭을 줄인다 */
-  .project-tab-header::before {
-    left: clamp(12px, calc(var(--tab-x, 20px) * 0.4), 70px);
-    font-size: 0.66rem;
-    padding: 3px 10px;
+  .archive {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 32px 20px;
   }
 
   .detail-grid {
