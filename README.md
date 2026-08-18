@@ -41,7 +41,7 @@ portfolio/
 │   │   ├── day1-signup/           # 실습 코드 (회원가입 폼)
 │   │   ├── day3-resume/           # 실습 코드 (이력서 페이지)
 │   │   ├── day4-profilecard/      # 실습 코드 (프로필 카드)
-│   │   ├── mini-cart/             # 미니 장바구니 (FastAPI+SQLite 백엔드, Next.js 프론트엔드)
+│   │   ├── Day11/                 # 미니 장바구니 (FastAPI+SQLite 백엔드, Next.js 프론트엔드)
 │   │   └── notebooks/             # Python 기초 · 조건문/반복문 노트북(.ipynb)
 │   ├── docs/                      # 기획서, AI 도구 트렌드 조사 보고서(.md)
 │   └── images/

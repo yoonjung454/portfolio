@@ -5,7 +5,7 @@ FastAPI + SQLite로 만든 백엔드와, Next.js로 시작한 프론트엔드로
 ## 파일 구조
 
 ```
-mini-cart/
+Day11/
 ├── main.py                    # FastAPI 백엔드 — SQLite(products, cart 테이블) + 화면(HTML/JS)까지 한 파일에서 서빙
 ├── README.md                  # 이 문서
 └── mini_cart/                 # Next.js(App Router) 프론트엔드
