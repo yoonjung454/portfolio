@@ -2,6 +2,27 @@
 
 FastAPI + SQLite로 만든 백엔드와, Next.js로 시작한 프론트엔드로 구성된 간단한 장바구니 웹앱 실습.
 
+## 파일 구조
+
+```
+mini-cart/
+├── main.py                    # FastAPI 백엔드 — SQLite(products, cart 테이블) + 화면(HTML/JS)까지 한 파일에서 서빙
+├── README.md                  # 이 문서
+└── mini_cart/                 # Next.js(App Router) 프론트엔드
+    ├── app/
+    │   ├── layout.tsx          # 메타데이터 (제목: "미니 장바구니")
+    │   ├── page.tsx            # 기본 화면 (제목만 "미니 장바구니"로 교체한 상태)
+    │   ├── globals.css
+    │   └── favicon.ico
+    ├── public/                 # create-next-app 기본 아이콘(svg)
+    ├── 화면캡쳐1.png            # FastAPI 화면 실행 결과 캡처
+    ├── package.json / package-lock.json
+    ├── next.config.ts / tsconfig.json / eslint.config.mjs / postcss.config.mjs
+    └── .gitignore              # node_modules, .next 등 빌드 산출물 제외
+```
+
+`node_modules/`, `.next/`(빌드 캐시), `cart.db`(런타임에 생성되는 SQLite 파일)는 실행할 때마다 새로 생기는 파일이라 저장소에는 올리지 않았다.
+
 ## 구성
 
 - `main.py` — FastAPI 백엔드. 상품/장바구니를 SQLite(`products`, `cart` 테이블)에 저장하고, 화면(HTML+JS)까지 같은 서버에서 함께 내려준다.
