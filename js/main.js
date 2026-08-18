@@ -305,7 +305,11 @@ function initProjectCalendar() {
           ],
           related: [{ label: '개인 포트폴리오 사이트 (지금 만들고 있는 이 사이트)', href: 'https://github.com/yoonjung454/portfolio' }] },
         { day: 18, title: '미니 장바구니 웹앱 제작 (FastAPI + SQLite 백엔드, Next.js 프론트엔드)',
-          related: [{ label: '미니 장바구니 프로젝트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/mini-cart' }] }
+          images: ['current-project/images/day18-mini-cart-result.png'],
+          related: [
+            { label: '미니 장바구니 프로젝트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/mini-cart' },
+            { label: '실습 결과 캡처 — 미니 장바구니 화면', href: 'current-project/images/day18-mini-cart-result.png' }
+          ] }
       ]
     },
     {
