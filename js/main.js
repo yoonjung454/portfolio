@@ -9,9 +9,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initRevealOnScroll();
   initNavActiveState();
   initScrollIndicator();
-  initProjectArchive();
-  initCurrentProjectLog();
-  initCurrentProjectCarousel();
+  initProjectFullScreenJump();
+  initProjectNavbarHide();
+  initProjectCalendar();
   initSkillsRadar();
   initExperienceWheel();
   initSectionBgRobot('aboutBgRobot', 'about');
@@ -157,143 +157,608 @@ function initScrollIndicator() {
     document.getElementById('about')?.scrollIntoView({ behavior: 'smooth' });
   });
 }
+function initProjectNavbarHide() {
+  const navbar = document.getElementById('navbar');
+  const projectSection = document.getElementById('current-project');
 
-/* ---------------------------------------------------------
-   4) Project Archive — hover는 CSS로 처리, 클릭은 여기서 열고/닫기
---------------------------------------------------------- */
-function initProjectArchive() {
-  const headers = document.querySelectorAll('.project-tab-header');
+  if (!navbar || !projectSection) return;
 
-  headers.forEach((header) => {
-    header.addEventListener('click', () => {
-      const tab = header.closest('.project-tab');
-      const isOpen = tab.classList.contains('is-open');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
 
-      // 이미 열려있던 다른 프로젝트는 닫아서 한 번에 하나만 펼쳐지게 한다
-      document.querySelectorAll('.project-tab.is-open').forEach((openTab) => {
-        if (openTab !== tab) {
-          openTab.classList.remove('is-open');
-          openTab.querySelector('.project-tab-header').setAttribute('aria-expanded', 'false');
-        }
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.35) {
+        navbar.classList.add('is-project-hidden');
+      } else {
+        navbar.classList.remove('is-project-hidden');
+      }
+
+    });
+  }, {
+    threshold: [0, 0.35, 0.6, 1]
+  });
+
+  observer.observe(projectSection);
+}
+function initProjectFullScreenJump() {
+  const projectLinks = document.querySelectorAll('a[href="#current-project"]');
+  const projectSection = document.getElementById('current-project');
+
+  if (!projectLinks.length || !projectSection) return;
+
+  projectLinks.forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      window.scrollTo({
+        top: projectSection.offsetTop,
+        behavior: 'smooth'
       });
-
-      tab.classList.toggle('is-open', !isOpen);
-      header.setAttribute('aria-expanded', String(!isOpen));
     });
   });
 }
-
 /* ---------------------------------------------------------
-   5) Current Project — 진행 로그 슬라이더 + 연동된 관련 자료
-   원본 <ul class="cp-log-list"> 항목을 그대로 데이터로 사용해서,
-   슬라이더(바)를 좌우로 움직이면 그 위치에 해당하는 날짜의
-   로그 내용이 표시창에 나타난다. 동시에 "관련 자료" 목록도
-   각 항목의 data-day 값을 기준으로 그 날짜에 해당하는 것만 남기고 숨긴다.
-
-   부드러운 움직임을 위해:
-   - 트랙 채움(--fill)과 지나온 눈금(is-passed)은 드래그하는 동안 매 프레임 즉시 갱신 (버벅임 없이 손끝을 그대로 따라오도록)
-   - 표시창 내용(날짜/배지/텍스트)은 값이 "실제로 바뀔 때"만 짧게 크로스페이드 (드래그 중 매 픽셀마다 깜빡이지 않도록)
+   4) Projects — 진행 중 + 완료 프로젝트 통합 캘린더 타임라인
+   원래 있던 "Current Project"의 날짜별 실습 기록과 "Project Archive"의
+   폴더별 완료 프로젝트를, 하나의 맥 창 스타일 달력 안에서 함께 보여준다.
+   왼쪽에서 카테고리/연도/월로 필터링하고, 가운데 타임라인에서 날짜를 고르면
+   오른쪽에 그날 활성 상태였던 프로젝트 카드가 쌓여서 나타난다.
 --------------------------------------------------------- */
-function initCurrentProjectLog() {
-  const log = document.getElementById('cpLog');
-  const slider = document.getElementById('cpLogSlider');
-  const list = document.getElementById('cpLogList');
-  const display = document.getElementById('cpLogDisplay');
-  const displayDate = document.getElementById('cpLogDisplayDate');
-  const displayText = document.getElementById('cpLogDisplayText');
-  const badge = document.getElementById('cpLogBadge');
-  const ticksBox = document.getElementById('cpLogTicks');
-  if (!log || !slider || !list || !display || !displayDate || !displayText) return;
+function initProjectCalendar() {
+  const categoryList = document.getElementById('categoryList');
+  const yearList = document.getElementById('yearList');
+  const monthList = document.getElementById('monthList');
+  const timelineMonthTitle = document.getElementById('timelineMonthTitle');
+  const todayButton = document.getElementById('todayButton');
+  const timelineScroll = document.getElementById('timelineScroll');
+  const timelineDays = document.getElementById('timelineDays');
+  const timelineEvents = document.getElementById('timelineEvents');
+  const timelineCursor = document.getElementById('timelineCursor');
+  const selectedDateLabel = document.getElementById('selectedDateLabel');
+  const nowProjects = document.getElementById('nowProjects');
+  if (!categoryList || !yearList || !monthList || !timelineDays || !nowProjects) return;
 
-  const entries = Array.from(list.querySelectorAll('li'));
-  if (!entries.length) return;
-
-  const latestIndex = entries.length - 1;
-  slider.max = String(latestIndex);
-
-  const ticks = ticksBox ? Array.from(ticksBox.querySelectorAll('span')) : [];
-  const fileItems = Array.from(document.querySelectorAll('#cpFileList > li'));
-  const emptyMessage = document.getElementById('cpFilesEmpty');
-
-  let currentIndex = null;
-  let fadeTimer = null;
-
-  // 트랙 채움 + 눈금은 값이 바뀔 때마다 즉시(부드럽게) 갱신 — 드래그의 손맛을 위해 지연 없음
-  const updateTrack = (index) => {
-    const percent = latestIndex === 0 ? 100 : (index / latestIndex) * 100;
-    slider.style.setProperty('--fill', `${percent}%`);
-    ticks.forEach((tick, i) => tick.classList.toggle('is-passed', i <= index));
+  /* ----- 데이터: 원래 Current Project(피지컬AI 일경험) + Project Archive(공정실습·
+     산학공동연구·소모임·진로멘토링)에 있던 내용을 그대로 옮겨온 것 ----- */
+  const PROJECTS = {
+    'physical-ai': {
+      name: '피지컬AI 일경험 프로젝트', category: 'experience',
+      tech: ['HTML', 'CSS', 'JavaScript', 'Python']
+    },
+    'process-practicum': {
+      name: '공정실습', category: 'academic',
+      tech: ['반도체 공정 실습 장비', '보고서 작성']
+    },
+    'industry-academia': {
+      name: '산학공동연구', category: 'academic',
+      tech: ['CAN 통신', '차량 제어 패널 설계/테스트 툴']
+    },
+    club: {
+      name: '소모임', category: 'personal',
+      tech: []
+    },
+    mentoring: {
+      name: '진로멘토링 3회차', category: 'experience',
+      tech: ['Adobe Premiere Pro']
+    }
   };
 
-  const updateContent = (index) => {
-    const entry = entries[index];
-    if (!entry) return;
-    displayDate.textContent = entry.dataset.date || '';
-    displayText.textContent = entry.querySelector('.cp-log-text')?.textContent || '';
+  // 카테고리: 학교 수업/실습 관련(ACADEMIC), 개인 활동(PERSONAL), 대외 경험 프로그램(EXPERIENCE)
+  const CATEGORIES = {
+    academic: { label: 'ACADEMIC', color: '#5E8CE6' },
+    personal: { label: 'PERSONAL', color: '#A78BFA' },
+    experience: { label: 'EXPERIENCE', color: '#64B5A7' }
+  };
+  const CATEGORY_ORDER = ['academic', 'personal', 'experience'];
 
-    // 지금 보고 있는 게 최신 기록인지 과거 기록인지 배지로 구분해준다
-    if (badge) {
-      const isLatest = index === latestIndex;
-      badge.textContent = isLatest ? 'NEW' : '과거 기록';
-      badge.classList.toggle('is-latest', isLatest);
+  // 프로젝트 고유의 색을 따로 갖게 하지 않고, 소속 카테고리 색을 그대로 물려받게 한다 —
+  // 그래야 카테고리 체크박스뿐 아니라 타임라인 바·카드 포인트·관련 자료 목록까지
+  // "이 프로젝트는 어느 카테고리인지"가 항상 같은 색으로 일관되게 보인다.
+  // soft는 그 색을 옅게 깐 배경용(예: 타임라인 바 채우기)으로, 카테고리 색에서 자동으로 계산한다.
+  function hexToRgba(hex, alpha) {
+    const n = parseInt(hex.slice(1), 16);
+    return 'rgba(' + [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(', ') + ', ' + alpha + ')';
+  }
+  Object.keys(PROJECTS).forEach((key) => {
+    const proj = PROJECTS[key];
+    const catColor = CATEGORIES[proj.category].color;
+    proj.color = catColor;
+    proj.soft = hexToRgba(catColor, 0.16);
+  });
+  const MONTHS = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+
+  const LOGS = [
+    {
+      key: 'physical-ai', status: 'in-progress',
+      startYear: 2026, startMonth: 8, startDay: 4, endYear: null, endMonth: null,
+      org: '미래내일 일경험 · 청년 피지컬AI 1기',
+      generalDesc: '웹 프론트엔드부터 파이썬까지, 단계별 실습으로 채워가는 청년 일경험형 교육 프로그램',
+      days: [
+        { day: 4, title: 'HTML 마크업 실습 (폼, 테이블, 회원가입 페이지)',
+          related: [{ label: '회원가입 폼 실습 (HTML 테이블·폼)', href: 'current-project/code/day1-signup/index.html' }] },
+        { day: 5, title: 'CSS 스타일링 실습 (내부 스타일시트, 이력서 페이지 제작)',
+          images: ['current-project/images/day3-resume-result.png'],
+          related: [
+            { label: '이력서 작성 실습 (HTML 테이블·폼)', href: 'current-project/code/day3-resume/index.html' },
+            { label: '실습 결과 캡처 — 이력서 페이지', href: 'current-project/images/day3-resume-result.png' }
+          ] },
+        { day: 6, title: 'JavaScript 기초(연산자·조건문·반복문) 학습, 프로필 카드 페이지 제작',
+          images: ['current-project/images/day4-profilecard-result.png'],
+          related: [
+            { label: '프로필 카드 페이지 실습 (HTML/CSS)', href: 'current-project/code/day4-profilecard/index.html' },
+            { label: '실습 결과 캡처 — 프로필 카드 페이지', href: 'current-project/images/day4-profilecard-result.png' }
+          ] },
+        { day: 7, title: '개인 기획서(STUDY.OS) 작성, AI 도구 트렌드 조사 보고서 작성',
+          related: [
+            { label: '개인 기획서 — STUDY.OS 프로젝트 계획서', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/STUDY.OS_프로젝트계획서.md' },
+            { label: 'AI 도구 트렌드 조사 보고서', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/AI도구_트렌드_보고서.md' }
+          ] },
+        { day: 10, title: 'Python 기초 문법 학습 시작 (변수, 자료형, 연산자)',
+          related: [{ label: 'Python 기초 문법 노트북 (변수 · 자료형 · 연산자)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0810_python-basics.ipynb' }] },
+        { day: 11, title: 'Python 조건문 · 반복문 실습',
+          related: [{ label: 'Python 조건문 · 반복문 노트북', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0811_control-flow.ipynb' }] },
+        { day: 13, title: '1주차 출석 확인서류 제출, 실습 자료 정리', related: null },
+        { day: 14, title: '개인 포트폴리오 사이트 만들기',
+          images: [
+            'current-project/images/day14/portfolio-site-1.png',
+            'current-project/images/day14/portfolio-site-2.png',
+            'current-project/images/day14/portfolio-site-3.png'
+          ],
+          related: [{ label: '개인 포트폴리오 사이트 (지금 만들고 있는 이 사이트)', href: 'https://github.com/yoonjung454/portfolio' }] },
+        { day: 18, title: '미니 장바구니 웹앱 제작 (FastAPI + SQLite 백엔드, Next.js 프론트엔드)',
+          related: [{ label: '미니 장바구니 프로젝트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/mini-cart' }] }
+      ]
+    },
+    {
+      key: 'process-practicum', status: 'done',
+      startYear: 2026, startMonth: 5, endYear: 2026, endMonth: 6,
+      desc: '반도체 공정(포토 공정 등) 실습 후 작성한 실험·실습 보고서. 조원들과 함께 실습 진행 및 보고서 공동 작성.',
+      related: [
+        { label: '반도체 공정 실습 보고서', href: 'archive/process-practicum/semiconductor-process-report.pdf' },
+        { label: '포토 공정 실험 보고서', href: 'archive/process-practicum/photo-process-report.pdf' }
+      ]
+    },
+    {
+      key: 'industry-academia', status: 'done',
+      startYear: 2026, startMonth: 5, endYear: 2026, endMonth: 6,
+      desc: '기업 현장 문제 해결을 위한 산학공동연구 프로젝트 — 한성모빌리티와 함께 진행 (2026-1학기). 차량 제어 패널·CAN 통신 관련 프로젝트 참여 및 결과 정리.',
+      images: ['archive/industry-academia/panel-result.png'],
+      related: [
+        { label: '프로젝트 결과보고서', href: 'archive/industry-academia/hansung-mobility-final-report.pdf' },
+        { label: '프로젝트 포스터', href: 'archive/industry-academia/hansung-mobility-poster.pdf' }
+      ]
+    },
+    {
+      key: 'club', status: 'in-progress',
+      startYear: 2026, startMonth: 3, endYear: null, endMonth: null,
+      desc: '소모임 활동 기록 (미팅 내용 정리)',
+      related: [
+        { label: '소모임 소개', href: 'archive/club/club-overview.docx' },
+        { label: '소모임 미팅 내용', href: 'archive/club/meeting-notes.docx' }
+      ]
+    },
+    {
+      key: 'mentoring', status: 'in-progress',
+      startYear: 2025, startMonth: 1, startDay: 13, endYear: 2025, endMonth: 1,
+      desc: '진로멘토링 3회차 — 창업가 인터뷰 영상 촬영·편집 프로젝트. 담당 역할: 인터뷰 영상 편집(컷 편집, 색 보정, 자막). 원본 영상 용량이 커서 이 아카이브에는 파일을 올리지 않음 (편집 진행 중).',
+      related: null
+    }
+  ];
+
+  const YEARS = [2025, 2026, 2027];
+  const DAY_HEIGHT = 76;
+
+  const now = new Date();
+  const TODAY_YEAR = now.getFullYear();
+  const TODAY_MONTH = now.getMonth() + 1;
+  const TODAY_DAY = now.getDate();
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function monthIndex(year, month) { return year * 12 + (month - 1); }
+  function daysInMonth(year, month) { return new Date(year, month, 0).getDate(); }
+  function statusLabel(status) { return status === 'in-progress' ? 'IN PROGRESS' : 'DONE'; }
+  function periodLabel(e) {
+    const start = e.startYear + '.' + pad(e.startMonth) + (e.startDay ? '.' + pad(e.startDay) : '');
+    const end = e.endYear === null
+      ? '진행중'
+      : e.endYear + '.' + pad(e.endMonth) + (e.endDay ? '.' + pad(e.endDay) : '');
+    return start + ' ~ ' + end;
+  }
+  function expandLog(l) {
+    return l.days.map((d) => Object.assign({}, l, d));
+  }
+
+  const TODAY_IDX = monthIndex(TODAY_YEAR, TODAY_MONTH);
+  const enabledCategories = {};
+  CATEGORY_ORDER.forEach((k) => { enabledCategories[k] = true; });
+
+  let selectedYear = TODAY_YEAR, selectedMonth = TODAY_MONTH, selectedDay = TODAY_DAY;
+
+  // 하루 날짜에 실제로 활성인 기록들. days 배열이 없는 로그는 활성 기간 전체를 채우고,
+  // days 배열이 있는 로그는 그 날짜와 정확히 일치하는 항목만 낸다.
+  function activeEntriesOn(year, month, day) {
+    const idx = monthIndex(year, month);
+    let out = [];
+    LOGS.forEach((l) => {
+      if (!enabledCategories[PROJECTS[l.key].category]) return;
+      const s = monthIndex(l.startYear, l.startMonth);
+      const e = l.endYear === null ? TODAY_IDX : monthIndex(l.endYear, l.endMonth);
+      if (idx < s || idx > e) return;
+      if (l.endYear === null && idx === TODAY_IDX && day > TODAY_DAY) return; // 진행중이어도 오늘 이후는 없음
+      if (l.days) {
+        out = out.concat(expandLog(l).filter((entry) => entry.day === day));
+      } else {
+        out.push(l);
+      }
+    });
+    return out;
+  }
+
+  function cardKey(e) { return e.key + '|' + e.startYear + '|' + e.startMonth + '|' + (e.day || 0); }
+
+  function relatedRowsHtml(list) {
+    if (!list || !list.length) return '';
+    return '<div class="related-list">' + list.map((r) =>
+      '<a class="related-row" href="' + r.href + '" target="_blank" rel="noopener">' +
+      '<svg aria-hidden="true"><use href="#icon-folder"></use></svg><span>' + r.label + '</span></a>'
+    ).join('') + '</div>';
+  }
+
+  function renderCard(e) {
+    const proj = PROJECTS[e.key];
+    const key = cardKey(e);
+    // 스크린샷이 여러 장이면(예: 08.14 포트폴리오 사이트 3장) 원래 있던 사진
+    // 슬라이드쇼처럼 겹쳐두고 JS가 자동으로 크로스페이드시킨다 (아래 renderProjectsForDate 참고).
+    const thumbHtml = (e.images && e.images.length)
+      ? '<div class="card-thumb">' + e.images.map((src, i) =>
+          '<img src="' + src + '" alt="' + proj.name + ' 관련 이미지 ' + (i + 1) + '" loading="lazy"' + (i === 0 ? ' class="is-active"' : '') + '>'
+        ).join('') + '</div>'
+      : '';
+
+    if (e.day) {
+      const isActualToday = e.startYear === TODAY_YEAR && e.startMonth === TODAY_MONTH && e.day === TODAY_DAY;
+      const dayLabel = isActualToday ? '오늘 교육 내용' : '이날의 교육 내용';
+      const metaLine = '기간 · ' + periodLabel(e) + (e.org ? '&nbsp;&nbsp;·&nbsp;&nbsp;참여 기관 · ' + e.org : '');
+      const dotsHtml = e.days.map((d) =>
+        '<button type="button" class="log-dot' + (d.day === e.day ? ' is-active' : '') + '" ' +
+        'data-jump-year="' + e.startYear + '" data-jump-month="' + e.startMonth + '" data-jump-day="' + d.day + '"></button>'
+      ).join('');
+      const firstDay = e.days[0].day, lastDay = e.days[e.days.length - 1].day;
+
+      return '<article class="now-card" data-card-key="' + key + '" data-proj-key="' + e.key + '"><div class="now-card-body">' +
+        '<span class="card-status">' + statusLabel(e.status) + '</span>' +
+        '<h3 class="card-title">' + proj.name + '</h3>' +
+        '<p class="card-meta">' + metaLine + '</p>' +
+        '<p class="card-description">' + e.generalDesc + '</p>' +
+        '<hr class="card-divider">' +
+        thumbHtml +
+        '<p class="card-today"><span class="card-today-label">' + dayLabel + '</span>' + e.title + '</p>' +
+        '<div class="log-strip">' + dotsHtml + '</div>' +
+        '<div class="log-strip-range"><span>' + pad(e.startMonth) + '.' + pad(firstDay) + '</span><span>' + pad(e.startMonth) + '.' + pad(lastDay) + '</span></div>' +
+        relatedRowsHtml(e.related) +
+      '</div></article>';
     }
 
-    // 관련 자료: 이 날짜(index)에 해당하는 항목만 보여주고 나머지는 숨긴다
-    let visibleCount = 0;
-    fileItems.forEach((item) => {
-      const isMatch = item.dataset.day === String(index);
-      item.hidden = !isMatch;
-      if (isMatch) visibleCount += 1;
+    const tech = e.tech || proj.tech;
+    return '<article class="now-card" data-card-key="' + key + '" data-proj-key="' + e.key + '"><div class="now-card-body">' +
+      '<span class="card-status">' + statusLabel(e.status) + '</span>' +
+      '<h3 class="card-title">' + proj.name + '</h3>' +
+      '<p class="card-period">' + periodLabel(e) + '</p>' +
+      '<p class="card-description">' + e.desc + '</p>' +
+      (tech && tech.length ? '<div class="card-tags">' + tech.map((t) => '<span>' + t + '</span>').join('') + '</div>' : '') +
+      thumbHtml +
+      relatedRowsHtml(e.related) +
+    '</div></article>';
+  }
+
+  const STACK_STEP = 28; // 뒤 카드의 폴더 탭이 앞 카드 위로 살짝씩 더 보이게 하는 간격(px)
+
+  // 카드 배경(=위쪽 폴더 탭 색)은 카드마다 돌아가며 칠하는 대신, 그 카드가 어떤
+  // 프로젝트인지에 맞춰 타임라인 바와 같은 색으로 칠한다. 다른 프로젝트로 전환되면
+  // (.now-card의 background-color transition을 통해) 색이 자연스럽게 바뀐다.
+  // --card-bg에는 (반투명한 soft가 아니라) 불투명해 보이도록 CSS의 color-mix가 흰색과
+  // 섞을 수 있게 프로젝트 고유의 진한 색(proj.color)을 그대로 넣어준다.
+  function layoutNowCards() {
+    const cards = nowProjects.querySelectorAll('.now-card');
+    const total = cards.length;
+    // .now-projects 자체가 이제 (.detail-top을 제외한) 남는 세로 공간을 flex:1로
+    // 전부 차지하므로, 그 실제 픽셀 높이를 기준으로 카드 높이를 계산한다.
+    const containerH = nowProjects.clientHeight;
+    cards.forEach((card, pos) => {
+      // 카드가 1장뿐이면 뒤에 아무것도 없으니 탭이 보일 여백도 필요 없다(top:0) —
+      // 이때 height는 containerH 그대로라 카드가 영역을 꽉 채운다.
+      // 카드가 여러 장이면, 맨 앞 카드만 실제 장수만큼 아래로 내려가서 그 위로
+      // 뒤 카드들의 탭이 층층이 드러나 보이게 하고, 내려간 만큼 높이를 줄여서
+      // 모든 카드의 "아래쪽 끝"이 항상 같은 선(= .now-projects의 바닥)에 맞도록 한다.
+      // (그 바닥은 .project-detail의 padding-bottom만큼 바깥 프레임과 이미 떨어져 있어
+      // 카드가 프레임 맨 아래에 완전히 붙지는 않는다.)
+      const top = (total - 1 - pos) * STACK_STEP;
+      const proj = PROJECTS[card.dataset.projKey];
+      card.style.top = top + 'px';
+      if (containerH > 0) card.style.height = Math.max(containerH - top, 160) + 'px';
+      card.style.setProperty('--card-bg', proj.color);
+      card.style.setProperty('--card-accent', proj.color);
+      card.style.zIndex = String(cards.length - pos);
+      card.dataset.front = pos === 0 ? 'true' : 'false';
     });
-    emptyMessage?.classList.toggle('is-visible', visibleCount === 0);
-  };
+  }
 
-  const render = (index, animate) => {
-    updateTrack(index);
+  // 창 크기가 바뀌면(특히 세로 높이) .now-projects의 실제 높이도 바뀌므로,
+  // 카드 높이를 다시 계산해서 항상 화면 높이에 맞게 유지한다.
+  let resizeRAF = null;
+  window.addEventListener('resize', () => {
+    if (resizeRAF) cancelAnimationFrame(resizeRAF);
+    resizeRAF = requestAnimationFrame(layoutNowCards);
+  });
+  function bringCardFront(card) {
+    if (card.dataset.front === 'true') return;
+    nowProjects.insertBefore(card, nowProjects.firstChild);
+    layoutNowCards();
+  }
 
-    if (index === currentIndex) return;
-    currentIndex = index;
+  let thumbTimers = [];
+  function clearThumbTimers() {
+    thumbTimers.forEach(clearInterval);
+    thumbTimers = [];
+  }
 
-    if (!animate) {
-      updateContent(index);
+  function renderProjectsForDate(year, month, day) {
+    clearThumbTimers(); // 카드가 다시 그려지기 전에, 이전 날짜의 슬라이드쇼 타이머부터 정리해서 안 쓰는 타이머가 계속 쌓이지 않게 한다
+    const active = activeEntriesOn(year, month, day).sort((a, b) => (b.day || 0) - (a.day || 0));
+    if (!active.length) {
+      nowProjects.innerHTML = '<p class="now-empty">이 날의 기록은 없습니다.</p>';
       return;
     }
+    nowProjects.innerHTML = active.map(renderCard).join('');
+    nowProjects.querySelectorAll('.now-card').forEach((card) => {
+      card.addEventListener('click', () => bringCardFront(card));
+    });
+    nowProjects.querySelectorAll('.log-dot').forEach((dot) => {
+      dot.addEventListener('click', (e) => {
+        e.stopPropagation();
+        selectDate(Number(dot.dataset.jumpYear), Number(dot.dataset.jumpMonth), Number(dot.dataset.jumpDay));
+      });
+    });
+    // 스크린샷이 여러 장인 썸네일은, 원래 있던 대표 사진 슬라이드쇼처럼 한 장씩 자동으로 크로스페이드된다
+    nowProjects.querySelectorAll('.card-thumb').forEach((thumb) => {
+      const imgs = Array.from(thumb.querySelectorAll('img'));
+      if (imgs.length < 2) return;
+      let idx = imgs.findIndex((img) => img.classList.contains('is-active'));
+      if (idx < 0) idx = 0;
+      thumbTimers.push(setInterval(() => {
+        imgs[idx].classList.remove('is-active');
+        idx = (idx + 1) % imgs.length;
+        imgs[idx].classList.add('is-active');
+      }, 1800));
+    });
+    layoutNowCards();
+  }
 
-    // 짧게 가라앉듯 사라졌다가, 새 내용으로 바뀐 뒤 다시 떠오르며 나타난다
-    clearTimeout(fadeTimer);
-    display.classList.add('is-changing');
-    fadeTimer = setTimeout(() => {
-      updateContent(index);
-      display.classList.remove('is-changing');
-    }, 160);
-  };
+  function updateTodayCursor(year, month) {
+    if (year === TODAY_YEAR && month === TODAY_MONTH) {
+      timelineCursor.style.display = 'block';
+      timelineCursor.style.top = ((TODAY_DAY - 1) * DAY_HEIGHT + DAY_HEIGHT / 2) + 'px';
+    } else {
+      timelineCursor.style.display = 'none';
+    }
+  }
 
-  slider.addEventListener('input', () => render(Number(slider.value), true));
+  function selectDate(year, month, day) {
+    selectedYear = year; selectedMonth = month; selectedDay = day;
+    setActiveButtons();
 
-  // 로그 목록 자체는 오래된 순(왼→오)으로 두되, 처음 화면에는 가장 최근 항목이 먼저 보이도록
-  // 슬라이더를 맨 오른쪽(가장 최근)에서 시작한다.
-  slider.value = String(latestIndex);
-  render(latestIndex, false);
-  log.classList.add('is-enhanced'); // JS가 정상 동작할 때만 슬라이더 UI로 전환
-}
+    timelineDays.querySelectorAll('.timeline-day').forEach((el) => el.classList.remove('is-selected'));
+    const row = timelineDays.querySelector('.timeline-day[data-day="' + day + '"]');
+    if (row && timelineScroll) {
+      row.classList.add('is-selected');
+      // row.scrollIntoView()는 이 안(.timeline-scroll)만이 아니라 페이지 전체까지
+      // 스크롤시켜서 화면이 위로 확 튀는 문제가 있었다. 그래서 이 작은 내부 스크롤
+      // 영역의 scrollTop만 직접 계산해서 옮긴다 — 바깥 페이지는 그대로 둔 채로.
+      const target = row.offsetTop - (timelineScroll.clientHeight - row.offsetHeight) / 2;
+      timelineScroll.scrollTo({ top: Math.max(0, target), behavior: 'smooth' });
+    }
 
-/* ---------------------------------------------------------
-   6) Current Project — 대표 사진 슬라이드쇼
-   여러 장의 사진이 같은 자리에 겹쳐 있다가, 한 장씩 서서히 사라지고
-   다음 사진이 떠오르며 자동으로 바뀐다 (CSS opacity 전환 + setInterval).
---------------------------------------------------------- */
-function initCurrentProjectCarousel() {
-  const photos = Array.from(document.querySelectorAll('#cpPhotoCarousel .cp-photo'));
-  if (photos.length < 2) return;
+    renderProjectsForDate(year, month, day);
+    selectedDateLabel.textContent = new Date(year, month - 1, day).toLocaleString('en', { month: 'long', day: 'numeric', year: 'numeric' });
+  }
 
-  let index = photos.findIndex((photo) => photo.classList.contains('is-active'));
-  if (index < 0) index = 0;
+  function computeProjectSegments(year, month) {
+    const idx = monthIndex(year, month);
+    const segments = [];
 
-  setInterval(() => {
-    photos[index].classList.remove('is-active');
-    index = (index + 1) % photos.length;
-    photos[index].classList.add('is-active');
-  }, 1800);
+    LOGS.forEach((l) => {
+      if (!enabledCategories[PROJECTS[l.key].category]) return;
+      const s = monthIndex(l.startYear, l.startMonth);
+      const e = l.endYear === null ? TODAY_IDX : monthIndex(l.endYear, l.endMonth);
+      if (idx < s || idx > e) return;
+
+      if (l.days) {
+        const recorded = l.days.map((d) => d.day);
+        const startDay = Math.min.apply(null, recorded);
+        const endDay = (l.endYear === null && idx === TODAY_IDX) ? TODAY_DAY : Math.max.apply(null, recorded);
+        segments.push({ key: l.key, startDay, endDay, dots: recorded });
+      } else {
+        const monthEndDay = daysInMonth(year, month);
+        const cappedEndDay = (l.endYear === null && idx === TODAY_IDX) ? Math.min(TODAY_DAY, monthEndDay) : monthEndDay;
+        segments.push({ key: l.key, startDay: 1, endDay: cappedEndDay, dots: null });
+      }
+    });
+
+    const order = [];
+    segments.slice().sort((a, b) => a.startDay - b.startDay).forEach((seg) => {
+      if (order.indexOf(seg.key) === -1) order.push(seg.key);
+    });
+    segments.forEach((seg) => { seg.col = order.indexOf(seg.key); });
+    segments.numCols = order.length;
+    return segments;
+  }
+
+  const BAR_WIDTH = 56; // 간트차트 느낌의 얇은 바 폭 — 열이 여러 개면 그보다는 좁게 줄어든다
+
+  function renderTimelineEvents(year, month) {
+    timelineEvents.innerHTML = '';
+    const segments = computeProjectSegments(year, month);
+    const numCols = segments.numCols || 1;
+    const colLeftExpr = (col) => col + ' * (100% / ' + numCols + ')';
+    const barWidthExpr = 'min(' + BAR_WIDTH + 'px, calc(100% / ' + numCols + ' - 8px))';
+
+    segments.forEach((seg) => {
+      const proj = PROJECTS[seg.key];
+
+      const block = document.createElement('div');
+      block.className = 'event-block';
+      block.title = proj.name; // 바 폭이 좁아 이름이 잘릴 수 있어, hover 시 전체 이름을 볼 수 있도록
+      block.style.setProperty('--proj-color', proj.color);
+      block.style.setProperty('--proj-soft', proj.soft);
+      block.style.top = ((seg.startDay - 1) * DAY_HEIGHT + 3) + 'px';
+      block.style.height = ((seg.endDay - seg.startDay + 1) * DAY_HEIGHT - 6) + 'px';
+      block.style.left = 'calc(' + colLeftExpr(seg.col) + ' + 4px)';
+      block.style.width = barWidthExpr;
+      block.textContent = proj.name;
+      block.addEventListener('click', ((startDay, endDay, y, m) => (e) => {
+        e.stopPropagation();
+        const rect = e.currentTarget.getBoundingClientRect();
+        const frac = (e.clientY - rect.top) / rect.height;
+        const day = startDay + Math.floor(frac * (endDay - startDay + 1));
+        selectDate(y, m, Math.min(endDay, Math.max(startDay, day)));
+      })(seg.startDay, seg.endDay, year, month));
+      timelineEvents.appendChild(block);
+
+      if (seg.dots) {
+        seg.dots.forEach((day) => {
+          const mark = document.createElement('div');
+          mark.className = 'event-day-mark';
+          mark.title = proj.name;
+          mark.style.setProperty('--proj-color', proj.color);
+          mark.style.top = ((day - 1) * DAY_HEIGHT + 3) + 'px';
+          mark.style.height = (DAY_HEIGHT - 6) + 'px';
+          mark.style.left = 'calc(' + colLeftExpr(seg.col) + ' + 4px)';
+          mark.style.width = barWidthExpr;
+          mark.addEventListener('click', ((y, m, d) => (e) => { e.stopPropagation(); selectDate(y, m, d); })(year, month, day));
+          timelineEvents.appendChild(mark);
+        });
+      }
+    });
+  }
+
+  function buildTimeline(year, month) {
+    timelineDays.innerHTML = '';
+    timelineMonthTitle.textContent = new Date(year, month - 1).toLocaleString('en', { month: 'long', year: 'numeric' });
+
+    const totalDays = daysInMonth(year, month);
+    for (let day = 1; day <= totalDays; day++) {
+      const row = document.createElement('div');
+      row.className = 'timeline-day' + (year === TODAY_YEAR && month === TODAY_MONTH && day === TODAY_DAY ? ' is-today' : '');
+      row.dataset.day = day;
+      const weekday = new Date(year, month - 1, day).toLocaleString('en', { weekday: 'short' });
+      row.innerHTML = '<div class="day-label"><strong>' + day + '</strong>' + weekday + '</div><div class="day-content"></div>';
+      row.addEventListener('click', ((y, m, d) => () => selectDate(y, m, d))(year, month, day));
+      timelineDays.appendChild(row);
+    }
+    renderTimelineEvents(year, month);
+    updateTodayCursor(year, month);
+  }
+
+  function renderCategoryList() {
+    categoryList.innerHTML = '';
+    CATEGORY_ORDER.forEach((key) => {
+      const cat = CATEGORIES[key];
+      const item = document.createElement('label');
+      item.className = 'category-item';
+      item.innerHTML =
+        '<input type="checkbox" checked data-category="' + key + '">' +
+        '<span class="category-swatch" style="--cat-color:' + cat.color + '"></span>' +
+        '<span>' + cat.label + '</span>';
+      categoryList.appendChild(item);
+    });
+    categoryList.querySelectorAll('input[type="checkbox"]').forEach((input) => {
+      input.addEventListener('change', () => {
+        const key = input.dataset.category;
+        enabledCategories[key] = input.checked;
+        input.closest('.category-item').classList.toggle('is-off', !input.checked);
+        buildTimeline(selectedYear, selectedMonth);
+        renderProjectsForDate(selectedYear, selectedMonth, selectedDay);
+      });
+    });
+  }
+
+  function renderYearButtons() {
+    yearList.innerHTML = '';
+    YEARS.forEach((y) => {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'year-btn'; b.textContent = y;
+      b.addEventListener('click', () => {
+        selectedYear = y;
+        buildTimeline(selectedYear, selectedMonth);
+        selectDate(selectedYear, selectedMonth, (y === TODAY_YEAR && selectedMonth === TODAY_MONTH) ? TODAY_DAY : 1);
+      });
+      yearList.appendChild(b);
+    });
+  }
+
+  function renderMonthButtons() {
+    monthList.innerHTML = '';
+    MONTHS.forEach((name, i) => {
+      const m = i + 1;
+      const b = document.createElement('button');
+      b.type = 'button'; b.dataset.month = m; b.textContent = name;
+      b.addEventListener('click', () => {
+        selectedMonth = m;
+        buildTimeline(selectedYear, selectedMonth);
+        selectDate(selectedYear, selectedMonth, (selectedYear === TODAY_YEAR && m === TODAY_MONTH) ? TODAY_DAY : 1);
+      });
+      monthList.appendChild(b);
+    });
+  }
+
+  function setActiveButtons() {
+    yearList.querySelectorAll('.year-btn').forEach((b) => b.classList.toggle('active', Number(b.textContent) === selectedYear));
+    monthList.querySelectorAll('button').forEach((b) => b.classList.toggle('active', Number(b.dataset.month) === selectedMonth));
+  }
+
+  todayButton?.addEventListener('click', () => {
+    selectedYear = TODAY_YEAR; selectedMonth = TODAY_MONTH;
+    buildTimeline(selectedYear, selectedMonth);
+    selectDate(TODAY_YEAR, TODAY_MONTH, TODAY_DAY);
+  });
+
+  // 타임라인/상세 패널 폭 조절 (구분선 드래그)
+  (() => {
+    const archiveCalendar = document.querySelector('.archive-calendar');
+    const resizer = document.getElementById('calendarResizer');
+    if (!archiveCalendar || !resizer) return;
+    let timelineW = 300;
+    let dragging = false, startX = 0, startW = 0;
+
+    function apply() { archiveCalendar.style.setProperty('--timeline-w', timelineW + 'px'); }
+    apply();
+
+    resizer.addEventListener('pointerdown', (e) => {
+      dragging = true; startX = e.clientX; startW = timelineW;
+      resizer.classList.add('is-dragging');
+      resizer.setPointerCapture(e.pointerId);
+      document.body.style.userSelect = 'none';
+    });
+    resizer.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      timelineW = Math.min(520, Math.max(220, startW + (e.clientX - startX)));
+      apply();
+    });
+    function endDrag(e) {
+      if (!dragging) return;
+      dragging = false;
+      resizer.classList.remove('is-dragging');
+      document.body.style.userSelect = '';
+      try { resizer.releasePointerCapture(e.pointerId); } catch (err) {}
+    }
+    resizer.addEventListener('pointerup', endDrag);
+    resizer.addEventListener('pointercancel', endDrag);
+  })();
+
+  renderCategoryList();
+  renderYearButtons();
+  renderMonthButtons();
+  buildTimeline(selectedYear, selectedMonth);
+  selectDate(selectedYear, selectedMonth, selectedDay);
 }
 
 /* ---------------------------------------------------------

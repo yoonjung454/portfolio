@@ -22,7 +22,6 @@
   /* 가운데 콘텐츠 섹션들 — Home 배경과 같은 라벤더-그레이 계열의 명도 흐름 */
   --about-bg: #f0f1f7;
   --current-bg: #e6e7f0;
-  --archive-bg: #c9cbdd;   /* Archive에서 가장 짙은 톤 (흐름의 정점) */
   --skills-bg: #e6e7f0;
   --experience-bg: #f0f1f7;
 
@@ -32,9 +31,7 @@
   --text-muted: #5b5f78;
   --border: #d8dae6;
 
-  /* Archive 전용 포인트 컬러 — 액센트는 메인 accent(청록)와 통일 */
-  --archive-card: #eef1f6;   /* 폴더 자체의 색 — 안에서 나오는 흰 종이와 구분되도록 살짝 톤을 줌 */
-  --archive-card-edge: #c3c6d6;
+  /* 전용 포인트 컬러 — 액센트는 메인 accent(청록)와 통일 */
   --archive-text: #1f2333;
   --archive-accent: #0d9488;
 
@@ -125,6 +122,19 @@ a { color: inherit; text-decoration: none; }
   pointer-events: none;
   transition: top 0.5s cubic-bezier(0.22, 1, 0.36, 1), transform 0.5s cubic-bezier(0.22, 1, 0.36, 1), background 0.4s ease, border-color 0.4s ease;
 }
+.navbar {
+  transition:
+    top 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.4s ease,
+    border-color 0.4s ease,
+    opacity 0.35s ease;
+}
+
+.navbar.is-project-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
 
 .navbar.is-docked {
   top: 0;
@@ -135,15 +145,18 @@ a { color: inherit; text-decoration: none; }
   border-bottom: 1px solid rgba(31, 35, 51, 0.08);
   pointer-events: auto;
 }
-
+.nav-logo {
+  display: none;
+}
 .nav-inner {
   max-width: 1100px;
   height: 100%;
   margin: 0 auto;
   padding: 0 24px;
+
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 /* Home 화면(도킹 전)에서는 로고 없이, 메뉴만 가운데 정렬로 떠 있는다 */
@@ -452,786 +465,502 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* -------------------------------------------
-   Current Project
+   Projects — 진행 중 + 완료 프로젝트를 하나의 캘린더형 타임라인으로 통합
+   (원래 있던 "Current Project"의 날짜별 실습 기록과
+    "Project Archive"의 폴더별 완료 프로젝트를 이 하나의 컴포넌트가 함께 보여준다)
 ------------------------------------------- */
 .current-project-section {
-  background: linear-gradient(to bottom, var(--about-bg) 0, var(--current-bg) var(--blend), var(--current-bg) 100%);
-}
+  min-height: 100vh;
+  height: 100vh;
 
-/*
-  이 섹션(설명 + 사진 + 진행 로그 + 관련 자료)이 전부 한 화면 안에 들어오도록
-  여백과 카드 크기를 곳곳에서 촘촘하게 줄인다.
-*/
-.current-project-section .section-inner {
-  padding-top: 36px;
-  padding-bottom: 36px;
-}
-
-.current-project-section .section-title {
-  margin-bottom: 18px;
-}
-
-.current-project-section .cp-card {
-  padding: 18px 20px;
-}
-
-.current-project-section .cp-layout {
-  gap: 20px;
-}
-
-.current-project-section .cp-log {
-  padding: 14px 16px;
-}
-
-.current-project-section .cp-files-card {
-  margin-top: 14px;
-}
-
-.current-project-section .cp-log-card {
-  margin-top: 12px;
-}
-
-.current-project-section .cp-log-title,
-.current-project-section .cp-files-title {
-  margin-bottom: 8px;
-}
-
-.current-project-section .cp-log-timeline {
-  margin: 2px 0 12px;
-}
-
-.current-project-section .badge-in-progress {
-  margin-bottom: 8px;
-}
-
-.current-project-section .cp-name {
-  margin-bottom: 4px;
-  font-size: 1.25rem;
-}
-
-.current-project-section .cp-today {
-  margin-top: 10px;
-  padding-top: 10px;
-}
-
-.current-project-section .cp-file-item {
-  padding: 8px 12px;
-  background: rgba(255, 255, 255, 0.4);
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-.current-project-section .cp-files-empty {
-  border-color: rgba(255, 255, 255, 0.5);
-}
-
-/*
-  진행 로그 / 프로젝트 설명 / 대표 사진, 이 세 가지가 각자 분리된 블록으로 보이도록
-  구성한다. 설명과 로그는 각각 흰 카드(.cp-card)에 담고, 사진은 카드 없이
-  섹션 배경 위에 그대로 떠 있게 해서 서로 다른 성격의 정보라는 걸 시각적으로 구분한다.
-*/
-/* 완전한 흰 박스 대신, 배경이 살짝 비쳐 보이는 반투명 유리 카드(토스 스타일) */
-.cp-card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-radius: var(--radius);
-  padding: 32px;
-  box-shadow: 0 12px 30px rgba(20, 30, 40, 0.05);
-}
-
-/* 설명 카드와 진행 로그 카드는 글자가 잘 읽히도록 다른 카드보다 덜 투명하게(더 불투명하게) */
-.cp-info-card {
+  background: var(--current-bg);
+  padding: 0;
   margin: 0;
-  background: rgba(255, 255, 255, 0.88);
+
+  align-items: stretch;
 }
 
-/* 관련 자료 / 진행 로그를 각자 별도의 카드로 분리 — 서로 다른 정보라는 게 한눈에 구분되도록 */
-.cp-files-card {
-  margin-top: 24px;
+
+.current-project-section .section-inner {
+  width: 100%;
+  max-width: none;
+
+  height: 100%;
+  padding: 0;
+  margin: 0;
 }
 
-.cp-log-card {
-  margin-top: 16px;
+.projects-header {
+  flex-shrink: 0;
+  padding: 28px 32px 22px;
+
+  background: var(--pj-bg);
+  border-bottom: 1px solid #dedede;
 }
 
-/* 왼쪽: 프로젝트 설명 카드 / 오른쪽: 대표 사진 (카드 없이) */
-.cp-layout {
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 32px;
-  align-items: stretch; /* 오른쪽 사진 칸이 왼쪽 설명 카드와 같은 높이로 늘어나도록 */
+
+
+.projects-header .section-hint {
+  margin: 0;
 }
 
-.cp-media {
+/* 이 섹션의 제목은 아래 캘린더가 화면 한 번에 다 들어와야 해서, 다른 섹션 제목이
+   쓰는 기본 여백(40px)보다 훨씬 좁게 붙인다. */
+.current-project-section .section-title {
+  margin-bottom: 8px;
+}
+/* Projects 화면 전용 맥 상단바 */
+.project-mac-topbar {
+  height: 64px;
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+
+  padding: 0 24px;
+
+  background: var(--pj-bg);
+  border-bottom: 1px solid #e5e7eb;
+
+  position: relative;
+}
+
+
+/* 왼쪽 맥 버튼 */
+.project-mac-dots {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  position: absolute;
+  left: 24px;
+}
+
+
+/* 맥 화면 안 메뉴 */
+.project-inner-nav {
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 30px;
+}
+
+
+.project-inner-nav a {
+  font-size: 0.88rem;
+  color: var(--pj-text-muted);
+
+  padding: 8px 2px;
+
+  border-bottom: 2px solid transparent;
+
+  transition:
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+.project-inner-nav a:hover {
+  color: var(--pj-text);
+}
+
+
+.project-inner-nav a.active {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+}
+
+
+/* Projects 제목 */
+.projects-header {
+  flex-shrink: 0;
+
+  padding: 28px 32px 22px;
+
+  background: var(--pj-bg);
+  border-bottom: 1px solid #eef0f2;
+}
+
+
+.projects-header .section-title {
+  margin: 0 0 6px;
+
+  font-size: 2rem;
+  color: var(--pj-text);
+}
+
+
+.projects-header .section-hint {
+  margin: 0;
+
+  font-size: 0.85rem;
+  color: var(--pj-text-muted);
+  opacity: 0.8;
+}
+
+/* =========================
+   맥 창 스타일 캘린더 — 왼쪽부터 카테고리/프로젝트 필터, 월간 타임라인, 선택한 날짜의 프로젝트 카드
+   높이는 고정 680px 대신, 뷰포트 높이에서 위의 제목/여백/네비바 몫을 뺀 값과
+   680px 중 더 작은 쪽을 쓴다 — 화면이 낮아도 섹션 전체가 스크롤 없이 한 번에 들어오도록.
+========================= */
+.archive-calendar {
+  width: 100vw;
+  max-width: none;
+
+  height: 100vh;
+
+  margin: 0;
+
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  height: 100%;
-}
 
-/* 사진 여러 장이 같은 자리에 겹쳐 있다가, 서서히 사라지고 다음 사진이 떠오르며 바뀐다.
-   높이는 고정 비율이 아니라 flex:1로 채워서, 왼쪽 설명 카드와 같은 높이를 갖게 한다. */
-.cp-photo-carousel {
-  position: relative;
-  flex: 1;
-  width: 100%;
-  min-height: 160px;
-  border-radius: 14px;
+  /* Projects 화면 전용 배색 — 영역별로 톤을 미세하게 구분한 4단 회색조 +
+     본문/보조 두 단계의 글자색. 자식 요소들은 전부 이 변수를 참조해서,
+     여기 값만 바꾸면 화면 전체 톤이 같이 바뀐다. */
+  --pj-bg: #F5F5F7;
+  --pj-sidebar-bg: #ECECEE;
+  --pj-timeline-bg: #FBFBFD;
+  --pj-detail-bg: #F2F2F4;
+  --pj-text: #1D1D1F;
+  --pj-text-muted: #86868B;
+
+  background: var(--pj-bg);
+
+  /* 완전 전체화면이면 바깥 둥근 모서리도 없애는 게 자연스러움 */
+  border-radius: 0;
+
   overflow: hidden;
-  background: var(--bg-alt);
-  box-shadow: 0 8px 24px rgba(20, 30, 40, 0.08);
+
+  /* 전체화면에서는 그림자 필요 없음 */
+  box-shadow: none;
 }
 
-.cp-photo {
+.mac-titlebar {
+  flex-shrink: 0; height: 38px;
+  display: flex; align-items: center; gap: .45rem;
+  padding: 0 1rem;
+  background: #ECEEF1;
+  border-bottom: 1px solid #EEF0F2;
+}
+.mac-dot { width: 12px; height: 12px; border-radius: 50%; transition: filter .1s; }
+.mac-dot--red { background: #FF5F57; }
+.mac-dot--yellow { background: #FEBC2E; }
+.mac-dot--green { background: #28C840; }
+.mac-titlebar:hover .mac-dot { filter: brightness(.92); }
+.mac-titlebar-title {
+  flex: 1; text-align: center;
+  margin-right: calc(12px * 3 + .45rem * 2);
+  font-size: .78rem; font-weight: 600; color: #4E5968;
+}
+
+.mac-window-body {
+  flex: 1; min-height: 0;
+  /* 사이드바(카테고리/연도/월)는 좁게, 그 대신 확보한 폭은 타임라인 쪽에 더 준다.
+     가운데 타임라인 폭은 --timeline-w로 관리해서 구분선 드래그로 조절할 수 있게 한다
+     (실제 드래그 값은 JS가 이 변수에 넣어준다 — 기본값은 초기 로드시 JS가 300px로 설정). */
+  display: grid; grid-template-columns: 132px var(--timeline-w, 300px) 8px 1fr;
+  grid-template-rows: 100%; /* an explicit row size stops the day list from
+                              growing to fit its content instead of scrolling */
+  background: var(--pj-bg);
+}
+
+.calendar-resizer { position: relative; cursor: col-resize; background: transparent; }
+.calendar-resizer::before {
+  content: ""; position: absolute; top: 0; bottom: 0; left: 50%;
+  width: 1px; background: #EEF0F2; transform: translateX(-50%);
+  transition: background .15s, width .15s;
+}
+.calendar-resizer:hover::before, .calendar-resizer.is-dragging::before {
+  width: 2px; background: var(--accent);
+}
+
+/* 사이드바 안(Categories/Year/Month)이 세로로 좀 빡빡해서 불필요한 스크롤바가
+   생겼었다. 여백을 곳곳에서 줄여 전체 높이를 줄이고, 특히 Month 구획이 더
+   위로 붙어서 스크롤 없이도 한 번에 다 보이게 한다. */
+.calendar-sidebar { padding: 1.1rem 1rem; background: var(--pj-sidebar-bg); border-right: 1px solid #d9d9dc; overflow-y: auto; }
+.sidebar-title { font-size: .7rem; color: var(--pj-text-muted); text-transform: uppercase; letter-spacing: .12em; margin-bottom: .7rem; }
+
+.category-list { display: flex; flex-direction: column; gap: .1rem; margin-bottom: .8rem; }
+.category-item { display: flex; align-items: center; gap: .6rem; font-size: .78rem; color: var(--pj-text); cursor: pointer; padding: .25rem .3rem; border-radius: 6px; }
+.category-item:hover { background: #EEF0F2; }
+.category-item input { position: absolute; opacity: 0; width: 0; height: 0; }
+.category-swatch { width: 15px; height: 15px; border-radius: 4px; flex-shrink: 0; background: #E5E8EB; position: relative; transition: background .15s; }
+.category-item input:checked ~ .category-swatch { background: var(--cat-color); }
+.category-swatch::after {
+  content: ""; position: absolute; left: 3px; top: 0px; width: 4px; height: 8px;
+  border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); opacity: 0;
+}
+.category-item input:checked ~ .category-swatch::after { opacity: 1; }
+.category-item.is-off { color: var(--pj-text-muted); }
+
+.year-list { display: flex; flex-direction: column; gap: .2rem; }
+.year-btn { border: 0; background: transparent; border-radius: 8px; padding: .35rem .6rem; text-align: left; font-weight: 700; cursor: pointer; color: var(--pj-text-muted); transition: background .15s, color .15s, transform .1s; }
+.year-btn:hover { background: #EEF0F2; }
+.year-btn:active, .month-list button:active { transform: scale(.96); }
+.year-btn.active { background: var(--accent); color: #fff; }
+.sidebar-divider { height: 1px; background: #d7d7da; margin: .8rem 0; }
+.month-list { display: grid; grid-template-columns: 1fr 1fr; gap: .2rem; }
+.month-list button { border: 0; background: transparent; color: var(--pj-text-muted); border-radius: 8px; padding: .32rem .25rem; font-family: ui-monospace, monospace; font-size: .68rem; cursor: pointer; transition: background .15s, color .15s, transform .1s; }
+.month-list button:hover { background: #EEF0F2; color: var(--pj-text); }
+.month-list button.active { background: var(--accent); color: #fff; }
+
+.calendar-sidebar::-webkit-scrollbar, .timeline-scroll::-webkit-scrollbar { width: 6px; }
+.calendar-sidebar::-webkit-scrollbar-track, .timeline-scroll::-webkit-scrollbar-track { background: transparent; }
+.calendar-sidebar::-webkit-scrollbar-thumb, .timeline-scroll::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, .15); border-radius: 999px; background-clip: padding-box; }
+.calendar-sidebar::-webkit-scrollbar-thumb:hover, .timeline-scroll::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, .28); }
+
+.timeline-panel { background: var(--pj-timeline-bg); position: relative; border-right: 1px solid #dddddf; display: flex; flex-direction: column; min-width: 0; }
+.timeline-header {background: var(--pj-timeline-bg); height: 46px; padding: 0 1.2rem; display: flex; align-items: center; border-bottom: 1px solid #e5e5e7; }
+.timeline-header strong { font-size: 1.05rem; font-weight: 700; letter-spacing: -.01em; font-variant-numeric: tabular-nums; color: var(--pj-text); }
+
+/* Today 버튼 — 월 제목 옆이 아니라, 타임라인 영역 우측 상단에 작게 떠 있는다 */
+.today-btn {
+  position: absolute; top: .55rem; right: .9rem; z-index: 10;
+  border: none; background: #ECEEF1; color: var(--pj-text-muted);
+  padding: .3rem .7rem; border-radius: 999px; font-size: .68rem; font-weight: 700;
+  cursor: pointer; transition: background .15s, color .15s, transform .1s;
+}
+.today-btn:hover { background: rgba(13, 148, 136, .1); color: var(--accent); }
+.today-btn:active { transform: scale(.96); }
+
+.timeline-scroll { position: relative; flex: 1; overflow-y: auto; overflow-x: hidden; scroll-behavior: smooth; scrollbar-width: thin; }
+.timeline-days { position: relative; padding-bottom: 24px; } /* 마지막 날짜 줄이 하단에 딱 붙어 보이지 않도록 여백을 준다 */
+.timeline-day { position: relative; height: 76px; display: grid; grid-template-columns: 44px 1fr; border-bottom: 1px solid #ececef; cursor: pointer; transition: background .15s; }
+.timeline-day:not(.is-selected):hover { background: rgba(0, 0, 0, .02); }
+.day-label { padding-top: .75rem; padding-right: .4rem; text-align: right; color: var(--pj-text-muted); font-size: .62rem; font-family: ui-monospace, monospace; }
+.day-label strong { display: block; font-size: .82rem; color: var(--pj-text); font-variant-numeric: tabular-nums; }
+.timeline-day.is-selected { background: rgba(0, 122, 255, 0.07); }
+.timeline-day.is-selected .day-label strong { color: var(--accent); font-size: .95rem; }
+.day-content { position: relative; border-left: 1px solid #EEF0F2; }
+
+.timeline-events { position: absolute; top: 0; left: 44px; right: 0; bottom: 0; z-index: 5; pointer-events: none; }
+/* 간트차트 느낌의 얇은 세로 바 — 예전엔 칸 너비를 거의 다 채우는 두꺼운 사각형이었지만,
+   이제 폭을 고정(JS의 BAR_WIDTH)해서 진짜 "바"처럼 보이게 하고, 이름은 한 줄로 잘라
+   보여주되(ellipsis) title 속성으로 hover하면 전체 이름이 뜨게 한다. */
+.event-block {
+  position: absolute; border-radius: 8px;
+  background: var(--proj-soft); color: var(--pj-text);
+  padding: .35rem .5rem; font-size: .68rem; font-weight: 600; line-height: 1.3;
+  white-space: nowrap; text-overflow: ellipsis;
+  overflow: hidden; box-sizing: border-box; cursor: pointer; pointer-events: auto;
+  transition: filter .15s ease, box-shadow .15s ease;
+}
+.event-block:hover { filter: brightness(.96); box-shadow: 0 4px 10px -4px rgba(15, 23, 42, .25); }
+
+.event-day-mark {
+  position: absolute; background: var(--proj-color); opacity: .32; border-radius: 6px;
+  cursor: pointer; pointer-events: auto; transition: opacity .15s ease;
+}
+.event-day-mark:hover { opacity: .48; }
+
+.timeline-cursor { position: absolute; left: 44px; right: 0; height: 2px; background: #FA5252; z-index: 20; pointer-events: none; }
+.timeline-cursor::before { content: ""; position: absolute; left: -4px; top: 50%; transform: translateY(-50%); width: 8px; height: 8px; border-radius: 50%; background: #FA5252; }
+.timeline-day.is-today .day-label strong {
+  background: #FA5252; color: #fff; width: 20px; height: 20px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; margin-left: auto; font-size: .78rem;
+}
+
+.project-detail { display: flex; flex-direction: column; padding: 1.75rem 2rem; background: var(--pj-detail-bg); overflow-y: auto; overflow-x: hidden; min-width: 0; }
+.project-detail::-webkit-scrollbar { width: 6px; }
+.project-detail::-webkit-scrollbar-track { background: transparent; }
+.project-detail::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, .15); border-radius: 999px; background-clip: padding-box; }
+.project-detail::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, .28); }
+.detail-top { flex-shrink: 0; margin-bottom: .5rem; }
+#selectedDateLabel { display: block; color: var(--pj-text-muted); font-family: ui-monospace, monospace; font-size: .7rem; }
+
+/* .now-projects가 (.detail-top을 제외한) 남는 세로 공간을 전부 차지하도록
+   .project-detail을 세로 flex로 만든다. 그래야 카드가 화면 높이에 맞춰
+   자연스럽게 커지고 작아진다(고정 rem 값이 아니라). */
+.now-projects { position: relative; flex: 1; min-height: 0; margin-top: 0; }
+.now-empty { padding: 4.8rem 0; text-align: center; color: var(--pj-text-muted); font-size: .92rem; }
+/* 카드 배경 — JS가 --card-bg에 그 프로젝트의 진한 고유색(예: 민트, 로즈)을 넣어주는데,
+   그 색을 그대로 쓰면 채도가 너무 세고(카드 전체가 진한 색), 옅게 하려고 rgba 알파를
+   쓰면 카드가 반투명하게 비쳐 보여서("폴더가 투명해 보임") 둘 다 원하는 느낌이 아니었다.
+   그래서 color-mix로 흰색과 섞어 "불투명한 연한 색"을 만든다 (미지원 브라우저는 흰 배경으로).
+
+   카드 자체는 내용량과 상관없이 항상 같은 가로·세로 크기를 갖는다 — 내용이 적어도
+   줄어들지 않고, 넘치면 카드가 늘어나는 대신 안쪽 .now-card-body가 스크롤된다.
+   실제 높이는 JS(layoutNowCards)가 "이 카드의 위쪽 여백(top)을 뺀 나머지가
+   .now-projects 아래쪽 끝에 딱 맞도록" 매번 계산해서 넣어준다. 그 결과 모든 카드의
+   아래쪽 끝은 항상 같은 선에 맞춰지고(= 프레임 하단에서 .project-detail 패딩만큼
+   떨어진 지점), 맨 앞 카드는 화면 높이에 맞춰 거의 영역 전체를 채우게 된다.
+   아래 height:17rem은 JS 실행 전(또는 실패 시)의 최소 대체값일 뿐이다. */
+.now-card {
   position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  left: 0;
+  right: 0;
+  height: 17rem;
+  min-height: 12rem;
+  padding: 0;
+
+  background: rgba(255, 255, 255, 0.72);
+  background: color-mix(in srgb, var(--card-bg, #fff) 14%, #fff);
+
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-radius: 16px 16px 14px 14px;
+
+  box-shadow: 0 14px 30px rgba(0, 0, 0, .07);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  transition:
+    top .35s ease,
+    transform .35s ease,
+    box-shadow .35s ease,
+    background-color .35s ease;
+
+  cursor: pointer;
+  overflow: visible;
+}
+.now-card-body {
+  height: 100%; padding: 1.4rem 1.6rem; box-sizing: border-box;
+  overflow-y: auto; overflow-x: hidden;
+}
+.now-card-body::-webkit-scrollbar { width: 5px; }
+.now-card-body::-webkit-scrollbar-track { background: transparent; }
+.now-card-body::-webkit-scrollbar-thumb { background: rgba(0, 0, 0, .15); border-radius: 999px; background-clip: padding-box; }
+/* 위쪽 폴더 탭 장식 — 예전엔 너무 크고 둥글어서 카드 본체와 따로 노는 느낌이었어서,
+   높이와 굴곡을 확 줄여 카드에 붙어있는 얇은 탭처럼 보이게 했다.
+   background:inherit라서 --card-bg가 바뀌면(다른 프로젝트로 전환되면) 탭 색도 같이 바뀐다. */
+.now-card::before { content: ""; position: absolute; top: -10px; left: 0; width: 84px; height: 18px; background: inherit; border-radius: 10px 14px 0 0; z-index: -1; transition: background-color .35s ease; }
+.now-card::after { content: ""; position: absolute; top: -4px; left: 68px; width: 30px; height: 11px; background: inherit; transform: skewX(22deg); border-radius: 5px; z-index: -1; transition: background-color .35s ease; }
+.now-card:nth-child(2n)::before { left: auto; right: 15px; }
+.now-card:nth-child(2n)::after { left: auto; right: 78px; transform: skewX(-22deg); }
+.now-card:hover { transform: translateY(-6px); box-shadow: 0 22px 40px rgba(0, 0, 0, .13); }
+.now-card[data-front="true"] { cursor: default; }
+.now-card[data-front="true"]:hover { transform: none; box-shadow: 0 14px 30px rgba(0, 0, 0, .09); }
+
+/* 상태 배지 — 제목과 멀리 떨어진 흐릿한 글자 대신, 제목 바로 위에 붙는 작은 알약 배지로.
+   그 프로젝트의 포인트 컬러(--card-accent)를 배지 색으로 써서, 타임라인 바 색과도 연결된다. */
+.card-status {
+  display: inline-block;
+  margin-bottom: .5rem;
+
+  padding: .2rem .55rem;
+  border-radius: 999px;
+
+  background: rgba(0, 122, 255, 0.10);
+  color: #007aff;
+
+  font-size: .62rem;
+  font-family: ui-monospace, monospace;
+  font-weight: 700;
+  letter-spacing: .07em;
+}
+.card-title { font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; margin: 0 0 .4rem; }
+.card-meta { font-size: .78rem; opacity: .6; margin-bottom: .7rem; }
+.card-divider { border: none; border-top: 1px solid currentColor; opacity: .15; margin: 0 0 .7rem; }
+.card-today { font-size: .86rem; margin-bottom: .7rem; }
+.card-today-label { font-weight: 700; opacity: .85; margin-right: .4rem; }
+.card-period { font-family: ui-monospace, monospace; font-size: .68rem; opacity: .55; margin-bottom: .9rem; }
+.card-description { font-size: .86rem; line-height: 1.55; opacity: .8; max-width: 26rem; }
+.card-tags { display: flex; flex-wrap: wrap; gap: .35rem; margin-top: .9rem; }
+.card-tags span { padding: .25rem .5rem; border-radius: 999px; background: rgba(127, 127, 127, .16); color: inherit; font-size: .62rem; font-family: ui-monospace, monospace; }
+
+/* 스크린샷이 있는 기록에 붙는 작은 썸네일 — 원래 있던 대표 사진 슬라이드쇼를 그대로 옮겨온 것.
+   여러 장이면(예: 08.14 포트폴리오 사이트 3장) 같은 자리에 겹쳐 두고 JS가 한 장씩
+   자동으로 크로스페이드시킨다. 카드 너비(최대 700px대)에 맞춰 aspect-ratio로 늘리면
+   세로로 너무 커져서 카드 전체가 잘려 보이므로, 높이를 고정해서 "작은" 썸네일로 유지한다. */
+.card-thumb {
+  position: relative;
+  height: 150px;
+  margin: 0 0 .8rem;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, .1);
+}
+.card-thumb img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
   opacity: 0;
   transition: opacity 0.8s ease;
 }
+.card-thumb img.is-active { opacity: 1; }
 
-.cp-photo.is-active {
-  opacity: 1;
-}
+.log-strip { position: relative; display: flex; justify-content: space-between; align-items: center; height: 14px; margin: 0 .1rem .4rem; }
+.log-strip::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; height: 2px; background: var(--card-accent, currentColor); opacity: .3; transform: translateY(-50%); z-index: 0; }
+.log-dot { -webkit-appearance: none; appearance: none; position: relative; z-index: 1; width: 8px; height: 8px; border-radius: 50%; background: var(--card-accent, currentColor); border: 2px solid var(--card-bg, #fff); cursor: pointer; padding: 0; }
+.log-dot.is-active { width: 13px; height: 13px; background: var(--card-bg, #fff); border: 3px solid var(--card-accent, currentColor); }
+.log-strip-range { display: flex; justify-content: space-between; font-family: ui-monospace, monospace; font-size: .64rem; opacity: .5; margin-bottom: .9rem; }
 
-.cp-media-caption {
-  margin: 0;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-  text-align: center;
-}
-
-@media (max-width: 768px) {
-  .cp-layout {
-    grid-template-columns: 1fr;
-  }
-  /* 1단으로 쌓이는 화면에서는 굳이 왼쪽 카드 높이에 맞출 필요가 없어서, 원래처럼 고정 비율로 되돌린다 */
-  .cp-media {
-    height: auto;
-  }
-  .cp-photo-carousel {
-    flex: none;
-    aspect-ratio: 4 / 3;
-    min-height: 0;
-  }
-}
-
-.badge-in-progress {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: rgba(13, 148, 136, 0.12);
-  color: var(--accent);
-  font-size: 0.75rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  margin-bottom: 14px;
-  animation: pulseGlow 2.4s ease-in-out infinite;
-}
-
-@keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.25); }
-  50% { box-shadow: 0 0 0 6px rgba(13, 148, 136, 0); }
-}
-
-.cp-name { margin: 0 0 8px; font-size: 1.4rem; }
-.cp-meta { color: var(--text-muted); font-size: 0.9rem; margin: 0 0 12px; }
-.cp-summary { margin: 0; }
-
-/* 오늘 교육 내용 — 요약 아래에 짧게 한 줄로 덧붙이는 오늘 자 한 일 */
-.cp-today {
-  margin: 14px 0 0;
-  padding-top: 14px;
-  border-top: 1px dashed var(--border);
-  font-size: 0.92rem;
-  color: var(--text-muted);
-}
-
-.cp-today strong {
-  color: var(--archive-accent);
-  margin-right: 6px;
-}
-
-/* 진행 로그 — day/week 단위로 실습 내용을 짧게 기록해두는 타임라인.
-   흰 박스에 담지 않고 사진(.cp-media)처럼 섹션 배경 위에 그대로 떠 있게 둔다. */
-.cp-log {
-  margin: 0 0 24px;
-  padding: 0;
-}
-
-.cp-log-title {
-  margin: 0 0 14px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.cp-log-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  /* 목록 자체(DOM)는 오래된 순으로 두되, 화면에는 최근 항목이 위로 오도록 시각적으로만 뒤집는다.
-     JS가 꺼져 있어도(fallback) 최근 로그가 먼저 보이도록 하기 위함. */
-  flex-direction: column-reverse;
-  gap: 8px;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-}
-
-.cp-log-date {
-  display: inline-block;
-  min-width: 66px;
-  margin-right: 10px;
-  font-weight: 700;
-  color: var(--archive-accent);
-}
-
-/*
-  JS가 켜지면 위의 원본 목록(.cp-log-list) 대신 슬라이더 + 표시창으로 바꿔서 보여준다.
-  JS가 실행되지 않는 경우를 대비해, 슬라이더/표시창은 기본적으로 숨겨두고
-  .is-enhanced가 붙었을 때만 나타나도록 한다 (progressive enhancement).
-*/
-.cp-log-timeline,
-.cp-log-display {
-  display: none;
-}
-
-.cp-log.is-enhanced .cp-log-list {
-  display: none;
-}
-
-.cp-log.is-enhanced .cp-log-timeline,
-.cp-log.is-enhanced .cp-log-display {
-  display: block;
-}
-
-.cp-log-timeline {
-  margin: 4px 0 20px;
-}
-
-.cp-log-track {
-  position: relative;
-  padding: 10px 0 18px;
-}
-
-/*
-  좌우로 움직이는 바. 네이티브 range 슬라이더는 그대로 쓰되(접근성·터치 대응이 좋음),
-  트랙 배경을 --fill 값(0~100%)에 맞춰 그러데이션으로 칠해서
-  "지금까지 지나온 만큼"이 채워진 진행 바처럼 보이게 한다. --fill은 JS가 드래그할 때마다 갱신.
-*/
-.cp-log-slider {
-  --fill: 100%;
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  margin: 0;
-  appearance: none;
-  -webkit-appearance: none;
-  height: 4px;
-  border-radius: 999px;
-  background: linear-gradient(
-    to right,
-    var(--archive-accent) var(--fill),
-    var(--border) var(--fill)
-  );
-  outline: none;
-  cursor: pointer;
-  transition: box-shadow 0.2s ease;
-}
-
-/* 토스 느낌의 흰 원형 손잡이 — 채워진 색이 아니라 흰 배경 + 은은한 링/그림자로 존재감을 줌 */
-.cp-log-slider::-webkit-slider-thumb {
-  appearance: none;
-  -webkit-appearance: none;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid var(--archive-accent);
-  box-shadow: 0 2px 6px rgba(20, 30, 40, 0.18);
-  cursor: pointer;
-  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.15s ease;
-}
-
-.cp-log-slider:active::-webkit-slider-thumb {
-  transform: scale(1.15);
-  box-shadow: 0 4px 12px rgba(20, 30, 40, 0.24);
-}
-
-.cp-log-slider::-moz-range-thumb {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #fff;
-  border: 2px solid var(--archive-accent);
-  box-shadow: 0 2px 6px rgba(20, 30, 40, 0.18);
-  cursor: pointer;
-  transition: transform 0.15s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.15s ease;
-}
-
-.cp-log-slider:active::-moz-range-thumb {
-  transform: scale(1.15);
-}
-
-/* 슬라이더 아래, 실제 로그 항목 수만큼 찍히는 눈금 점 — 지나온 지점은 채워서 진행감을 준다 */
-.cp-log-ticks {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 20px;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 1px;
-  pointer-events: none;
-}
-
-.cp-log-ticks span {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--border);
-  transition: background 0.3s ease, transform 0.3s ease;
-}
-
-.cp-log-ticks span.is-passed {
-  background: var(--archive-accent);
-  transform: scale(1.1);
-}
-
-.cp-log-range-labels {
-  display: flex;
-  justify-content: space-between;
-  margin-top: -6px;
-  font-size: 0.74rem;
-  color: var(--text-muted);
-  opacity: 0.7;
-}
-
-/* 슬라이더 위치에 맞는 날짜/내용이 나타나는 표시창 — 박스로 감싸지 않고,
-   왼쪽 포인트 컬러 선으로만 "지금 보고 있는 내용"이라는 걸 표시한다 */
-.cp-log-display {
-  padding: 2px 0 2px 16px;
-  border-left: 3px solid var(--archive-accent);
-}
-
-.cp-log-display-head {
+/* 관련 자료 — 실제로 올려둔 실습 코드·문서·이미지로 바로 이동하는 링크 목록.
+   .now-card에서 물려받은 --card-accent(그 프로젝트의 카테고리 색)로 아주 옅게
+   물들여서, 카드·타임라인 바와 같은 색이 파일 목록까지 자연스럽게 이어지게 한다
+   (color-mix 미지원 브라우저는 그 위 rgba 값으로 대체). */
+.related-list { display: flex; flex-direction: column; gap: .4rem; margin-top: .7rem; }
+.related-row {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 0 0 8px;
+  gap: .6rem;
+
+  background: rgba(255, 255, 255, 0.72);
+  background: color-mix(in srgb, var(--card-accent, #9aa1ab) 10%, #fff);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+
+  padding: .5rem .7rem;
+
+  font-size: .78rem;
+  color: var(--pj-text);
+  text-decoration: none;
+
+  transition: background .15s ease, transform .15s ease;
 }
 
-.cp-log-display .cp-log-date {
-  display: inline-block;
-  margin: 0;
-}
-
-/* 지금 보고 있는 로그가 "최신"인지 "과거 기록"인지 한눈에 구분하는 배지 */
-.cp-log-badge {
-  display: inline-block;
-  padding: 2px 10px;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  background: var(--border);
-  color: var(--text-muted);
-  transition: background 0.25s ease, color 0.25s ease;
-}
-
-.cp-log-badge.is-latest {
-  background: rgba(13, 148, 136, 0.14);
-  color: var(--archive-accent);
-}
-
-.cp-log-display .cp-log-text {
-  display: block;
-  margin: 0;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  color: var(--archive-text);
-}
-
-/*
-  슬라이더를 움직여서 로그 내용이 바뀔 때, 텍스트가 툭 끊기듯 바뀌지 않고
-  살짝 가라앉으며 사라졌다가 다시 떠오르며 나타나도록 부드럽게 크로스페이드 한다.
-*/
-.cp-log-display-head,
-.cp-log-display .cp-log-text {
-  transition: opacity 0.18s ease, transform 0.18s ease;
-}
-
-.cp-log-display.is-changing .cp-log-display-head,
-.cp-log-display.is-changing .cp-log-text {
-  opacity: 0;
-  transform: translateY(3px);
-}
-
-/* GitHub 링크 대신, 실제로 올려둔 실습 코드·문서·이미지로 바로 이동하는 목록.
-   진행 로그 슬라이더를 움직이면, 그 날짜(data-day)에 해당하는 항목만 남고 나머지는 숨는다. */
-.cp-files-title {
-  margin: 0 0 10px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.cp-files-empty {
-  display: none;
-  margin: 0;
-  padding: 10px 14px;
-  border: 1px dashed var(--border);
-  border-radius: 8px;
-  font-size: 0.88rem;
-  color: var(--text-muted);
-}
-
-.cp-files-empty.is-visible {
-  display: block;
-}
-
-.cp-file-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.cp-file-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: var(--bg-alt);
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  transition: border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
-}
-
-.cp-file-item:hover {
-  border-color: var(--archive-accent);
-  color: var(--archive-text);
+.related-row:hover {
+  background: #fff;
+  background: color-mix(in srgb, var(--card-accent, #9aa1ab) 18%, #fff);
   transform: translateX(2px);
 }
-
-/*
-  파일 목록 앞에 붙는 작은 폴더 아이콘 — Project Archive의 폴더 그래픽(뒤판+앞판)을
-  줄여놓은 버전. 같은 시각 언어를 써서 "이것도 하나의 파일철"이라는 느낌을 통일한다.
-  파일 목록에서 눈에 잘 띄도록 텍스트보다 조금 더 크게 키워서 강조한다.
-*/
-.cp-file-folder-icon {
-  position: relative;
-  display: inline-block;
-  width: 40px;
-  height: 30px;
+.related-row svg {
+  width: 16px;
+  height: 16px;
   flex-shrink: 0;
+
+  color: var(--card-accent, #5f6368);
+  opacity: .85;
 }
 
-.cp-file-folder-back {
-  position: absolute;
-  left: 2px;
-  top: 6px;
-  width: 36px;
-  height: 20px;
-  background: #fbbf24;
-  border-radius: 4px;
+@media (max-width: 900px) {
+  .mac-window-body { grid-template-columns: 130px 200px 0 1fr; }
+  .calendar-resizer { display: none; }
+  .calendar-sidebar { padding: 1.25rem .9rem; }
+  .project-detail { padding: 1.25rem 1.4rem; }
+  .now-projects { height: auto; min-height: 26rem; }
 }
 
-.cp-file-folder-back::before {
-  content: "";
-  position: absolute;
-  top: -5px;
-  left: 0;
-  width: 15px;
-  height: 7px;
-  background: #fbbf24;
-  border-radius: 4px 4px 0 0;
-}
-
-.cp-file-folder-front {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 40px;
-  height: 17px;
-  background: linear-gradient(#ffd76a, #ffcd54);
-  border: 2px solid #f5b82e;
-  border-radius: 4px 4px 5px 5px;
-  box-sizing: border-box;
-}
-
-/*
-  아카이브 상세 안에서 파일을 날짜별로 묶어 보여줄 때 쓰는 줄.
-  왼쪽엔 날짜(.cp-log-date 재사용), 오른쪽엔 파일 링크(.cp-file-item 재사용)를 나란히 배치한다.
-*/
-.archive-log-list {
-  gap: 6px;
-}
-
-.archive-log-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.archive-log-item .cp-log-date {
-  flex-shrink: 0;
-  min-width: 60px;
-  margin: 0;
-}
-
-.archive-log-item .cp-file-item {
-  flex: 1;
-  min-width: 0;
-}
-
-/* -------------------------------------------
-   Projects Archive
-------------------------------------------- */
-.projects-section {
-  background: linear-gradient(to bottom, var(--current-bg) 0, var(--archive-bg) var(--blend), var(--archive-bg) 100%);
-}
-
-.projects-section .section-title {
-  color: var(--archive-text);
-}
-
-/* =========================
-   폴더 전체 배치 — 종이 파일 더미 대신, 폴더 아이콘들이 나란히 놓인 그리드
-========================= */
-.archive {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-  gap: 45px 35px;
-  align-items: start;
-  padding-top: 35px;
-}
-
-/* 프로젝트 하나 (폴더 아이콘 + 이름 + 상세 내용을 담는 칸) */
-.project-tab {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-width: 0;
-}
-
-/*
-  탭을 열면 그 칸만 그리드 전체 너비를 차지하도록 만들어서,
-  아래의 상세 내용(.project-detail)이 좁은 폴더 칸에 눌리지 않고
-  한 줄을 통째로 차지해서 펼쳐지게 한다.
-*/
-.project-tab.is-open {
-  grid-column: 1 / -1;
-}
-
-/* =========================
-   폴더 버튼
-========================= */
-.project-tab-header {
-  appearance: none;
-  border: none;
-  background: none;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-  font-family: inherit;
-  color: var(--archive-text);
-}
-
-/* =========================
-   폴더 아이콘
-========================= */
-.folder-icon {
-  position: relative;
-  width: 125px;
-  height: 100px;
-  transition: transform 0.25s ease, filter 0.25s ease;
-}
-
-/* 마우스 올렸을 때 — 폴더 전체가 살짝 떠오른다 */
-.project-tab-header:hover .folder-icon {
-  transform: translateY(-8px) scale(1.04);
-  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.15));
-}
-
-/* 폴더 뒤판 */
-.folder-back {
-  position: absolute;
-  left: 2px;
-  top: 15px;
-  width: 121px;
-  height: 78px;
-  background: #fbbf24;
-  border-radius: 7px;
-}
-
-/* 폴더 위쪽 탭 */
-.folder-back::before {
-  content: "";
-  position: absolute;
-  top: -13px;
-  left: 0;
-  width: 52px;
-  height: 25px;
-  background: #fbbf24;
-  border-radius: 7px 7px 0 0;
-}
-
-/* 안에 들어있는 종이 */
-.folder-paper {
-  position: absolute;
-  z-index: 2;
-  left: 30px;
-  top: 23px;
-  width: 65px;
-  height: 65px;
-  background: #ffffff;
-  border: 1px solid #d8d8d8;
-  border-radius: 3px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 24px;
-  transition: transform 0.3s ease;
-}
-
-/* 종이 오른쪽 위 접힌 모서리 */
-.folder-paper::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 18px;
-  height: 18px;
-  background: linear-gradient(45deg, #e5e7eb 50%, transparent 50%);
-}
-
-/* hover 시 종이가 살짝 올라옴 (서류철에서 문서를 꺼내는 느낌) */
-.project-tab-header:hover .folder-paper {
-  transform: translateY(-10px);
-}
-
-/* 폴더 앞판 */
-.folder-front {
-  position: absolute;
-  z-index: 3;
-  bottom: 0;
-  left: 0;
-  width: 125px;
-  height: 60px;
-  background: linear-gradient(#ffd76a, #ffcd54);
-  border: 2px solid #f5b82e;
-  border-radius: 5px 5px 7px 7px;
-  box-sizing: border-box;
-}
-
-/* =========================
-   폴더 이름
-========================= */
-.tab-name {
-  margin-top: 12px;
-  max-width: 120px;
-  font-size: 15px;
-  font-weight: 500;
-  line-height: 1.3;
-  text-align: center;
-  white-space: normal;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-}
-
-.project-tab-header:hover .tab-name {
-  color: var(--archive-accent);
-}
-
-/* =========================
-   상세 내용
-========================= */
-
-/*
-  상세 내용은 폴더 색과 다른 새하얀 종이 한 장이라는 느낌을 주기 위해
-  배경을 순백색(--bg)으로 분리했다. 평소엔 접혀 있다가(높이 0),
-  열리면(부모 .project-tab이 그리드 전체 너비로 확장되면서) 그 안에서
-  펼쳐진다.
-*/
-.project-detail {
-  width: 100%;
-  max-height: 0;
-  overflow: hidden;
-  opacity: 0;
-  background: var(--bg);
-  border-radius: 10px;
-  transition: max-height 0.5s ease, opacity 0.35s ease, margin 0.4s ease;
-}
-
-/* 폴더 클릭 후 */
-.project-tab.is-open .project-detail {
-  max-height: 1000px;
-  opacity: 1;
-  margin-top: 20px;
-  box-shadow: 0 15px 35px rgba(20, 30, 40, 0.15);
-}
-
-.detail-grid {
-  display: grid;
-  grid-template-columns: 220px 1fr;
-  gap: 24px;
-  padding: 24px;
-}
-
-.detail-image {
-  aspect-ratio: 4 / 3;
-  background: repeating-linear-gradient(45deg, #e6eaee, #e6eaee 8px, #d6dde3 8px, #d6dde3 16px);
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #64748b;
-  font-size: 0.85rem;
-}
-
-.detail-info p {
-  margin: 0 0 10px;
-  font-size: 0.92rem;
-  color: #33414f;
-}
-
-.detail-info strong {
-  color: var(--archive-text);
-  margin-right: 4px;
-}
-
-.detail-github {
-  display: inline-block;
-  margin-top: 6px;
-  font-weight: 700;
-  color: var(--archive-accent);
-  border-bottom: 1px solid currentColor;
+@media (max-width: 700px) {
+  .archive-calendar { height: auto; border-radius: 20px; }
+  .mac-window-body { display: flex; flex-direction: column; }
+  .calendar-sidebar {
+    border-right: none; border-bottom: 1px solid #EEF0F2;
+    display: flex; flex-wrap: wrap; align-items: flex-start; gap: 1.5rem;
+  }
+  .sidebar-divider { display: none; }
+  .year-list { flex-direction: row; }
+  .month-list { grid-template-columns: repeat(6, 1fr); flex: 1 1 100%; }
+  .timeline-panel { border-right: none; border-bottom: 1px solid #EEF0F2; }
+  .timeline-scroll { max-height: 340px; }
+  .now-projects { min-height: 0; height: auto; }
+  /* 모바일은 카드가 겹치지 않고 세로로 쭉 나열되니, 데스크톱처럼 높이를 고정해서
+     안쪽을 스크롤시킬 필요 없이 내용 길이에 맞춰 자연스럽게 늘어나게 한다 */
+  /* JS가 매번 카드에 top/height를 인라인 스타일로 넣어주는데, 인라인 스타일은
+     !important 없는 스타일시트 규칙보다 항상 우선한다. 그래서 모바일에서
+     "자연스러운 높이"로 되돌리려면 여기서도 !important가 필요하다. */
+  .now-card { position: relative; height: auto !important; margin-bottom: 1.25rem; top: 0 !important; }
+  .now-card-body { height: auto; overflow: visible; }
+  .now-card::before, .now-card::after { display: none; }
 }
 
 /* -------------------------------------------
    Skills — 능력치 오각형(레이더) 차트
 ------------------------------------------- */
 .skills-section {
-  background: linear-gradient(to bottom, var(--archive-bg) 0, var(--skills-bg) var(--blend), var(--skills-bg) 100%);
+  background: linear-gradient(to bottom, var(--current-bg) 0, var(--skills-bg) var(--blend), var(--skills-bg) 100%);
 }
 
 .skills-hint {

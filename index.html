@@ -8,6 +8,13 @@
 </head>
 <body>
 
+  <!-- 관련 자료 링크에 쓰이는 폴더 아이콘 심볼 (숨겨진 sprite, <use>로 참조) -->
+  <svg aria-hidden="true" style="position:absolute; width:0; height:0; overflow:hidden;">
+    <symbol id="icon-folder" viewBox="0 0 24 24">
+      <path fill="currentColor" d="M3 5.5A1.5 1.5 0 0 1 4.5 4h4.379a1.5 1.5 0 0 1 1.06.44L11.06 5.56A1.5 1.5 0 0 0 12.12 6H19.5A1.5 1.5 0 0 1 21 7.5v11A1.5 1.5 0 0 1 19.5 20h-15A1.5 1.5 0 0 1 3 18.5v-13z"/>
+    </symbol>
+  </svg>
+
   <!-- 첫 진입 인트로: 암전 → 로봇 → 글자 순서로 등장 -->
   <div class="intro-overlay" id="introOverlay"></div>
 
@@ -17,8 +24,7 @@
       <nav class="nav-links" id="navLinks">
         <a href="#home" class="nav-link" data-nav="home">Home</a>
         <a href="#about" class="nav-link" data-nav="about">About<span class="nav-link-desc">자기소개</span></a>
-        <a href="#current-project" class="nav-link" data-nav="current-project">Current<span class="nav-link-desc">지금 진행 중인 프로젝트</span></a>
-        <a href="#projects" class="nav-link" data-nav="projects">Projects<span class="nav-link-desc">완료한 프로젝트 아카이브</span></a>
+        <a href="#current-project" class="nav-link" data-nav="current-project">Projects<span class="nav-link-desc">진행 중 · 완료한 프로젝트 타임라인</span></a>
         <a href="#skills" class="nav-link" data-nav="skills">Skills<span class="nav-link-desc">보유 기술 스택</span></a>
         <a href="#experience" class="nav-link" data-nav="experience">Experience<span class="nav-link-desc">교육 · 활동 · 수상 경험</span></a>
         <a href="#contact" class="nav-link" data-nav="contact">Contact<span class="nav-link-desc">연락처</span></a>
@@ -67,315 +73,103 @@
       </div>
     </section>
 
-    <!-- 3. CURRENT PROJECT -->
+    <!-- 3. PROJECTS (진행 중 + 완료 프로젝트 통합 타임라인) -->
     <section id="current-project" class="section current-project-section">
       <div class="section-inner">
-        <h2 class="section-title reveal">최근 진행중인 프로젝트</h2>
+        <div class="archive-calendar reveal">
 
-        <div class="cp-layout">
-          <div class="cp-card cp-info-card reveal is-in-progress">
-            <span class="badge-in-progress">IN PROGRESS</span>
-            <h3 class="cp-name">피지컬AI 일경험 프로젝트</h3>
-            <p class="cp-meta">기간 · 2026.08.04 ~ 진행중&nbsp;&nbsp;|&nbsp;&nbsp;참여 기관 · 미래내일 일경험 · 청년 피지컬AI 1기</p>
-            <p class="cp-summary">웹 프론트엔드부터 파이썬까지, 단계별 실습으로 채워가는 청년 일경험형 교육 프로그램</p>
-            <p class="cp-today"><strong>오늘 교육 내용</strong> 개인 포트폴리오 사이트 만들기</p>
-          </div>
+          <!-- 맥 화면 최상단 -->
+          <div class="project-mac-topbar">
 
-          <div class="cp-media">
-            <div class="cp-photo-carousel" id="cpPhotoCarousel">
-              <img class="cp-photo is-active" src="current-project/images/day14/portfolio-site-1.png" alt="08.14 포트폴리오 사이트 Home 화면 스크린샷">
-              <img class="cp-photo" src="current-project/images/day14/portfolio-site-2.png" alt="08.14 포트폴리오 사이트 Current Project 화면 스크린샷">
-              <img class="cp-photo" src="current-project/images/day14/portfolio-site-3.png" alt="08.14 포트폴리오 사이트 Project Archive 화면 스크린샷">
-            </div>
-            <p class="cp-media-caption">08.14 — 개인 포트폴리오 사이트 만들기 (실제 작업 화면 스크린샷)</p>
-          </div>
-        </div>
-
-        <div class="cp-card cp-files-card reveal">
-          <div class="cp-files" id="cpFiles">
-            <h4 class="cp-files-title">관련 자료</h4>
-            <ul class="cp-file-list" id="cpFileList">
-              <li data-day="0">
-                <a class="cp-file-item" href="current-project/code/day1-signup/index.html" target="_blank" rel="noopener">
-                  <span class="cp-file-folder-icon" aria-hidden="true"><span class="cp-file-folder-back"></span><span class="cp-file-folder-front"></span></span>
-                  <span class="cp-file-name">회원가입 폼 실습 (HTML 테이블·폼)</span>
-                </a>
-              </li>
-              <li data-day="1">
-                <a class="cp-file-item" href="current-project/code/day3-resume/index.html" target="_blank" rel="noopener">
-                  <span class="cp-file-folder-icon" aria-hidden="true"><span class="cp-file-folder-back"></span><span class="cp-file-folder-front"></span></span>
-                  <span class="cp-file-name">이력서 작성 실습 (HTML 테이블·폼)</span>
-                </a>
-              </li>
-              <li data-day="1">
-                <a class="cp-file-item" href="current-project/images/day3-resume-result.png" target="_blank" rel="noopener">
-                  <span class="cp-file-folder-icon" aria-hidden="true"><span class="cp-file-folder-back"></span><span class="cp-file-folder-front"></span></span>
-                  <span class="cp-file-name">실습 결과 캡처 — 이력서 페이지</span>
-                </a>
-              </li>
-              <li data-day="2">
-                <a class="cp-file-item" href="current-project/code/day4-profilecard/index.html" target="_blank" rel="noopener">
-                  <span class="cp-file-folder-icon" aria-hidden="true"><span class="cp-file-folder-back"></span><span class="cp-file-folder-front"></span></span>
-                  <span class="cp-file-name">프로필 카드 페이지 실습 (HTML/CSS)</span>
-                </a>
-              </li>
-              <li data-day="2">
-                <a class="cp-file-item" href="current-project/images/day4-profilecard-result.png" target="_blank" rel="noopener">
-                  <span class="cp-file-folder-icon" aria-hidden="true"><span class="cp-file-folder-back"></span><span class="cp-file-folder-front"></span></span>
-                  <span class="cp-file-name">실습 결과 캡처 — 프로필 카드 페이지</span>
-                </a>
-              </li>
-              <li data-day="3">
-                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/STUDY.OS_프로젝트계획서.md" target="_blank" rel="noopener">
-                  <span class="cp-file-folder-icon" aria-hidden="true"><span class="cp-file-folder-back"></span><span class="cp-file-folder-front"></span></span>
-                  <span class="cp-file-name">개인 기획서 — STUDY.OS 프로젝트 계획서</span>
-                </a>
-              </li>
-              <li data-day="3">
-                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/AI도구_트렌드_보고서.md" target="_blank" rel="noopener">
-                  <span class="cp-file-folder-icon" aria-hidden="true"><span class="cp-file-folder-back"></span><span class="cp-file-folder-front"></span></span>
-                  <span class="cp-file-name">AI 도구 트렌드 조사 보고서</span>
-                </a>
-              </li>
-              <li data-day="4">
-                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0810_python-basics.ipynb" target="_blank" rel="noopener">
-                  <span class="cp-file-folder-icon" aria-hidden="true"><span class="cp-file-folder-back"></span><span class="cp-file-folder-front"></span></span>
-                  <span class="cp-file-name">Python 기초 문법 노트북 (변수 · 자료형 · 연산자)</span>
-                </a>
-              </li>
-              <li data-day="5">
-                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0811_control-flow.ipynb" target="_blank" rel="noopener">
-                  <span class="cp-file-folder-icon" aria-hidden="true"><span class="cp-file-folder-back"></span><span class="cp-file-folder-front"></span></span>
-                  <span class="cp-file-name">Python 조건문 · 반복문 노트북</span>
-                </a>
-              </li>
-              <li data-day="7">
-                <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio" target="_blank" rel="noopener">
-                  <span class="cp-file-folder-icon" aria-hidden="true"><span class="cp-file-folder-back"></span><span class="cp-file-folder-front"></span></span>
-                  <span class="cp-file-name">개인 포트폴리오 사이트 (지금 만들고 있는 이 사이트)</span>
-                </a>
-              </li>
-            </ul>
-            <p class="cp-files-empty" id="cpFilesEmpty">이 날짜에는 공개할 별도 자료가 없어요 (출석 확인서류 등 비공개 문서만 있음).</p>
-          </div>
-        </div>
-
-        <div class="cp-log-card reveal">
-          <div class="cp-log" id="cpLog">
-            <h4 class="cp-log-title">진행 로그</h4>
-
-            <!-- JS가 활성화되면 이 목록 대신 아래의 슬라이더로 날짜별 내용을 보여준다 -->
-            <ul class="cp-log-list" id="cpLogList">
-              <li data-date="08.04–05"><span class="cp-log-date">08.04–05</span><span class="cp-log-text">HTML 마크업 실습 (폼, 테이블, 회원가입 페이지)</span></li>
-              <li data-date="08.05–06"><span class="cp-log-date">08.05–06</span><span class="cp-log-text">CSS 스타일링 실습 (내부 스타일시트, 이력서 페이지 제작)</span></li>
-              <li data-date="08.06"><span class="cp-log-date">08.06</span><span class="cp-log-text">JavaScript 기초(연산자·조건문·반복문) 학습, 프로필 카드 페이지 제작</span></li>
-              <li data-date="08.07"><span class="cp-log-date">08.07</span><span class="cp-log-text">개인 기획서(STUDY.OS) 작성, AI 도구 트렌드 조사 보고서 작성</span></li>
-              <li data-date="08.10"><span class="cp-log-date">08.10</span><span class="cp-log-text">Python 기초 문법 학습 시작 (변수, 자료형, 연산자)</span></li>
-              <li data-date="08.11–12"><span class="cp-log-date">08.11–12</span><span class="cp-log-text">Python 조건문 · 반복문 실습</span></li>
-              <li data-date="08.13"><span class="cp-log-date">08.13</span><span class="cp-log-text">1주차 출석 확인서류 제출, 실습 자료 정리</span></li>
-              <li data-date="08.14"><span class="cp-log-date">08.14</span><span class="cp-log-text">개인 포트폴리오 사이트 만들기</span></li>
-            </ul>
-
-            <div class="cp-log-timeline">
-              <div class="cp-log-track">
-                <input type="range" class="cp-log-slider" id="cpLogSlider" min="0" max="7" step="1" value="7" aria-label="진행 로그 타임라인">
-                <div class="cp-log-ticks" id="cpLogTicks" aria-hidden="true">
-                  <span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span>
-                </div>
-              </div>
-              <div class="cp-log-range-labels" aria-hidden="true">
-                <span>08.04</span>
-                <span>08.14 →</span>
-              </div>
+            <div class="project-mac-dots">
+              <span class="mac-dot mac-dot--red"></span>
+              <span class="mac-dot mac-dot--yellow"></span>
+              <span class="mac-dot mac-dot--green"></span>
             </div>
 
-            <div class="cp-log-display" id="cpLogDisplay">
-              <div class="cp-log-display-head">
-                <span class="cp-log-date" id="cpLogDisplayDate"></span>
-                <span class="cp-log-badge" id="cpLogBadge"></span>
-              </div>
-              <p class="cp-log-text" id="cpLogDisplayText"></p>
-            </div>
+            <!-- Projects 화면 안의 메뉴 -->
+            <nav class="project-inner-nav">
+              <a href="#home">Home</a>
+              <a href="#about">About</a>
+              <a href="#current-project" class="active">Projects</a>
+              <a href="#skills">Skills</a>
+              <a href="#experience">Experience</a>
+              <a href="#contact">Contact</a>
+            </nav>
+
           </div>
+
+
+        <!-- Projects 제목 -->
+        <div class="projects-header">
+          <h2 class="section-title">Projects</h2>
+
+          <p class="section-hint">
+              카테고리·연도·월을 눌러 필터링하고,
+               날짜를 선택하면 그날 진행한 프로젝트를 확인할 수 있어요.
+          </p>
         </div>
+
+
+        <!-- 실제 프로젝트 화면 -->
+        <div class="mac-window-body">
+
+          <aside class="calendar-sidebar">
+            <div class="sidebar-title">Categories</div>
+            <div class="category-list" id="categoryList"></div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-title">Year</div>
+            <div class="year-list" id="yearList"></div>
+
+            <div class="sidebar-divider"></div>
+
+            <div class="sidebar-title">Month</div>
+            <div class="month-list" id="monthList"></div>
+          </aside>
+
+
+          <section class="timeline-panel">
+
+            <div class="timeline-header">
+              <strong id="timelineMonthTitle">August 2026</strong>
+            </div>
+
+            <button id="todayButton" type="button" class="today-btn">
+              Today
+            </button>
+
+            <div class="timeline-scroll" id="timelineScroll">
+              <div class="timeline-days" id="timelineDays"></div>
+              <div class="timeline-events" id="timelineEvents"></div>
+              <div class="timeline-cursor" id="timelineCursor"></div>
+            </div>
+
+          </section>
+
+
+          <div class="calendar-resizer" id="calendarResizer"></div>
+
+
+          <aside class="project-detail">
+
+            <div class="detail-top">
+              <span id="selectedDateLabel">August 15</span>
+            </div>
+
+            <div class="now-projects" id="nowProjects"></div>
+
+          </aside>
+
+          </div>
+
+        </div>
+
       </div>
     </section>
 
-    <!-- 4. PROJECTS ARCHIVE -->
-    <section id="projects" class="section projects-section">
-      <div class="section-inner">
-        <h2 class="section-title reveal">Project Archive</h2>
-        <div class="archive" id="archive">
-
-          <!-- 피지컬 AI 일경험 프로젝트 -->
-          <article class="project-tab reveal">
-            <button class="project-tab-header" data-target="detail-physical-ai" aria-expanded="false">
-              <div class="folder-icon">
-                <div class="folder-back"></div>
-                <div class="folder-paper"><span>🤖</span></div>
-                <div class="folder-front"></div>
-              </div>
-              <span class="tab-name">피지컬 AI<br>일경험 프로젝트</span>
-            </button>
-            <div class="project-detail" id="detail-physical-ai">
-              <div class="detail-grid">
-                <div class="detail-image">
-                  <img src="current-project/images/day4-profilecard-result.png" alt="프로필 카드 실습 결과" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">
-                </div>
-                <div class="detail-info">
-                  <p><strong>기간</strong> 2026.08.04 ~ (지금도 진행 중 — 최신 진행 상황은 위 Current Project 참고)</p>
-                  <p><strong>한 줄 소개</strong> 웹 프론트엔드부터 파이썬까지 단계별로 배우는 청년 일경험 프로그램 (청년 피지컬AI 1기)</p>
-                  <p><strong>담당 역할</strong> 교육생으로 매일 실습 과제를 수행하고 결과물을 정리</p>
-                  <p><strong>사용 기술</strong> HTML, CSS, JavaScript, Python (Jupyter Notebook)</p>
-                  <p><strong>느낀 점</strong> 진행 중인 프로젝트라 작성 예정</p>
-                  <p><strong>자료</strong> (이미 지난 실습 내용을 날짜별로 아카이브)</p>
-                  <ul class="cp-file-list archive-log-list">
-                    <li class="archive-log-item">
-                      <span class="cp-log-date">08.04–05</span>
-                      <a class="cp-file-item" href="current-project/code/day1-signup/index.html" target="_blank" rel="noopener"><span class="cp-file-name">회원가입 폼 실습</span></a>
-                    </li>
-                    <li class="archive-log-item">
-                      <span class="cp-log-date">08.05–06</span>
-                      <a class="cp-file-item" href="current-project/code/day3-resume/index.html" target="_blank" rel="noopener"><span class="cp-file-name">이력서 작성 실습</span></a>
-                    </li>
-                    <li class="archive-log-item">
-                      <span class="cp-log-date">08.06</span>
-                      <a class="cp-file-item" href="current-project/code/day4-profilecard/index.html" target="_blank" rel="noopener"><span class="cp-file-name">프로필 카드 실습</span></a>
-                    </li>
-                    <li class="archive-log-item">
-                      <span class="cp-log-date">08.07</span>
-                      <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/STUDY.OS_프로젝트계획서.md" target="_blank" rel="noopener"><span class="cp-file-name">STUDY.OS 기획서</span></a>
-                    </li>
-                    <li class="archive-log-item">
-                      <span class="cp-log-date">08.07</span>
-                      <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/AI도구_트렌드_보고서.md" target="_blank" rel="noopener"><span class="cp-file-name">AI 도구 트렌드 보고서</span></a>
-                    </li>
-                    <li class="archive-log-item">
-                      <span class="cp-log-date">08.10</span>
-                      <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0810_python-basics.ipynb" target="_blank" rel="noopener"><span class="cp-file-name">Python 기초 노트북</span></a>
-                    </li>
-                    <li class="archive-log-item">
-                      <span class="cp-log-date">08.11–12</span>
-                      <a class="cp-file-item" href="https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0811_control-flow.ipynb" target="_blank" rel="noopener"><span class="cp-file-name">Python 조건문·반복문 노트북</span></a>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- 공정실습 -->
-          <article class="project-tab reveal">
-            <button class="project-tab-header" data-target="detail-process-practicum" aria-expanded="false">
-              <div class="folder-icon">
-                <div class="folder-back"></div>
-                <div class="folder-paper"><span>🔬</span></div>
-                <div class="folder-front"></div>
-              </div>
-              <span class="tab-name">공정실습</span>
-            </button>
-            <div class="project-detail" id="detail-process-practicum">
-              <div class="detail-grid">
-                <div class="detail-image">대표 이미지</div>
-                <div class="detail-info">
-                  <p><strong>기간</strong> 2026.05 ~ 2026.06</p>
-                  <p><strong>한 줄 소개</strong> 반도체 공정(포토 공정 등) 실습 후 작성한 실험·실습 보고서</p>
-                  <p><strong>담당 역할</strong> 조원들과 함께 실습 진행 및 보고서 공동 작성</p>
-                  <p><strong>사용 기술</strong> 반도체 공정 실습 장비, 보고서 작성</p>
-                  <p><strong>자료</strong></p>
-                  <ul class="cp-file-list">
-                    <li><a class="cp-file-item" href="archive/process-practicum/semiconductor-process-report.pdf" target="_blank" rel="noopener"><span class="cp-file-name">반도체 공정 실습 보고서</span></a></li>
-                    <li><a class="cp-file-item" href="archive/process-practicum/photo-process-report.pdf" target="_blank" rel="noopener"><span class="cp-file-name">포토 공정 실험 보고서</span></a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- 산학공동연구 -->
-          <article class="project-tab reveal">
-            <button class="project-tab-header" data-target="detail-industry-academia" aria-expanded="false">
-              <div class="folder-icon">
-                <div class="folder-back"></div>
-                <div class="folder-paper"><span>🚗</span></div>
-                <div class="folder-front"></div>
-              </div>
-              <span class="tab-name">산학공동연구</span>
-            </button>
-            <div class="project-detail" id="detail-industry-academia">
-              <div class="detail-grid">
-                <div class="detail-image">
-                  <img src="archive/industry-academia/panel-result.png" alt="차량 제어 패널 완성 화면" style="width:100%;height:100%;object-fit:cover;border-radius:6px;">
-                </div>
-                <div class="detail-info">
-                  <p><strong>기간</strong> 2026.05 ~ 2026.06 (2026-1학기)</p>
-                  <p><strong>한 줄 소개</strong> 기업 현장 문제 해결을 위한 산학공동연구 프로젝트 — 한성모빌리티와 함께 진행</p>
-                  <p><strong>담당 역할</strong> 차량 제어 패널·CAN 통신 관련 프로젝트 참여 및 결과 정리</p>
-                  <p><strong>사용 기술</strong> CAN 통신, 차량 제어 패널 설계/테스트 툴</p>
-                  <p><strong>자료</strong> (요청에 따라 결과보고서·포스터 PDF만 공개)</p>
-                  <ul class="cp-file-list">
-                    <li><a class="cp-file-item" href="archive/industry-academia/hansung-mobility-final-report.pdf" target="_blank" rel="noopener"><span class="cp-file-name">프로젝트 결과보고서</span></a></li>
-                    <li><a class="cp-file-item" href="archive/industry-academia/hansung-mobility-poster.pdf" target="_blank" rel="noopener"><span class="cp-file-name">프로젝트 포스터</span></a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- 소모임 -->
-          <article class="project-tab reveal">
-            <button class="project-tab-header" data-target="detail-club" aria-expanded="false">
-              <div class="folder-icon">
-                <div class="folder-back"></div>
-                <div class="folder-paper"><span>👥</span></div>
-                <div class="folder-front"></div>
-              </div>
-              <span class="tab-name">소모임</span>
-            </button>
-            <div class="project-detail" id="detail-club">
-              <div class="detail-grid">
-                <div class="detail-image">대표 이미지</div>
-                <div class="detail-info">
-                  <p><strong>기간</strong> 2026.03 ~</p>
-                  <p><strong>한 줄 소개</strong> 소모임 활동 기록 (미팅 내용 정리)</p>
-                  <p><strong>자료</strong></p>
-                  <ul class="cp-file-list">
-                    <li><a class="cp-file-item" href="archive/club/club-overview.docx" target="_blank" rel="noopener"><span class="cp-file-name">소모임 소개</span></a></li>
-                    <li><a class="cp-file-item" href="archive/club/meeting-notes.docx" target="_blank" rel="noopener"><span class="cp-file-name">소모임 미팅 내용</span></a></li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </article>
-
-          <!-- 진로멘토링 3회차 -->
-          <article class="project-tab reveal">
-            <button class="project-tab-header" data-target="detail-mentoring" aria-expanded="false">
-              <div class="folder-icon">
-                <div class="folder-back"></div>
-                <div class="folder-paper"><span>🎥</span></div>
-                <div class="folder-front"></div>
-              </div>
-              <span class="tab-name">진로멘토링<br>3회차</span>
-            </button>
-            <div class="project-detail" id="detail-mentoring">
-              <div class="detail-grid">
-                <div class="detail-image">대표 이미지</div>
-                <div class="detail-info">
-                  <p><strong>한 줄 소개</strong> 진로멘토링 3회차 — 창업가 인터뷰 영상 촬영·편집 프로젝트</p>
-                  <p><strong>담당 역할</strong> 인터뷰 영상 편집 (컷 편집, 색 보정, 자막)</p>
-                  <p><strong>사용 기술</strong> Adobe Premiere Pro</p>
-                  <p><strong>비고</strong> 원본 영상 용량이 커서 이 아카이브에는 파일을 올리지 않음 (편집 진행 중)</p>
-                </div>
-              </div>
-            </div>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. SKILLS -->
+    <!-- 4. SKILLS -->
     <section id="skills" class="section skills-section">
       <div class="section-inner">
         <h2 class="section-title reveal">Skills</h2>
@@ -432,7 +226,7 @@
       </div>
     </section>
 
-    <!-- 6. EXPERIENCE -->
+    <!-- 5. EXPERIENCE -->
     <section id="experience" class="section experience-section">
       <div class="section-inner">
         <h2 class="section-title reveal">Experience</h2>
@@ -467,7 +261,7 @@
       </div>
     </section>
 
-    <!-- 7. CONTACT -->
+    <!-- 6. CONTACT -->
     <section id="contact" class="section contact-section">
       <img class="contact-bg-robot" id="contactBgRobot" src="images/contact-robot-fly.png" alt="" aria-hidden="true">
       <div class="section-inner">
