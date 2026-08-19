@@ -363,8 +363,8 @@ function initProjectCalendar() {
         'current-project/images/supabase연동/testSQL_editor.png'
       ],
       related: [
-        { label: '대나무숲 웹사이트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/bamboo-forest' },
-        { label: 'Supabase 연동 (SQL 스키마 + RLS 정책)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/bamboo-forest/supabase/schema.sql' }
+        { label: '대나무숲 웹사이트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/2026-08-19/bamboo-forest' },
+        { label: 'Supabase 연동 (SQL 스키마 + RLS 정책)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/bamboo-forest/supabase/schema.sql' }
       ]
     },
     {
