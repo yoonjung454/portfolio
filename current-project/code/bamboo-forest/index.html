@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>대나무숲</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <canvas id="scene"></canvas>
+
+  <div id="loading-overlay" class="loading-overlay">
+    <div class="loading-content">
+      <div class="loading-leaf">🍃</div>
+      <div id="loading-text">숲을 준비하는 중...</div>
+    </div>
+  </div>
+
+  <!-- 몰입감을 위해 UI는 최소한으로: 안내 문구는 잠시 후 사라짐 -->
+  <div id="ambient-hint" class="ambient-hint">
+    마음에 담아둔 말을 놓아보세요 🍃 잡고, 흔들고, 대나무에 부딪혀 보세요
+  </div>
+
+  <div id="config-badge" class="config-badge" hidden>
+    ⚠ Supabase 미설정 — 로컬 전용 모드 (README 참고)
+  </div>
+
+  <div id="active-count" class="active-count"></div>
+
+  <!-- 플로팅 버튼 하나로 시작 → 누르면 작은 입력 알약이 펼쳐짐 -->
+  <div class="composer-wrapper">
+    <div id="release-status" class="release-status" aria-live="polite"></div>
+    <form id="release-form" class="composer" autocomplete="off">
+      <textarea
+        id="release-input"
+        class="release-input"
+        placeholder="숲에 놓아줄 마음..."
+        maxlength="120"
+        rows="1"
+      ></textarea>
+      <button id="release-button" type="submit" class="release-button" aria-label="놓아주기">➤</button>
+    </form>
+    <button id="composer-fab" class="composer-fab" type="button" aria-label="고민 남기기">🍃</button>
+  </div>
+
+  <!--
+    전부 평범한 전역 스크립트(ES 모듈 아님) — file://로 더블클릭해서 열어도 동작하도록.
+    아래 순서(의존 관계) 그대로 유지해야 함.
+  -->
+  <script src="https://cdn.jsdelivr.net/npm/matter-js@0.19.0/build/matter.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="config.js"></script>
+  <script src="js/supabaseClient.js"></script>
+  <script src="js/forest.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
