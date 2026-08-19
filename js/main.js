@@ -239,10 +239,6 @@ function initProjectCalendar() {
     mentoring: {
       name: '진로멘토링 3회차', category: 'experience',
       tech: ['Adobe Premiere Pro']
-    },
-    'bamboo-forest': {
-      name: '대나무숲 웹사이트 제작', category: 'personal',
-      tech: ['HTML', 'CSS', 'JavaScript', 'Matter.js', 'Supabase']
     }
   };
 
@@ -319,6 +315,16 @@ function initProjectCalendar() {
             { label: '외출 판정 도구 코드 (지오코딩 + 날씨/대기질 동시 요청, 스레드·타임아웃 처리)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/app.py' },
             { label: 'API 연습 코드 모음 (날씨/대기질 API 호출 단계별 실습)', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/2026-08-19/apiapp2' },
             { label: 'app.py와 손코딩으로 작성한 내용 비교분석', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/app.py와 손코딩으로 작성한 내용 비교분석.md' }
+          ] },
+        { day: 19, title: '대나무숲 웹사이트 제작 (Matter.js 인터랙티브 + Supabase 연동)',
+          images: [
+            'current-project/images/supabase연동/SQL_editor.png',
+            'current-project/images/supabase연동/table_editor.png',
+            'current-project/images/supabase연동/testSQL_editor.png'
+          ],
+          related: [
+            { label: '대나무숲 웹사이트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/2026-08-19/bamboo-forest' },
+            { label: 'Supabase 연동 (SQL 스키마 + RLS 정책)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/bamboo-forest/supabase/schema.sql' }
           ] }
       ]
     },
@@ -348,23 +354,6 @@ function initProjectCalendar() {
       related: [
         { label: '소모임 소개', href: 'archive/club/club-overview.docx' },
         { label: '소모임 미팅 내용', href: 'archive/club/meeting-notes.docx' }
-      ]
-    },
-    {
-      key: 'bamboo-forest', status: 'in-progress',
-      startYear: 2026, startMonth: 8, startDay: 19, endYear: null, endMonth: null,
-      desc: '익명 게시판 대신 인터랙티브한 "대나무숲"으로 고민을 흘려보내는 개인 웹사이트. ' +
-        'Matter.js 물리 엔진으로 고민을 종이 오브젝트로 만들어 대나무숲에 떨어뜨리고, ' +
-        '잡아 끌거나 던지며 놀 수 있게 했고, 일정 시간이 지나면 흩어져 사라지도록 설계했다. ' +
-        'Supabase(Postgres + RLS)에 저장해 방문자끼리 고민을 함께 볼 수 있도록 연동.',
-      images: [
-        'current-project/images/supabase연동/SQL_editor.png',
-        'current-project/images/supabase연동/table_editor.png',
-        'current-project/images/supabase연동/testSQL_editor.png'
-      ],
-      related: [
-        { label: '대나무숲 웹사이트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/2026-08-19/bamboo-forest' },
-        { label: 'Supabase 연동 (SQL 스키마 + RLS 정책)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/bamboo-forest/supabase/schema.sql' }
       ]
     },
     {
