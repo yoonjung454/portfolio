@@ -318,9 +318,9 @@ function initProjectCalendar() {
           ] },
         { day: 19, title: '대나무숲 웹사이트 제작 (Matter.js 인터랙티브 + Supabase 연동)',
           images: [
-            'current-project/images/supabase연동/SQL_editor.png',
-            'current-project/images/supabase연동/table_editor.png',
-            'current-project/images/supabase연동/testSQL_editor.png'
+            'current-project/code/2026-08-19/bamboo-forest/supabase연동사진/SQL_editor.png',
+            'current-project/code/2026-08-19/bamboo-forest/supabase연동사진/table_editor.png',
+            'current-project/code/2026-08-19/bamboo-forest/supabase연동사진/testSQL_editor.png'
           ],
           related: [
             { label: '대나무숲 웹사이트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/2026-08-19/bamboo-forest' },
