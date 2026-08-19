@@ -314,7 +314,7 @@ function initProjectCalendar() {
           related: [
             { label: '외출 판정 도구 코드 (지오코딩 + 날씨/대기질 동시 요청, 스레드·타임아웃 처리)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/app.py' },
             { label: 'API 연습 코드 모음 (날씨/대기질 API 호출 단계별 실습)', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/2026-08-19/apiapp2' },
-            { label: '실습 정리 README', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/README.md' }
+            { label: 'app.py와 손코딩으로 작성한 내용 비교분석', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/app.py와 손코딩으로 작성한 내용 비교분석.md' }
           ] }
       ]
     },
