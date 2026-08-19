@@ -310,7 +310,7 @@ function initProjectCalendar() {
             { label: '미니 장바구니 프로젝트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/Day11' },
             { label: '실습 결과 캡처 — 미니 장바구니 화면', href: 'current-project/images/day18-mini-cart-result.png' }
           ] },
-        { day: 19, title: '공개 API(Open-Meteo) 연동 실습 — 날씨·대기질 조회 후 "외출 가능 여부" 판정 도구 제작',
+        { day: 19, title: 'apiapp2 vs app.py 비교분석 — 날씨·대기질 API 연습 코드와 완성본 비교',
           related: [
             { label: '외출 판정 도구 코드 (지오코딩 + 날씨/대기질 동시 요청, 스레드·타임아웃 처리)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/app.py' },
             { label: 'API 연습 코드 모음 (날씨/대기질 API 호출 단계별 실습)', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/2026-08-19/apiapp2' },
