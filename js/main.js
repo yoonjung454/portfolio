@@ -325,7 +325,15 @@ function initProjectCalendar() {
           related: [
             { label: '대나무숲 웹사이트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/2026-08-19/bamboo-forest' },
             { label: 'Supabase 연동 (SQL 스키마 + RLS 정책)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/bamboo-forest/supabase/schema.sql' }
-          ] }
+          ] },
+        { day: 20, title: '아두이노 · 틴커캐드 실습 (LED, 패시브 부저, PIR 센서, 초음파 센서)',
+          images: [
+            'current-project/code/20260820/1_LED.png',
+            'current-project/code/20260820/4_PassivaBuzzer.png',
+            'current-project/code/20260820/9_PIR Sensor.png',
+            'current-project/code/20260820/11_Ultrasonic_Sensor.png'
+          ],
+          related: [{ label: '틴커캐드 실습 코드 정리 (LED · 부저 · PIR · 초음파 센서)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/20260820/tinkercad_code정리.txt' }] }
       ]
     },
     {

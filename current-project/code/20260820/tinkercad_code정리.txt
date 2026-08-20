@@ -1,0 +1,142 @@
+[1_LED]----------------
+int Red = 7;
+int Yellow = 6;
+int Blue = 5;
+
+void setup()
+{
+  pinMode(Red, OUTPUT);
+  pinMode(Yellow, OUTPUT);
+  pinMode(Blue, OUTPUT);
+}
+
+void loop()
+{
+  digitalWrite(Red, LOW);
+  digitalWrite(Yellow, LOW);
+  digitalWrite(Blue, LOW);
+  delay(1000);
+  
+  digitalWrite(Red, HIGH);
+  delay(1000);
+  digitalWrite(Red, LOW);
+
+  digitalWrite(Yellow, HIGH);
+  delay(1000);
+  digitalWrite(Yellow, LOW); 
+
+  digitalWrite(Blue, HIGH);
+  delay(1000);
+  digitalWrite(Blue, LOW);
+  
+}
+
+[4buzzer]------------------
+// C++ code
+//
+
+int Buzzer=12;
+
+
+void setup()
+{
+  pinMode(Buzzer, OUTPUT);
+}
+
+void loop()
+{
+  tone(Buzzer, 523);
+  delay(500);
+  tone(Buzzer, 587);
+  delay(500);
+  tone(Buzzer, 659);
+  delay(500);
+  
+}
+
+[9PIR]-------------
+// C++ code
+//
+
+int ledPin =8;
+int inputPin =7;
+int val =0;
+
+void setup()
+{
+  pinMode(ledPin, OUTPUT);
+  pinMode(inputPin, INPUT);
+  Serial.begin(9600);
+}
+
+void loop()
+{
+  val = digitalRead(inputPin);
+  
+  if(val == HIGH){
+    digitalWrite(ledPin, HIGH);
+    Serial.println("Welcome");
+  }
+    else{
+      digitalWrite(ledPin,LOW);
+      Serial.println("Nithing");
+    }
+  delay(1000);
+      
+  
+}
+
+[11Ultrasonic]
+
+// C++ code
+//
+int echoPin = 7;
+int trigPin = 8;
+
+int buzzerPin = 13;
+int ledPin = 2;
+int limitDistance = 1000; 
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(echoPin, INPUT);
+  pinMode(trigPin, OUTPUT);
+
+  pinMode(buzzerPin, OUTPUT);
+  pinMode(ledPin, OUTPUT);
+}
+
+void loop()
+{
+  long duration, distance;
+
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  duration = pulseIn(echoPin, HIGH);
+  distance = ((float)(340 * duration) / 1000) / 2;
+
+  Serial.print("Distance: ");
+  Serial.println(distance);
+
+  
+  if (distance < limitDistance)
+  {
+    digitalWrite(buzzerPin, HIGH);
+    digitalWrite(ledPin, HIGH);
+    delay(500);
+
+    digitalWrite(buzzerPin, LOW);
+    digitalWrite(ledPin, LOW);
+    delay(500);
+  }
+  else
+  {
+    digitalWrite(buzzerPin, LOW);
+    digitalWrite(ledPin, LOW);
+    delay(1000);
+  }
+}
+
