@@ -1,3 +1,7 @@
+//delay()는 아두이노의 동작을 지정한 시간만큼 멈추는 함수
+//Serial은 컴퓨터 화면에 확인용 글자
+//igitalWrite()는 아두이노 핀의 전기 신호를 켜거나(HIGH) 끄는(LOW) 명령어
+
 [1_LED]----------------
 int Red = 7;
 int Yellow = 6;
@@ -47,7 +51,7 @@ void loop()
 {
   tone(Buzzer, 523);
   delay(500);
-  tone(Buzzer, 587);
+  tone(Buzzer, 587); // tone(핀 번호, 주파수)
   delay(500);
   tone(Buzzer, 659);
   delay(500);
@@ -72,7 +76,7 @@ void setup()
 void loop()
 {
   val = digitalRead(inputPin);
-  
+  // PIR 센서값 읽기: 감지되면 HIGH, 감지되지 않으면 LOW
   if(val == HIGH){
     digitalWrite(ledPin, HIGH);
     Serial.println("Welcome");
