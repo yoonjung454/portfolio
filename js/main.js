@@ -274,66 +274,66 @@ function initProjectCalendar() {
       generalDesc: '웹 프론트엔드부터 파이썬까지, 단계별 실습으로 채워가는 청년 일경험형 교육 프로그램',
       days: [
         { day: 4, title: 'HTML 마크업 실습 (폼, 테이블, 회원가입 페이지)',
-          related: [{ label: '회원가입 폼 실습 (HTML 테이블·폼)', href: 'current-project/code/day1-signup/index.html' }] },
+          related: [{ label: '회원가입 폼 실습 (HTML 테이블·폼)', href: 'current-project/2026-08-04/index.html' }] },
         { day: 5, title: 'CSS 스타일링 실습 (내부 스타일시트, 이력서 페이지 제작)',
-          images: ['current-project/images/day3-resume-result.png'],
+          images: ['current-project/2026-08-05/day3-resume-result.png'],
           related: [
-            { label: '이력서 작성 실습 (HTML 테이블·폼)', href: 'current-project/code/day3-resume/index.html' },
-            { label: '실습 결과 캡처 — 이력서 페이지', href: 'current-project/images/day3-resume-result.png' }
+            { label: '이력서 작성 실습 (HTML 테이블·폼)', href: 'current-project/2026-08-05/index.html' },
+            { label: '실습 결과 캡처 — 이력서 페이지', href: 'current-project/2026-08-05/day3-resume-result.png' }
           ] },
         { day: 6, title: 'JavaScript 기초(연산자·조건문·반복문) 학습, 프로필 카드 페이지 제작',
-          images: ['current-project/images/day4-profilecard-result.png'],
+          images: ['current-project/2026-08-06/day4-profilecard-result.png'],
           related: [
-            { label: '프로필 카드 페이지 실습 (HTML/CSS)', href: 'current-project/code/day4-profilecard/index.html' },
-            { label: '실습 결과 캡처 — 프로필 카드 페이지', href: 'current-project/images/day4-profilecard-result.png' }
+            { label: '프로필 카드 페이지 실습 (HTML/CSS)', href: 'current-project/2026-08-06/index.html' },
+            { label: '실습 결과 캡처 — 프로필 카드 페이지', href: 'current-project/2026-08-06/day4-profilecard-result.png' }
           ] },
         { day: 7, title: '개인 기획서(STUDY.OS) 작성, AI 도구 트렌드 조사 보고서 작성',
           related: [
-            { label: '개인 기획서 — STUDY.OS 프로젝트 계획서', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/STUDY.OS_프로젝트계획서.md' },
-            { label: 'AI 도구 트렌드 조사 보고서', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/docs/AI도구_트렌드_보고서.md' }
+            { label: '개인 기획서 — STUDY.OS 프로젝트 계획서', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/2026-08-07/STUDY.OS_프로젝트계획서.md' },
+            { label: 'AI 도구 트렌드 조사 보고서', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/2026-08-07/AI도구_트렌드_보고서.md' }
           ] },
         { day: 10, title: 'Python 기초 문법 학습 시작 (변수, 자료형, 연산자)',
-          related: [{ label: 'Python 기초 문법 노트북 (변수 · 자료형 · 연산자)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0810_python-basics.ipynb' }] },
+          related: [{ label: 'Python 기초 문법 노트북 (변수 · 자료형 · 연산자)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/2026-08-10/0810_python-basics.ipynb' }] },
         { day: 11, title: 'Python 조건문 · 반복문 실습',
-          related: [{ label: 'Python 조건문 · 반복문 노트북', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/notebooks/0811_control-flow.ipynb' }] },
+          related: [{ label: 'Python 조건문 · 반복문 노트북', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/2026-08-11/0811_control-flow.ipynb' }] },
         { day: 13, title: '1주차 출석 확인서류 제출, 실습 자료 정리', related: null },
         { day: 14, title: '개인 포트폴리오 사이트 만들기',
           images: [
-            'current-project/images/day14/portfolio-site-1.png',
-            'current-project/images/day14/portfolio-site-2.png',
-            'current-project/images/day14/portfolio-site-3.png'
+            'current-project/2026-08-14/portfolio-site-1.png',
+            'current-project/2026-08-14/portfolio-site-2.png',
+            'current-project/2026-08-14/portfolio-site-3.png'
           ],
           related: [{ label: '개인 포트폴리오 사이트 (지금 만들고 있는 이 사이트)', href: 'https://github.com/yoonjung454/portfolio' }] },
         { day: 18, title: '미니 장바구니 웹앱 제작 (FastAPI + SQLite 백엔드, Next.js 프론트엔드)',
-          images: ['current-project/images/day18-mini-cart-result.png'],
+          images: ['current-project/2026-08-18/day18-mini-cart-result.png'],
           related: [
-            { label: '미니 장바구니 프로젝트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/Day11' },
-            { label: '실습 결과 캡처 — 미니 장바구니 화면', href: 'current-project/images/day18-mini-cart-result.png' }
+            { label: '미니 장바구니 프로젝트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/2026-08-18' },
+            { label: '실습 결과 캡처 — 미니 장바구니 화면', href: 'current-project/2026-08-18/day18-mini-cart-result.png' }
           ] },
         { day: 19, title: 'apiapp2 vs app.py 비교분석 — 날씨·대기질 API 연습 코드와 완성본 비교',
           related: [
-            { label: '외출 판정 도구 코드 (지오코딩 + 날씨/대기질 동시 요청, 스레드·타임아웃 처리)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/app.py' },
-            { label: 'API 연습 코드 모음 (날씨/대기질 API 호출 단계별 실습)', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/2026-08-19/apiapp2' },
-            { label: 'app.py와 손코딩으로 작성한 내용 비교분석', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/app.py와 손코딩으로 작성한 내용 비교분석.md' }
+            { label: '외출 판정 도구 코드 (지오코딩 + 날씨/대기질 동시 요청, 스레드·타임아웃 처리)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/2026-08-19/app.py' },
+            { label: 'API 연습 코드 모음 (날씨/대기질 API 호출 단계별 실습)', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/2026-08-19/apiapp2' },
+            { label: 'app.py와 손코딩으로 작성한 내용 비교분석', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/2026-08-19/app.py와 손코딩으로 작성한 내용 비교분석.md' }
           ] },
         { day: 19, title: '대나무숲 웹사이트 제작 (Matter.js 인터랙티브 + Supabase 연동)',
           images: [
-            'current-project/code/2026-08-19/bamboo-forest/supabase연동사진/SQL_editor.png',
-            'current-project/code/2026-08-19/bamboo-forest/supabase연동사진/table_editor.png',
-            'current-project/code/2026-08-19/bamboo-forest/supabase연동사진/testSQL_editor.png'
+            'current-project/2026-08-19/bamboo-forest/supabase연동사진/SQL_editor.png',
+            'current-project/2026-08-19/bamboo-forest/supabase연동사진/table_editor.png',
+            'current-project/2026-08-19/bamboo-forest/supabase연동사진/testSQL_editor.png'
           ],
           related: [
-            { label: '대나무숲 웹사이트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/code/2026-08-19/bamboo-forest' },
-            { label: 'Supabase 연동 (SQL 스키마 + RLS 정책)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/2026-08-19/bamboo-forest/supabase/schema.sql' }
+            { label: '대나무숲 웹사이트 코드', href: 'https://github.com/yoonjung454/portfolio/tree/main/current-project/2026-08-19/bamboo-forest' },
+            { label: 'Supabase 연동 (SQL 스키마 + RLS 정책)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/2026-08-19/bamboo-forest/supabase/schema.sql' }
           ] },
         { day: 20, title: '아두이노 · 틴커캐드 실습 (LED, 패시브 부저, PIR 센서, 초음파 센서)',
           images: [
-            'current-project/code/20260820/1_LED.png',
-            'current-project/code/20260820/4_PassivaBuzzer.png',
-            'current-project/code/20260820/9_PIR Sensor.png',
-            'current-project/code/20260820/11_Ultrasonic_Sensor.png'
+            'current-project/2026-08-20/1_LED.png',
+            'current-project/2026-08-20/4_PassivaBuzzer.png',
+            'current-project/2026-08-20/9_PIR_Sensor.png',
+            'current-project/2026-08-20/11_Ultrasonic_Sensor.png'
           ],
-          related: [{ label: '틴커캐드 실습 코드 정리 (LED · 부저 · PIR · 초음파 센서)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/code/20260820/tinkercad_code정리.txt' }] }
+          related: [{ label: '틴커캐드 실습 코드 정리 (LED · 부저 · PIR · 초음파 센서)', href: 'https://github.com/yoonjung454/portfolio/blob/main/current-project/2026-08-20/tinkercad_code정리.txt' }] }
       ]
     },
     {
